@@ -12,6 +12,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+UI_DIR = BASE_DIR.parent / 'ui'
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--vp%f)iu3v*^pe#tqt@e620wf2#vd#dz-fpo)+)0*frikfpnj^')
@@ -31,7 +32,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    # Add local apps here
+    'core',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -52,7 +53,7 @@ ROOT_URLCONF = 'frete_proj.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [UI_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,7 +94,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    UI_DIR / 'static',
 ]
 
 # Media files
