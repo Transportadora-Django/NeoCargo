@@ -82,7 +82,7 @@ superuser: ## Cria superusuário
 # === Testes ===
 test: ## Executa todos os testes
 	@echo "$(GREEN)🧪 Executando testes...$(NC)"
-	@$(DOCKER_COMPOSE) run --rm web pytest
+	@$(DOCKER_COMPOSE) run --rm web pytest --cov=. --cov-report=xml --cov-report=term-missing
 	@echo "$(GREEN)✅ Testes concluídos!$(NC)"
 
 test-cov: ## Testes com coverage
@@ -96,9 +96,9 @@ lint: ## Verifica qualidade do código
 	@echo "$(YELLOW)Backend (Ruff)...$(NC)"
 	@$(DOCKER_COMPOSE) run --rm web ruff check .
 	@$(DOCKER_COMPOSE) run --rm web ruff format --check .
-	@echo "$(YELLOW)Frontend (ESLint/Prettier)...$(NC)"
+	@echo "$(YELLOW)Frontend (ESLint/Prettier/Stylelint/HTMLHint)...$(NC)"
 	@if [ -f "ui/package.json" ]; then \
-		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint && npm run format:check"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint && npm run lint:css && npm run lint:html && npm run format:check"; \
 	else \
 		echo "$(YELLOW)Frontend não configurado$(NC)"; \
 	fi
@@ -113,22 +113,23 @@ format: ## Formata todo o código
 	@echo "$(GREEN)✅ Formatação concluída!$(NC)"
 
 fix: ## Corrige problemas automaticamente
-	@echo "$(GREEN)🔧 Corrigindo problemas...$(NC)"
-	@$(DOCKER_COMPOSE) run --rm web ruff check . --fix
+	@echo "$(GREEN)✨ Corrigindo problemas...$(NC)"
+	@$(DOCKER_COMPOSE) run --rm web ruff check --fix .
 	@$(DOCKER_COMPOSE) run --rm web ruff format .
 	@if [ -f "ui/package.json" ]; then \
-		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:fix && npm run format"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:fix && npm run lint:css:fix && npm run format"; \
 	fi
 	@echo "$(GREEN)✅ Correções aplicadas!$(NC)"
 
 # === CI/CD ===
-ci: ## Executa todas as verificações do CI
-	@echo "$(GREEN)🚀 Executando CI completo...$(NC)"
-	@echo "$(YELLOW)1. Verificação Django...$(NC)"
-	@$(DOCKER_COMPOSE) run --rm web python manage.py check
-	@echo "$(YELLOW)2. Linting e formatação...$(NC)"
+ci: ## Executa todas as verificações do CI (idêntico ao GitHub Actions)
+	@echo "$(GREEN)🚀 Executando CI completo (sequencial)...$(NC)"
+	@echo "$(YELLOW)1. Docker Build Test...$(NC)"
+	@$(DOCKER_COMPOSE) build --no-cache
+	@$(DOCKER_COMPOSE) run --rm web python --version
+	@echo "$(YELLOW)2. Backend & Frontend Linting...$(NC)"
 	@$(MAKE) lint
-	@echo "$(YELLOW)3. Testes...$(NC)"
+	@echo "$(YELLOW)3. Backend Tests...$(NC)"
 	@$(MAKE) test
 	@echo "$(GREEN)✅ CI passou em todas as verificações!$(NC)"
 
