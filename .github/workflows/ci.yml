@@ -1,0 +1,206 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [ "*" ]  # Executa em todas as branches
+  pull_request:
+    branches: [ "*" ]  # Executa em todos os PRs
+
+env:
+  PYTHON_VERSION: '3.10'
+  NODE_VERSION: '18'
+
+jobs:
+  # Job 1: Backend Linting com Ruff
+  backend-lint:
+    name: Backend Linting (Ruff)
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-ruff-${{ hashFiles('backend/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-ruff-
+
+    - name: Install Ruff
+      run: pip install ruff
+
+    - name: Run Ruff Linting
+      run: |
+        cd backend
+        ruff check .
+
+    - name: Run Ruff Formatting Check
+      run: |
+        cd backend
+        ruff format --check .
+
+  # Job 2: Backend Tests
+  backend-tests:
+    name: Backend Tests (Pytest)
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: neocargo_test
+          POSTGRES_USER: neocargo_user
+          POSTGRES_PASSWORD: neocargo_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-tests-${{ hashFiles('backend/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-tests-
+
+    - name: Install dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Create test .env file
+      run: |
+        cd backend
+        cat > .env << EOF
+        DEBUG=True
+        SECRET_KEY=test-secret-key-for-ci-pipeline-django
+        DATABASE_URL=postgresql://neocargo_user:neocargo_password@localhost:5432/neocargo_test
+        ALLOWED_HOSTS=localhost,127.0.0.1
+        DJANGO_ENVIRONMENT=test
+        EOF
+
+    - name: Run Django system check
+      run: |
+        cd backend
+        python manage.py check
+
+    - name: Run migrations
+      run: |
+        cd backend
+        python manage.py migrate
+
+    - name: Run Tests with Coverage
+      run: |
+        cd backend
+        pytest --cov=. --cov-report=xml --cov-report=term-missing
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./backend/coverage.xml
+        flags: backend
+        name: backend-coverage
+
+  # Job 3: Frontend Linting
+  frontend-lint:
+    name: Frontend Linting (ESLint + Prettier)
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+
+    - name: Check if package.json exists
+      id: check-package
+      run: |
+        if [ -f "ui/package.json" ]; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Install dependencies
+      if: steps.check-package.outputs.exists == 'true'
+      run: |
+        cd ui
+        npm ci
+
+    - name: Run ESLint (JavaScript)
+      if: steps.check-package.outputs.exists == 'true'
+      run: |
+        cd ui
+        npm run lint
+
+    - name: Run Stylelint (CSS)
+      if: steps.check-package.outputs.exists == 'true'
+      run: |
+        cd ui
+        npm run lint:css
+
+    - name: Run HTMLHint (HTML)
+      if: steps.check-package.outputs.exists == 'true'
+      run: |
+        cd ui
+        npm run lint:html
+
+    - name: Run Prettier check
+      if: steps.check-package.outputs.exists == 'true'
+      run: |
+        cd ui
+        npm run format:check
+
+    - name: Skip frontend (no package.json)
+      if: steps.check-package.outputs.exists == 'false'
+      run: |
+        echo "⚠️ No package.json found in ui/ directory, skipping frontend checks"
+
+  # Job 4: Docker Build Test
+  docker-build:
+    name: Docker Build Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Create .env file for Docker
+      run: |
+        cd backend
+        cp .env.dev .env
+
+    - name: Build Docker image
+      run: |
+        docker build -f infra/Dockerfile -t neocargo-test .
+
+    - name: Test Docker image
+      run: |
+        docker run --rm neocargo-test python --version
