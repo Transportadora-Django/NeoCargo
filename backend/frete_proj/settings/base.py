@@ -7,12 +7,13 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 UI_DIR = BASE_DIR.parent / 'ui'
+
+# Load environment variables from .env file in backend directory
+env_path = BASE_DIR / '.env'
+load_dotenv(dotenv_path=env_path)
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure--vp%f)iu3v*^pe#tqt@e620wf2#vd#dz-fpo)+)0*frikfpnj^')
