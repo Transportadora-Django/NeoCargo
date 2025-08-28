@@ -44,9 +44,6 @@ media/
 # !*/migrations/__init__.py
 
 # Docker
-.dockerignore
-Dockerfile*
-docker-compose*.yml
 .docker/
 volumes/
 
@@ -103,6 +100,7 @@ node_modules/
 .env.development.local
 .env.test.local
 .env.production.local
+backend/.env
 
 # Temporary files
 *.tmp
