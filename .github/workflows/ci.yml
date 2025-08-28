@@ -98,7 +98,7 @@ jobs:
       if: steps.check-package.outputs.exists == 'true'
       run: |
         cd ui
-        npm ci
+        npm install
 
     - name: Run ESLint (JavaScript)
       if: steps.check-package.outputs.exists == 'true'
