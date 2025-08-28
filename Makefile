@@ -129,7 +129,9 @@ ci: ## Executa todas as verificações do CI (idêntico ao GitHub Actions)
 	@$(DOCKER_COMPOSE) run --rm web python --version
 	@echo "$(YELLOW)2. Backend & Frontend Linting...$(NC)"
 	@$(MAKE) lint
-	@echo "$(YELLOW)3. Backend Tests...$(NC)"
+	@echo "$(YELLOW)3. Preparando ambiente de teste...$(NC)"
+	@$(DOCKER_COMPOSE) run --rm web python manage.py collectstatic --noinput
+	@echo "$(YELLOW)4. Backend Tests...$(NC)"
 	@$(MAKE) test
 	@echo "$(GREEN)✅ CI passou em todas as verificações!$(NC)"
 

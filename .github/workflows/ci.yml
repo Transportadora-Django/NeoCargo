@@ -189,6 +189,11 @@ jobs:
         cd backend
         python manage.py check
 
+    - name: Run collectstatic
+      run: |
+        cd backend
+        python manage.py collectstatic --noinput
+
     - name: Run migrations
       run: |
         cd backend
