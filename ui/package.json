@@ -1,0 +1,38 @@
+{
+  "name": "neocargo-frontend",
+  "version": "1.0.0",
+  "description": "Frontend para o sistema NeoCargo",
+  "main": "static/js/app.js",
+  "scripts": {
+    "lint": "eslint static/js/**/*.js",
+    "lint:fix": "eslint static/js/**/*.js --fix",
+    "lint:css": "stylelint static/css/**/*.css",
+    "lint:css:fix": "stylelint static/css/**/*.css --fix",
+    "lint:html": "htmlhint static/**/*.html templates/**/*.html",
+    "lint:all": "npm run lint && npm run lint:css && npm run lint:html",
+    "format:check": "prettier --check static/**/*.{js,css}",
+    "format": "prettier --write static/**/*.{js,css}",
+    "build": "echo 'Build completed - static files ready'",
+    "dev": "echo 'Development mode - watching files'"
+  },
+  "devDependencies": {
+    "eslint": "^8.50.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-n": "^16.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "stylelint": "^14.16.1",
+    "stylelint-config-standard": "^29.0.0",
+    "stylelint-config-prettier": "^9.0.5",
+    "htmlhint": "^1.1.4",
+    "prettier": "^3.0.3"
+  },
+  "keywords": [
+    "neocargo",
+    "transportadora",
+    "django",
+    "frontend"
+  ],
+  "author": "NeoCargo Team",
+  "license": "MIT"
+}

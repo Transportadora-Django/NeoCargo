@@ -14,6 +14,9 @@ RUN apt-get update \
         build-essential \
         libpq-dev \
         netcat-traditional \
+        curl \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -23,6 +26,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project
 COPY backend/ /app/backend/
 COPY ui/ /app/ui/
+
+# Install frontend dependencies automatically
+RUN if [ -f "/app/ui/package.json" ]; then \
+        cd /app/ui && npm install; \
+    fi
 
 # Set working directory to backend
 WORKDIR /app/backend

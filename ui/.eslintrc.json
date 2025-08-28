@@ -1,0 +1,27 @@
+{
+  "env": {
+    "browser": true,
+    "es2021": true,
+    "jquery": true
+  },
+  "extends": [
+    "standard"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "quotes": ["error", "single"],
+    "semi": ["error", "never"],
+    "no-console": "warn",
+    "no-unused-vars": "warn",
+    "space-before-function-paren": "off",
+    "comma-dangle": "off"
+  },
+  "globals": {
+    "django": "readonly",
+    "bootstrap": "readonly"
+  }
+}
