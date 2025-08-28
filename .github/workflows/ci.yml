@@ -1,10 +1,10 @@
-name: CI Pipeline
+name: "CI Pipeline"
 
 on:
   push:
-    branches: [ "*" ]  # Executa em todas as branches
+    branches: [ "*" ]
   pull_request:
-    branches: [ "*" ]  # Executa em todos os PRs
+    branches: [ "*" ]
 
 env:
   PYTHON_VERSION: '3.10'
