@@ -1,0 +1,72 @@
+/* NeoCargo - Classes Utilitárias */
+
+/* Classes de cores utilitárias */
+.bg-neocargo-cyan {
+  background-color: var(--neocargo-cyan) !important;
+}
+
+.bg-neocargo-navy {
+  background-color: var(--neocargo-navy) !important;
+}
+
+.text-neocargo-cyan {
+  color: var(--neocargo-cyan) !important;
+}
+
+.text-neocargo-navy {
+  color: var(--neocargo-navy) !important;
+}
+
+.border-neocargo-cyan {
+  border-color: var(--neocargo-cyan) !important;
+}
+
+.border-neocargo-navy {
+  border-color: var(--neocargo-navy) !important;
+}
+
+/* Utilitários de sombra */
+.shadow-soft {
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.shadow-medium {
+  box-shadow: var(--shadow-md) !important;
+}
+
+.shadow-large {
+  box-shadow: var(--shadow-lg) !important;
+}
+
+/* Utilitários de border-radius */
+.rounded-lg {
+  border-radius: var(--border-radius-lg) !important;
+}
+
+.rounded-xl {
+  border-radius: var(--border-radius-xl) !important;
+}
+
+/* Gradientes */
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary-color), var(--info-color));
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gradient-neocargo {
+  background: linear-gradient(135deg, var(--neocargo-navy) 0%, #264563 100%);
+}
+
+/* Transições */
+.transition-fast {
+  transition: var(--transition-fast);
+}
+
+.transition-normal {
+  transition: var(--transition-normal);
+}
+
+.transition-slow {
+  transition: var(--transition-slow);
+}
