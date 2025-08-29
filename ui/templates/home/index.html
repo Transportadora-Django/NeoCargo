@@ -6,27 +6,29 @@
 {% block content %}
 <div class="container my-5">
   <!-- Hero Section -->
-  <div class="hero-section text-center mb-5">
+  <div class="hero-section-neocargo text-center mb-5">
     <div class="row justify-content-center">
       <div class="col-lg-8">
-        <h1 class="display-4 fw-bold text-primary mb-3">
-          <i class="fas fa-truck me-3"></i>
-          Bem-vindo ao NeoCargo
+        <div class="hero-logo mb-4">
+          <img src="{% static 'assets/Logo-NeoCargo.svg' %}" alt="NeoCargo" class="hero-logo-img">
+        </div>
+        <h1 class="display-4 fw-bold mb-3">
+          Bem-vindo ao Sistema NeoCargo
         </h1>
-        <p class="lead text-muted mb-4">
+        <p class="lead mb-4">
           Sistema completo de gestão para transportadoras. Gerencie cargas,
           rotas, clientes e muito mais de forma eficiente.
         </p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-center">
           <button
-            class="btn btn-primary btn-lg px-4"
+            class="btn btn-neocargo-primary btn-lg px-4"
             onclick="alert('Funcionalidade em desenvolvimento')"
           >
             <i class="fas fa-plus me-2"></i>
             Nova Carga
           </button>
           <button
-            class="btn btn-outline-primary btn-lg px-4"
+            class="btn btn-neocargo-outline btn-lg px-4"
             onclick="alert('Funcionalidade em desenvolvimento')"
           >
             <i class="fas fa-chart-bar me-2"></i>
@@ -42,9 +44,7 @@
     <div class="col-md-6 col-lg-3">
       <div class="card h-100 border-0 shadow-sm">
         <div class="card-body text-center">
-          <div
-            class="feature-icon bg-primary text-white rounded-circle mx-auto mb-3"
-          >
+          <div class="feature-icon bg-neocargo-cyan text-white rounded-circle mx-auto mb-3">
             <i class="fas fa-box fa-2x"></i>
           </div>
           <h5 class="card-title">Gestão de Cargas</h5>
@@ -53,7 +53,7 @@
             em tempo real.
           </p>
           <button
-            class="btn btn-outline-primary"
+            class="btn btn-outline-neocargo-cyan"
             onclick="alert('Em desenvolvimento')"
           >
             Acessar
@@ -65,9 +65,7 @@
     <div class="col-md-6 col-lg-3">
       <div class="card h-100 border-0 shadow-sm">
         <div class="card-body text-center">
-          <div
-            class="feature-icon bg-success text-white rounded-circle mx-auto mb-3"
-          >
+          <div class="feature-icon bg-success text-white rounded-circle mx-auto mb-3">
             <i class="fas fa-route fa-2x"></i>
           </div>
           <h5 class="card-title">Planejamento de Rotas</h5>
@@ -88,9 +86,7 @@
     <div class="col-md-6 col-lg-3">
       <div class="card h-100 border-0 shadow-sm">
         <div class="card-body text-center">
-          <div
-            class="feature-icon bg-info text-white rounded-circle mx-auto mb-3"
-          >
+          <div class="feature-icon bg-neocargo-navy text-white rounded-circle mx-auto mb-3">
             <i class="fas fa-users fa-2x"></i>
           </div>
           <h5 class="card-title">Gestão de Clientes</h5>
@@ -99,7 +95,7 @@
             histórico.
           </p>
           <button
-            class="btn btn-outline-info"
+            class="btn btn-outline-neocargo-navy"
             onclick="alert('Em desenvolvimento')"
           >
             Acessar
@@ -111,9 +107,7 @@
     <div class="col-md-6 col-lg-3">
       <div class="card h-100 border-0 shadow-sm">
         <div class="card-body text-center">
-          <div
-            class="feature-icon bg-warning text-white rounded-circle mx-auto mb-3"
-          >
+          <div class="feature-icon bg-warning text-white rounded-circle mx-auto mb-3">
             <i class="fas fa-chart-line fa-2x"></i>
           </div>
           <h5 class="card-title">Relatórios &amp; Analytics</h5>
@@ -138,7 +132,7 @@
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-bottom">
           <h5 class="card-title mb-0">
-            <i class="fas fa-tachometer-alt me-2"></i>
+            <i class="fas fa-tachometer-alt me-2 text-neocargo-cyan"></i>
             Dashboard do Sistema
           </h5>
         </div>
@@ -146,7 +140,7 @@
           <div class="row text-center">
             <div class="col-4">
               <div class="metric">
-                <h3 class="text-primary mb-1">0</h3>
+                <h3 class="text-neocargo-cyan mb-1">0</h3>
                 <small class="text-muted">Cargas Ativas</small>
               </div>
             </div>
@@ -158,7 +152,7 @@
             </div>
             <div class="col-4">
               <div class="metric">
-                <h3 class="text-info mb-1">0</h3>
+                <h3 class="text-neocargo-navy mb-1">0</h3>
                 <small class="text-muted">Clientes Ativos</small>
               </div>
             </div>
@@ -171,7 +165,7 @@
       <div class="card border-0 shadow-sm">
         <div class="card-header bg-white border-bottom">
           <h5 class="card-title mb-0">
-            <i class="fas fa-info-circle me-2"></i>
+            <i class="fas fa-info-circle me-2 text-neocargo-cyan"></i>
             Status do Sistema
           </h5>
         </div>
@@ -202,40 +196,4 @@
     </div>
   </div>
 </div>
-{% endblock %} {% block extra_css %}
-<style>
-  .hero-section {
-    padding: 4rem 0;
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    border-radius: 1rem;
-    margin-bottom: 2rem;
-  }
-
-  .feature-icon {
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .metric h3 {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
-
-  .status-indicator {
-    width: 12px;
-    height: 12px;
-    flex-shrink: 0;
-  }
-
-  .card {
-    transition: transform 0.2s ease-in-out;
-  }
-
-  .card:hover {
-    transform: translateY(-2px);
-  }
-</style>
 {% endblock %}
