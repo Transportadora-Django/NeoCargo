@@ -1,0 +1,73 @@
+{% load static %}
+<!-- NeoCargo Hero Section -->
+<section class="hero-banner">
+  <!-- Background Elements -->
+  <div class="hero-background">
+    <div class="hero-symbols">
+      <div class="hero-symbol hero-symbol-1">
+        <img src="{% static 'assets/Symbol-NeoCargo.svg' %}" alt="">
+      </div>
+      <div class="hero-symbol hero-symbol-2">
+        <img src="{% static 'assets/Symbol-NeoCargo.svg' %}" alt="">
+      </div>
+      <div class="hero-symbol hero-symbol-3">
+        <img src="{% static 'assets/Symbol-NeoCargo.svg' %}" alt="">
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Elements -->
+  <div class="hero-decorative">
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+    <div class="floating-element"></div>
+  </div>
+
+  <div class="container">
+    <div class="hero-content">
+      <!-- Hero Text Content -->
+      <div class="hero-text">
+        <h1 class="hero-title">
+          Gestão <span class="highlight">inteligente</span><br>
+          de <span class="highlight">fretes</span>
+        </h1>
+        
+        <p class="hero-description">
+          Clientes, motoristas e gerentes conectados em uma única plataforma de gestão de fretes.
+        </p>
+
+        <div class="hero-buttons">
+          <a href="#" class="btn-hero-primary" onclick="alert('Em desenvolvimento')">
+            <i class="fas fa-user-plus me-2"></i>
+            Criar Conta
+          </a>
+          <a href="#" class="btn-hero-secondary" onclick="alert('Em desenvolvimento')">
+            <i class="fas fa-info-circle me-2"></i>
+            Saiba Mais
+          </a>
+        </div>
+
+        <!-- Hero Stats -->
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-number">1000+</span>
+            <span class="stat-label">Cargas gerenciadas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">50+</span>
+            <span class="stat-label">Empresas atendidas</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">99%</span>
+            <span class="stat-label">Entregas no prazo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Visual/Mockup -->
+      <div class="hero-visual">
+        {% include 'home/components/hero-mockup.html' %}
+      </div>
+    </div>
+  </div>
+</section>
