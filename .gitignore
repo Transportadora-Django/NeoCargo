@@ -21,6 +21,16 @@ wheels/
 *.egg
 MANIFEST
 
+# Coverage reports
+.coverage
+.coverage.*
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+.coverage
+.pytest_cache/
+
 # Virtual environments
 .env
 .venv

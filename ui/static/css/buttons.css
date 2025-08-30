@@ -1,0 +1,136 @@
+/* ============================================================ */
+
+/* BUTTON COMPONENT SYSTEM                                     */
+
+/* ============================================================ */
+
+/* Centralized button styles following Clean Code principles   */
+
+/* ========================================================== */
+
+/* BASE BUTTON STYLES                                        */
+
+/* ========================================================== */
+.btn {
+  border-radius: var(--border-radius);
+  font-weight: 500;
+  transition: var(--transition-normal);
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ========================================================== */
+
+/* PRIMARY BUTTON VARIANTS                                   */
+
+/* ========================================================== */
+
+/* Primary NeoCargo Button */
+.btn-neocargo-primary {
+  background: var(--neocargo-cyan);
+  border: 2px solid var(--neocargo-cyan);
+  color: #fff;
+  font-weight: 600;
+  transition: var(--transition-normal);
+  box-shadow: 0 4px 15px rgb(6 182 212 / 30%);
+}
+
+.btn-neocargo-primary:hover {
+  background: #0891a8;
+  border-color: #0891a8;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgb(6 182 212 / 40%);
+}
+
+/* ========================================================== */
+
+/* OUTLINE BUTTON VARIANTS                                   */
+
+/* ========================================================== */
+
+/* NeoCargo Outline Button */
+.btn-neocargo-outline {
+  background: transparent;
+  border: 2px solid var(--neocargo-cyan);
+  color: var(--neocargo-cyan);
+  font-weight: 600;
+  transition: var(--transition-normal);
+}
+
+.btn-neocargo-outline:hover {
+  background: var(--neocargo-cyan);
+  border-color: var(--neocargo-cyan);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgb(6 182 212 / 40%);
+}
+
+/* Card-specific Outline Button */
+.btn-outline-neocargo-cyan {
+  border-color: var(--neocargo-cyan);
+  color: var(--neocargo-cyan);
+  transition: var(--transition-normal);
+}
+
+.btn-outline-neocargo-cyan:hover {
+  background-color: var(--neocargo-cyan);
+  border-color: var(--neocargo-cyan);
+  color: #fff;
+}
+
+.btn-outline-neocargo-navy {
+  border-color: var(--neocargo-navy);
+  color: var(--neocargo-navy);
+  transition: var(--transition-normal);
+}
+
+.btn-outline-neocargo-navy:hover {
+  background-color: var(--neocargo-navy);
+  border-color: var(--neocargo-navy);
+  color: #fff;
+}
+
+/* Botões do Hero */
+.btn-hero-primary {
+  background: var(--neocargo-cyan);
+  border: none;
+  color: #fff;
+  padding: 12px 32px;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: var(--transition-normal);
+  box-shadow: 0 4px 20px rgb(6 182 212 / 30%);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-hero-primary:hover {
+  background: #0891a8;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgb(6 182 212 / 40%);
+}
+
+.btn-hero-secondary {
+  background: transparent;
+  color: var(--neocargo-navy);
+  border: 2px solid var(--neocargo-navy);
+  padding: 10px 30px;
+  font-weight: 600;
+  border-radius: 12px;
+  transition: var(--transition-normal);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-hero-secondary:hover {
+  background: var(--neocargo-navy);
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgb(30 41 59 / 30%);
+}

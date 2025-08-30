@@ -1,0 +1,339 @@
+/* NeoCargo - Componentes */
+
+/* Organizado seguindo princípios de Clean Code e SOLID */
+
+/* =================================================================== */
+
+/* CARD COMPONENTS                                                     */
+
+/* =================================================================== */
+.card {
+  border: none;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-normal);
+  animation: fade-in-up 0.6s ease-out;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.card-header {
+  border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0 !important;
+  background-color: #fff;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* =================================================================== */
+
+/* FEATURE COMPONENTS                                                  */
+
+/* =================================================================== */
+
+/* Feature Icons */
+.feature-icon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  box-shadow: 0 4px 15px rgb(0 0 0 / 10%);
+}
+
+/* Feature Cards */
+.feature-card {
+  transition: var(--transition-normal);
+  border: 1px solid transparent;
+}
+
+.feature-card:hover {
+  border-color: var(--neocargo-cyan);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 40px rgb(6 182 212 / 15%) !important;
+}
+
+/* =================================================================== */
+
+/* SECTION LAYOUTS                                                     */
+
+/* =================================================================== */
+
+/* Features Section */
+.features-section {
+  background: #fff;
+}
+
+/* Dashboard Section - Deprecated */
+.dashboard-section {
+  background: #f8fafc;
+}
+
+/* =================================================================== */
+
+/* HERO SECTION                                                        */
+
+/* =================================================================== */
+.hero-section-neocargo {
+  background: linear-gradient(135deg, var(--neocargo-navy) 0%, #264563 100%);
+  color: var(--neocargo-white);
+  border-radius: var(--border-radius-xl);
+  padding: 4rem 2rem;
+  margin-bottom: 3rem;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-section-neocargo::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgb(6 182 212 / 10%) 50%,
+    transparent 70%
+  );
+  pointer-events: none;
+}
+
+.hero-section-neocargo h1 {
+  text-shadow: 0 2px 10px rgb(0 0 0 / 30%);
+  position: relative;
+  z-index: 1;
+}
+
+.hero-section-neocargo .lead {
+  position: relative;
+  z-index: 1;
+  opacity: 0.95;
+}
+
+/* Hero Logo */
+.hero-logo-img {
+  height: 60px;
+  width: auto;
+  filter: brightness(1.2) drop-shadow(0 4px 20px rgb(6 182 212 / 30%));
+  transition: var(--transition-normal);
+}
+
+.hero-logo-img:hover {
+  transform: scale(1.05);
+  filter: brightness(1.3) drop-shadow(0 6px 25px rgb(6 182 212 / 50%));
+}
+
+/* =================================================================== */
+
+/* METRICS AND STATUS COMPONENTS                                       */
+
+/* =================================================================== */
+
+/* Metrics Display */
+.metric h3 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.metric small {
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Status Indicators */
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+/* =================================================================== */
+
+/* FORM COMPONENTS                                                     */
+
+/* =================================================================== */
+
+/* Alerts */
+.alert {
+  border: none;
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Form Controls */
+.form-control {
+  border-radius: var(--border-radius);
+  border: 1px solid #e9ecef;
+  transition: var(--transition-normal);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.2rem rgb(13 110 253 / 25%);
+}
+
+/* =================================================================== */
+
+/* ANIMATIONS                                                          */
+
+/* =================================================================== */
+
+/* Heart Animation - Deprecated (removido do footer) */
+.heart-animation {
+  color: #ff6b9d;
+  animation: heartbeat 2s infinite ease-in-out;
+  display: inline-block;
+}
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* =================================================================== */
+
+/* RESPONSIVE DESIGN                                                   */
+
+/* =================================================================== */
+@media (max-width: 768px) {
+  /* Hero Adjustments */
+  .hero-logo-img {
+    height: 45px;
+  }
+
+  .hero-section-neocargo {
+    padding: 2rem 1rem;
+  }
+
+  /* Feature Adjustments */
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* Metrics Adjustments */
+  .metric h3 {
+    font-size: 2rem;
+  }
+}
+
+/* =================================================================== */
+
+/* NEOCARGO BRAND UTILITIES                                            */
+
+/* =================================================================== */
+
+/* Text Colors */
+.text-neocargo-cyan {
+  color: var(--neocargo-cyan) !important;
+}
+
+.text-neocargo-navy {
+  color: var(--neocargo-navy) !important;
+}
+
+.text-neocargo-slate {
+  color: var(--neocargo-slate) !important;
+}
+
+/* Background Colors */
+.bg-neocargo-cyan {
+  background-color: var(--neocargo-cyan) !important;
+}
+
+.bg-neocargo-navy {
+  background-color: var(--neocargo-navy) !important;
+}
+
+.bg-neocargo-slate {
+  background-color: var(--neocargo-slate) !important;
+}
+
+/* =================================================================== */
+
+/* FOOTER COMPONENT                                                    */
+
+/* =================================================================== */
+.footer-neocargo {
+  background: linear-gradient(
+    135deg,
+    var(--neocargo-dark-slate) 0%,
+    var(--neocargo-slate) 100%
+  );
+  color: var(--neocargo-white);
+  margin-top: 0;
+  border-top: 3px solid var(--neocargo-cyan);
+}
+
+.footer-logo {
+  height: 24px;
+  width: auto;
+}
+
+.footer-divider {
+  border: none;
+  height: 3px;
+  background: var(--neocargo-cyan);
+  opacity: 1;
+  margin: 1rem 0;
+}
+
+/* ============================================================ */
+
+/* ANIMATIONS                                                          */
+
+/* ============================================================ */
+
+/* Heart Animation - Deprecated (removido do footer) */
+
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+/* ============================================================ */
+
+/* RESPONSIVE DESIGN                                                   */
+
+/* ============================================================ */
+
+@media (max-width: 768px) {
+  /* Hero Adjustments */
+  .hero-logo-img {
+    height: 45px;
+  }
+
+  .hero-section-neocargo {
+    padding: 2rem 1rem;
+  }
+
+  /* Feature Adjustments */
+  .feature-icon {
+    width: 60px;
+    height: 60px;
+  }
+
+  /* Metrics Adjustments */
+  .metric h3 {
+    font-size: 2rem;
+  }
+}

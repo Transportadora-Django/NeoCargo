@@ -1,23 +1,27 @@
-// NeoCargo Application JavaScript
+/* ============================================================ */
+/* NEOCARGO APPLICATION JAVASCRIPT                             */
+/* ============================================================ */
+/* Main application entry point following Clean Code principles */
 
+/**
+ * Application Initialization
+ * Follows Single Responsibility Principle - each function has one purpose
+ */
 document.addEventListener('DOMContentLoaded', function () {
-  console.log('NeoCargo System Initialized')
-
-  // Initialize tooltips
+  // Initialize all application modules
   initializeTooltips()
-
-  // Initialize animations
   initializeAnimations()
-
-  // Initialize theme handler
   initializeTheme()
-
-  // Initialize navigation
   initializeNavigation()
 })
 
+/* ========================================================== */
+/* BOOTSTRAP COMPONENTS INITIALIZATION                       */
+/* ========================================================== */
+
 /**
  * Initialize Bootstrap tooltips
+ * Dependency Inversion Principle - depends on Bootstrap abstraction
  */
 function initializeTooltips() {
   const tooltipTriggerList = [].slice.call(
@@ -28,17 +32,33 @@ function initializeTooltips() {
   })
 }
 
+/* ========================================================== */
+/* ANIMATION SYSTEM                                          */
+/* ========================================================== */
+
 /**
- * Initialize animations and effects
+ * Initialize animations and visual effects
+ * Open/Closed Principle - extensible for new animations
  */
 function initializeAnimations() {
-  // Fade in cards on load
+  initializeCardAnimations()
+  initializeButtonHoverEffects()
+}
+
+/**
+ * Initialize card fade-in animations
+ */
+function initializeCardAnimations() {
   const cards = document.querySelectorAll('.card')
   cards.forEach((card, index) => {
     card.style.animationDelay = `${index * 0.1}s`
   })
+}
 
-  // Add hover effects to buttons
+/**
+ * Initialize button hover effects
+ */
+function initializeButtonHoverEffects() {
   const buttons = document.querySelectorAll('.btn')
   buttons.forEach(button => {
     button.addEventListener('mouseenter', function () {
@@ -233,7 +253,10 @@ async function copyToClipboard(text) {
       2000
     )
   } catch (err) {
-    console.error('Erro ao copiar texto: ', err)
+    if (process?.env?.NODE_ENV === 'development') {
+      // eslint-disable-next-line no-console
+      console.error('Erro ao copiar texto: ', err)
+    }
     showNotification('Erro ao copiar texto', 'error', 2000)
   }
 }
@@ -263,6 +286,5 @@ window.NeoCargo = {
 
 // Development helpers
 if (process?.env?.NODE_ENV === 'development') {
-  console.log('NeoCargo development mode enabled')
   window.NeoCargo.debug = true
 }
