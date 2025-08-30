@@ -4,7 +4,8 @@
 .como-funciona-section {
   background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  padding: 2rem 0;
 }
 
 .section-title {
@@ -27,6 +28,7 @@
   grid-template-columns: 1fr;
   gap: 4rem;
   margin: 3rem 0;
+  padding: 0 1rem;
 }
 
 /* Etapas do workflow */
@@ -48,20 +50,26 @@
   grid-template-columns: 1fr 1fr;
 }
 
-.workflow-step[data-step='2'] .step-mockup {
-  order: 2;
-}
-
-.workflow-step[data-step='2'] .step-info {
-  order: 1;
-}
-
 /* Mockups - seletor geral primeiro */
 .step-mockup {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
+  min-height: 400px;
+}
+
+/* Informações das etapas - seletor geral primeiro */
+.step-info {
+  padding: 1rem;
+}
+
+.workflow-step[data-step='2'] .step-mockup {
+  order: 2;
+}
+
+.workflow-step[data-step='2'] .step-info {
+  order: 1;
 }
 
 /* Mockup Phone */
@@ -75,6 +83,7 @@
   overflow-y: auto;
   transform: rotate(-5deg);
   transition: var(--transition-normal);
+  flex-shrink: 0;
 }
 
 .mockup-phone:hover {
@@ -90,6 +99,7 @@
   overflow: hidden;
   transform: perspective(1000px) rotateY(5deg);
   transition: var(--transition-normal);
+  flex-shrink: 0;
 }
 
 .mockup-desktop:hover {
@@ -109,6 +119,7 @@
   overflow: hidden;
   transform: rotate(3deg);
   transition: var(--transition-normal);
+  flex-shrink: 0;
 }
 
 .mockup-tablet:hover {
@@ -415,11 +426,6 @@
   margin-bottom: 0.3rem;
 }
 
-/* Informações das etapas - seletor geral primeiro */
-.step-info {
-  padding: 1rem;
-}
-
 .step-badge {
   display: inline-flex;
   align-items: center;
@@ -467,33 +473,13 @@
   margin-bottom: 0.7rem;
 }
 
-/* Setas do workflow */
-.workflow-arrow {
-  position: absolute;
-  right: -2rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 4rem;
-  height: 4rem;
-  background: var(--neocargo-cyan);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 1.2rem;
-  box-shadow: 0 8px 20px rgb(6 182 212 / 30%);
-  z-index: 10;
-  animation: pulse 2s infinite;
-}
-
-.workflow-step:last-child .workflow-arrow {
-  display: none;
-}
-
 /* Benefícios */
 .beneficios-card {
-  background: linear-gradient(135deg, var(--neocargo-navy), var(--neocargo-slate));
+  background: linear-gradient(
+    135deg,
+    var(--neocargo-navy),
+    var(--neocargo-slate)
+  );
   color: #fff;
   padding: 3rem 2rem;
   border-radius: 20px;
@@ -687,6 +673,28 @@
   color: var(--neocargo-navy);
 }
 
+/* Ícones gerais primeiro */
+.btn-action i {
+  font-size: 0.6rem;
+}
+
+.btn-motorista i {
+  font-size: 0.7rem;
+}
+
+.detail-item.location i {
+  color: #10b981;
+  font-size: 0.7rem;
+  width: 12px;
+}
+
+.detail-item.destination i {
+  color: #ef4444;
+  font-size: 0.7rem;
+  width: 12px;
+}
+
+/* Ícones específicos depois */
 .opcao-card.economico .opcao-header i {
   color: #10b981;
 }
@@ -779,32 +787,21 @@
   }
 }
 
-@keyframes pulse {
-  0%,
-  100% {
-    transform: translateY(-50%) scale(1);
-  }
-
-  50% {
-    transform: translateY(-50%) scale(1.1);
-  }
-}
-
 /* Responsividade */
 @media (max-width: 1200px) {
   .workflow-container {
     gap: 3rem;
   }
-  
+
   .workflow-step {
     gap: 2rem;
     padding: 1.5rem;
   }
-  
+
   .mockup-desktop.wide {
     width: 400px;
   }
-  
+
   .mockup-desktop {
     width: 380px;
   }
@@ -814,42 +811,42 @@
   .workflow-container {
     gap: 2.5rem;
   }
-  
+
   .workflow-step {
     gap: 1.5rem;
     padding: 1.5rem;
   }
-  
+
   .mockup-desktop.wide {
     width: 360px;
   }
-  
+
   .mockup-desktop {
     width: 340px;
   }
-  
+
   .mockup-phone {
     width: 280px;
   }
-  
+
   .mockup-tablet {
     width: 300px;
   }
-  
+
   .section-title {
     font-size: 2.2rem;
   }
-  
+
   .section-subtitle {
     font-size: 1.15rem;
   }
-  
+
   /* Ajustes de grid para tablets */
   .metrics-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.8rem;
   }
-  
+
   .admin-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.8rem;
@@ -860,22 +857,38 @@
   .workflow-container {
     gap: 2rem;
     margin: 2rem 0;
+    padding: 0 0.5rem;
   }
-  
+
   .workflow-step {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
     gap: 1.5rem;
-    text-align: center;
-    padding: 1.2rem;
+    padding: 1rem;
+    margin: 0 0.25rem;
   }
 
-  /* Importante: Sempre mockup primeiro, depois texto */
-  .workflow-step .step-mockup {
-    order: 1;
+  /* Remove ordenação específica no mobile - força ordem natural do HTML */
+  .workflow-step[data-step='2'] .step-mockup,
+  .workflow-step[data-step='4'] .step-mockup {
+    order: unset !important;
   }
 
-  .workflow-step .step-info {
-    order: 2;
+  .workflow-step[data-step='2'] .step-info,
+  .workflow-step[data-step='4'] .step-info {
+    order: unset !important;
+  }
+
+  /* Seletores gerais nas media queries */
+  /* stylelint-disable-next-line no-descending-specificity */
+  .step-mockup {
+    min-height: 300px;
+    padding: 0.5rem;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .step-info {
+    padding: 1.2rem 0.8rem;
+    text-align: left;
   }
 
   .mockup-phone {
@@ -896,13 +909,6 @@
     width: 280px;
     transform: rotate(0deg);
     margin: 0 auto;
-  }
-
-  .workflow-arrow {
-    right: 50%;
-    bottom: -2rem;
-    top: unset;
-    transform: translateX(50%) rotate(90deg);
   }
 
   .section-title {
@@ -996,27 +1002,39 @@
     margin: 0 auto;
   }
 
-  /* Step info centralizado no mobile */
-  .step-info {
-    text-align: center;
-    padding: 1.5rem 1rem;
+  .step-info h4 {
+    font-size: 1.3rem;
+    margin-bottom: 0.8rem;
+  }
+
+  .step-info p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
   }
 
   .step-info ul {
+    max-width: 100%;
+    margin: 0;
     text-align: left;
-    max-width: 400px;
-    margin: 0 auto;
+  }
+
+  .step-info li {
+    font-size: 0.9rem;
+    margin-bottom: 0.6rem;
   }
 }
 
 @media (max-width: 640px) {
   .workflow-container {
     gap: 1.8rem;
+    padding: 0 0.25rem;
   }
 
   .workflow-step {
-    padding: 1rem;
+    padding: 0.8rem;
     gap: 1.2rem;
+    margin: 0 0.1rem;
   }
 
   .mockup-phone {
@@ -1144,23 +1162,39 @@
     font-size: 0.68rem;
   }
 
-  /* Step info mobile */
+  /* Step elements mobile - ordem: mockup depois info */
+  .step-mockup {
+    min-height: 250px;
+    padding: 0.4rem;
+  }
+
   .step-info {
-    padding: 1.2rem 0.8rem;
+    padding: 1rem 0.6rem;
   }
 
   .step-badge {
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
   }
 
   .step-info h4 {
-    font-size: 1.4rem;
-    margin-bottom: 0.8rem;
+    font-size: 1.2rem;
+    margin-bottom: 0.7rem;
   }
 
   .step-info p {
     font-size: 0.9rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
+    line-height: 1.5;
+  }
+
+  .step-info ul {
+    max-width: 100%;
+    margin: 0;
+  }
+
+  .step-info li {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
   }
 }
 
@@ -1168,12 +1202,14 @@
   .workflow-container {
     margin: 1.5rem 0;
     gap: 1.5rem;
+    padding: 0 0.1rem;
   }
-  
+
   .workflow-step {
-    padding: 0.8rem;
+    padding: 0.6rem;
     gap: 1rem;
     border-radius: 15px;
+    margin: 0;
   }
 
   .mockup-phone {
@@ -1359,28 +1395,38 @@
     font-size: 0.75rem;
   }
 
-  /* Step info mobile específico */
+  /* Step elements mobile específico - ordem: mockup depois info */
+  .step-mockup {
+    min-height: 200px;
+    padding: 0.3rem;
+  }
+
   .step-info {
-    padding: 1rem 0.8rem;
-    background: #f8fafc;
-    border-radius: 12px;
-    margin-top: 0.5rem;
+    padding: 0.8rem 0.6rem;
+    background: transparent;
+    border-radius: 0;
+    margin-top: 0;
   }
 
   .step-badge {
     padding: 0.4rem 0.8rem;
     font-size: 0.8rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.6rem;
   }
 
   .step-info h4 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     margin-bottom: 0.6rem;
   }
 
   .step-info p {
     font-size: 0.85rem;
-    margin-bottom: 0.8rem;
+    margin-bottom: 0.7rem;
+    line-height: 1.4;
+  }
+
+  .step-info ul {
+    margin: 0;
   }
 
   .step-info li {
@@ -1420,20 +1466,13 @@
     max-width: 180px;
     padding: 0.7rem 1.5rem;
   }
-
-  /* Workflow arrow mobile */
-  .workflow-arrow {
-    bottom: -1.5rem;
-    width: 3rem;
-    height: 3rem;
-    font-size: 1rem;
-  }
 }
 
 @media (max-width: 360px) {
   .workflow-step {
-    padding: 0.6rem;
+    padding: 0.4rem;
     gap: 0.8rem;
+    margin: 0;
   }
 
   .mockup-phone {
@@ -1508,19 +1547,34 @@
   }
 
   .step-info {
-    padding: 0.8rem 0.6rem;
+    padding: 0.6rem 0.4rem;
+  }
+
+  .step-mockup {
+    min-height: 180px;
+    padding: 0.2rem;
+  }
+
+  .step-badge {
+    padding: 0.35rem 0.7rem;
+    font-size: 0.75rem;
+    margin-bottom: 0.5rem;
   }
 
   .step-info h4 {
-    font-size: 1.1rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
   }
 
   .step-info p {
     font-size: 0.8rem;
+    margin-bottom: 0.6rem;
+    line-height: 1.4;
   }
 
   .step-info li {
     font-size: 0.75rem;
+    margin-bottom: 0.35rem;
   }
 
   .btn-motorista {
@@ -1793,10 +1847,6 @@
   box-shadow: 0 4px 15px rgb(239 68 68 / 30%);
 }
 
-.btn-action i {
-  font-size: 0.6rem;
-}
-
 /* Dashboard específico do Motorista */
 .mockup-content.motorista-dashboard {
   padding: 1rem;
@@ -1994,18 +2044,6 @@
   padding-left: 0.2rem;
 }
 
-.detail-item.location i {
-  color: #10b981;
-  font-size: 0.7rem;
-  width: 12px;
-}
-
-.detail-item.destination i {
-  color: #ef4444;
-  font-size: 0.7rem;
-  width: 12px;
-}
-
 /* Instruções Especiais */
 .instrucoes-especiais {
   margin-bottom: 1rem;
@@ -2054,8 +2092,4 @@
   background: #059669;
   transform: translateY(-1px);
   box-shadow: 0 4px 15px rgb(16 185 129 / 30%);
-}
-
-.btn-motorista i {
-  font-size: 0.7rem;
 }
