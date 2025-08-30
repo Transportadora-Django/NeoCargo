@@ -1,0 +1,535 @@
+<!-- Como Funciona Section -->
+<section class="como-funciona-section py-5">
+  <div class="container">
+    <!-- Header da Seção -->
+    <div class="row mb-5">
+      <div class="col-12 text-center">
+        <h2 class="section-title mb-3">Como funciona o NeoCargo</h2>
+        <p class="section-subtitle">
+          O NeoCargo conecta <strong>Clientes, Gerentes, Motoristas e Donos</strong> em um fluxo integrado para simplificar a gestão de fretes
+        </p>
+      </div>
+    </div>
+
+    <!-- Fluxo Visual -->
+    <div class="workflow-container">
+      <!-- Etapa 1: Cliente -->
+      <div class="workflow-step" data-step="1">
+        <div class="step-mockup">
+          <div class="mockup-phone">
+            <div class="mockup-header bg-neocargo-cyan">
+              <span class="mockup-title">NeoCargo - Solicitar Frete</span>
+              <div class="mockup-user-icon">
+                <i class="fas fa-user"></i>
+              </div>
+            </div>
+            <div class="mockup-content">
+              <!-- Formulário Principal -->
+              <div class="cotacao-form">
+                <div class="form-title">
+                  <i class="fas fa-cube"></i>
+                  <span>Solicitar Cotação de Frete</span>
+                </div>
+                <p class="form-subtitle">Preencha os dados da sua carga para receber as melhores opções</p>
+                
+                <div class="form-group-mock">
+                  <label>Cidade de Origem</label>
+                  <div class="input-mock">São Paulo, SP</div>
+                </div>
+                
+                <div class="form-group-mock">
+                  <label>Cidade de Destino</label>
+                  <div class="input-mock">Rio de Janeiro, RJ</div>
+                </div>
+                
+                <div class="form-row-aligned">
+                  <div class="form-group-inline">
+                    <label>Peso da Carga (kg)</label>
+                    <div class="input-mock-inline">494</div>
+                  </div>
+                  <div class="form-group-inline">
+                    <label>Prazo Desejado (dias)</label>
+                    <div class="input-mock-inline">3</div>
+                  </div>
+                </div>
+                
+                <div class="form-group-mock">
+                  <label>Observações (opcional)</label>
+                  <div class="textarea-mock">Informações adicionais sobre a carga, endereços específicos, etc.</div>
+                </div>
+                
+                <button class="btn-mock primary gerar-cotacao">
+                  <i class="fas fa-calculator"></i>
+                  Gerar Cotação
+                </button>
+              </div>
+              
+              <!-- Opções Disponíveis -->
+              <div class="opcoes-section">
+                <h6 class="opcoes-title">Opções Disponíveis</h6>
+                
+                <div class="opcao-card economico">
+                  <div class="opcao-header">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span>Mais Econômico</span>
+                  </div>
+                  <p class="opcao-desc">Melhor preço com prazo estendido</p>
+                  <div class="opcao-details">
+                    <div class="detail-row">
+                      <span>Preço:</span>
+                      <strong>R$ 837,60</strong>
+                    </div>
+                    <div class="detail-row">
+                      <span>Prazo:</span>
+                      <strong>5-7 dias</strong>
+                    </div>
+                    <div class="detail-row">
+                      <span>Veículo:</span>
+                      <strong>Caminhão 3/4</strong>
+                    </div>
+                  </div>
+                  <button class="btn-opcao selected">Selecionar Esta Opção</button>
+                </div>
+                
+                <div class="opcao-card rapido">
+                  <div class="opcao-header">
+                    <i class="fas fa-bolt"></i>
+                    <span>Mais Rápido</span>
+                  </div>
+                  <p class="opcao-desc">Entrega expressa com prioridade</p>
+                  <div class="opcao-details">
+                    <div class="detail-row">
+                      <span>Preço:</span>
+                      <strong>R$ 1361,10</strong>
+                    </div>
+                    <div class="detail-row">
+                      <span>Prazo:</span>
+                      <strong>1-2 dias</strong>
+                    </div>
+                    <div class="detail-row">
+                      <span>Veículo:</span>
+                      <strong>Van Expressa</strong>
+                    </div>
+                  </div>
+                  <button class="btn-opcao">Selecionar Esta Opção</button>
+                </div>
+                
+                <div class="opcao-card custo-beneficio">
+                  <div class="opcao-header">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Melhor Custo-Benefício</span>
+                  </div>
+                  <p class="opcao-desc">Equilíbrio ideal entre preço e prazo</p>
+                  <div class="opcao-details">
+                    <div class="detail-row">
+                      <span>Preço:</span>
+                      <strong>R$ 1047,00</strong>
+                    </div>
+                    <div class="detail-row">
+                      <span>Prazo:</span>
+                      <strong>3-4 dias</strong>
+                    </div>
+                    <div class="detail-row">
+                      <span>Veículo:</span>
+                      <strong>Caminhão Toco</strong>
+                    </div>
+                  </div>
+                  <button class="btn-opcao">Selecionar Esta Opção</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="step-info">
+          <div class="step-badge">
+            <i class="fas fa-user"></i>
+            <span>Cliente</span>
+          </div>
+          <h4>Cria Solicitação de Frete</h4>
+          <p>O cliente informa peso, rota e prazo, escolhendo entre três modalidades:</p>
+          <ul class="modalidades-list">
+            <li><i class="fas fa-dollar-sign text-success"></i> <strong>Mais Econômico</strong> - prazo maior, menor preço</li>
+            <li><i class="fas fa-bolt text-warning"></i> <strong>Mais Rápido</strong> - prazo curto, preço maior</li>
+            <li><i class="fas fa-check-circle text-neocargo-cyan"></i> <strong>Custo-Benefício</strong> - equilíbrio entre preço e prazo</li>
+          </ul>
+        </div>
+
+        <!-- Seta para próxima etapa -->
+        <div class="workflow-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Etapa 2: Gerente -->
+      <div class="workflow-step" data-step="2">
+        <div class="step-mockup">
+          <div class="mockup-desktop wide">
+            <div class="mockup-header bg-neocargo-navy">
+              <div class="mockup-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span class="mockup-title">Dashboard do Gerente</span>
+              <div class="mockup-user-icon">
+                <i class="fas fa-user-tie"></i>
+              </div>
+            </div>
+            <div class="mockup-content dashboard">
+              <!-- Header do Dashboard -->
+              <div class="dashboard-header">
+                <h5>Dashboard do Gerente</h5>
+                <p class="dashboard-subtitle">Gerencie frota, aprove pedidos e configure o sistema</p>
+              </div>
+              
+              <!-- Navegação por Abas -->
+              <div class="dashboard-tabs">
+                <div class="tab-item">Frota</div>
+                <div class="tab-item active">Pedidos</div>
+                <div class="tab-item">Configurações</div>
+                <div class="tab-item">Relatórios</div>
+              </div>
+              
+              <!-- Métricas Cards -->
+              <div class="metrics-grid">
+                <div class="metric-card green">
+                  <div class="metric-value">R$ 6.300</div>
+                  <div class="metric-label">Lucro do Mês</div>
+                </div>
+                <div class="metric-card blue">
+                  <div class="metric-value">15</div>
+                  <div class="metric-label">Pedidos</div>
+                </div>
+                <div class="metric-card purple">
+                  <div class="metric-value">R$ 18.500</div>
+                  <div class="metric-label">Receita</div>
+                </div>
+                <div class="metric-card orange">
+                  <div class="metric-value">34.1%</div>
+                  <div class="metric-label">Margem</div>
+                </div>
+              </div>
+              
+              <!-- Pedidos Pendentes -->
+              <div class="pending-section">
+                <div class="section-header">
+                  <div class="section-icon">
+                    <i class="fas fa-clock"></i>
+                  </div>
+                  <div class="section-info">
+                    <h6>Pedidos Pendentes de Aprovação</h6>
+                    <p>Aprove ou rejeite pedidos de clientes</p>
+                  </div>
+                </div>
+                
+                <div class="pedido-item">
+                  <div class="pedido-info">
+                    <div class="pedido-header">
+                      <strong>Pedido #001</strong>
+                      <span class="pedido-price">R$ 850.00</span>
+                    </div>
+                    <div class="pedido-details">
+                      <div class="detail-line">Cliente: Empresa ABC Ltda</div>
+                      <div class="detail-line">São Paulo, SP → Rio de Janeiro, RJ</div>
+                      <div class="detail-line">Peso: 500kg | Prazo: 3 dias</div>
+                      <div class="detail-line">Data: 24/01/2024</div>
+                    </div>
+                  </div>
+                  <div class="pedido-actions">
+                    <button class="btn-action approve">
+                      <i class="fas fa-check"></i>
+                      Aprovar
+                    </button>
+                    <button class="btn-action reject">
+                      <i class="fas fa-times"></i>
+                      Rejeitar
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="pedido-item">
+                  <div class="pedido-info">
+                    <div class="pedido-header">
+                      <strong>Pedido #002</strong>
+                      <span class="pedido-price">R$ 1200.00</span>
+                    </div>
+                    <div class="pedido-details">
+                      <div class="detail-line">Cliente: Comércio XYZ</div>
+                      <div class="detail-line">Belo Horizonte, MG → Salvador, BA</div>
+                      <div class="detail-line">Peso: 1200kg | Prazo: 5 dias</div>
+                      <div class="detail-line">Data: 25/01/2024</div>
+                    </div>
+                  </div>
+                  <div class="pedido-actions">
+                    <button class="btn-action approve">
+                      <i class="fas fa-check"></i>
+                      Aprovar
+                    </button>
+                    <button class="btn-action reject">
+                      <i class="fas fa-times"></i>
+                      Rejeitar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="step-info">
+          <div class="step-badge">
+            <i class="fas fa-user-tie"></i>
+            <span>Gerente</span>
+          </div>
+          <h4>Revisa e Aprova Solicitações</h4>
+          <p>O gerente analisa as solicitações e toma as decisões:</p>
+          <ul>
+            <li><i class="fas fa-eye text-neocargo-cyan"></i> Revisa solicitações pendentes</li>
+            <li><i class="fas fa-user-check text-success"></i> Atribui motoristas da sede correta</li>
+            <li><i class="fas fa-shield-alt text-neocargo-navy"></i> Gerencia permissões específicas</li>
+          </ul>
+        </div>
+
+        <!-- Seta para próxima etapa -->
+        <div class="workflow-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Etapa 3: Motorista -->
+      <div class="workflow-step" data-step="3">
+        <div class="step-mockup">
+          <div class="mockup-tablet">
+            <div class="mockup-header bg-success">
+              <span class="mockup-title">Dashboard do Motorista</span>
+              <div class="mockup-user-icon">
+                <i class="fas fa-truck"></i>
+              </div>
+            </div>
+            <div class="mockup-content motorista-dashboard">
+              <!-- Header do Dashboard -->
+              <div class="dashboard-header">
+                <h5>Dashboard do Motorista</h5>
+                <p class="dashboard-subtitle">Gerencie suas atribuições e atualize o status das entregas</p>
+              </div>
+              
+              <!-- Navegação por Abas -->
+              <div class="motorista-tabs">
+                <div class="tab-item active">
+                  <span>Novas Atribuições</span>
+                  <span class="notification-badge">1</span>
+                </div>
+                <div class="tab-item">
+                  <span>Em Andamento</span>
+                </div>
+                <div class="tab-item">
+                  <span>Histórico</span>
+                </div>
+              </div>
+              
+              <!-- Seção Novas Atribuições -->
+              <div class="novas-atribuicoes-section">
+                <div class="section-header-motorista">
+                  <div class="section-icon-motorista">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                  <div class="section-info-motorista">
+                    <h6>Novas Atribuições</h6>
+                    <p>Aceite ou rejeite as atribuições recebidas</p>
+                  </div>
+                </div>
+                
+                <div class="entrega-card-motorista">
+                  <div class="entrega-header-motorista">
+                    <div class="pedido-info-left">
+                      <strong>Pedido #001</strong>
+                      <span class="status-badge-motorista pendente">
+                        <i class="fas fa-clock"></i>
+                        Pendente
+                      </span>
+                    </div>
+                    <div class="atribuido-date">Atribuído em 24/01/2024</div>
+                  </div>
+                  
+                  <div class="entrega-details-motorista">
+                    <div class="detail-item">
+                      <span class="detail-label">Cliente:</span>
+                      <span class="detail-value">Empresa ABC Ltda</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Telefone:</span>
+                      <span class="detail-value">+55 11 99999-1234</span>
+                    </div>
+                    <div class="detail-item location">
+                      <i class="fas fa-map-marker-alt"></i>
+                      <span>São Paulo, SP</span>
+                    </div>
+                    <div class="detail-item destination">
+                      <i class="fas fa-flag-checkered"></i>
+                      <span>Rio de Janeiro, RJ</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Peso:</span>
+                      <span class="detail-value">500kg | Prazo: 2 dias</span>
+                    </div>
+                    <div class="detail-item">
+                      <span class="detail-label">Veículo:</span>
+                      <span class="detail-value">Mercedes Sprinter - ABC-1234</span>
+                    </div>
+                  </div>
+                  
+                  <div class="instrucoes-especiais">
+                    <div class="alert-warning">
+                      <strong>Instruções especiais:</strong> Carga frágil - manuseio cuidadoso
+                    </div>
+                  </div>
+                  
+                  <div class="entrega-actions-motorista">
+                    <button class="btn-motorista aceitar">
+                      <i class="fas fa-check"></i>
+                      Aceitar
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="step-info">
+          <div class="step-badge">
+            <i class="fas fa-truck"></i>
+            <span>Motorista</span>
+          </div>
+          <h4>Gerencia Entregas Atribuídas</h4>
+          <p>O motorista recebe atribuições da empresa e gerencia as entregas:</p>
+          <ul>
+            <li><i class="fas fa-bell text-warning"></i> Recebe notificações de novas atribuições</li>
+            <li><i class="fas fa-tasks text-neocargo-cyan"></i> Gerencia entregas em andamento</li>
+            <li><i class="fas fa-map-route text-success"></i> Acessa detalhes completos da rota</li>
+            <li><i class="fas fa-phone text-neocargo-navy"></i> Contato direto com o cliente</li>
+          </ul>
+        </div>
+
+        <!-- Seta para próxima etapa -->
+        <div class="workflow-arrow">
+          <i class="fas fa-arrow-right"></i>
+        </div>
+      </div>
+
+      <!-- Etapa 4: Dono -->
+      <div class="workflow-step" data-step="4">
+        <div class="step-mockup">
+          <div class="mockup-desktop wide">
+            <div class="mockup-header bg-neocargo-slate">
+              <div class="mockup-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span class="mockup-title">Painel Administrativo</span>
+              <div class="mockup-user-icon">
+                <i class="fas fa-crown"></i>
+              </div>
+            </div>
+            <div class="mockup-content">
+              <div class="admin-grid">
+                <div class="admin-card">
+                  <h6><i class="fas fa-users"></i> Gerenciar Usuários</h6>
+                  <div class="user-item">
+                    <span>João Silva</span>
+                    <select class="role-select">
+                      <option>Motorista</option>
+                      <option selected>Gerente</option>
+                      <option>Dono</option>
+                    </select>
+                  </div>
+                </div>
+                
+                <div class="admin-card">
+                  <h6><i class="fas fa-shield-alt"></i> Permissões</h6>
+                  <div class="permission-item">
+                    <label>
+                      <input type="checkbox" checked> Pedidos
+                    </label>
+                    <label>
+                      <input type="checkbox" checked> Rotas
+                    </label>
+                    <label>
+                      <input type="checkbox"> Financeiro
+                    </label>
+                  </div>
+                </div>
+                
+                <div class="admin-card">
+                  <h6><i class="fas fa-chart-line"></i> Relatórios</h6>
+                  <div class="metric-small">
+                    <span>Entregas Hoje:</span>
+                    <strong>15</strong>
+                  </div>
+                  <div class="metric-small">
+                    <span>Receita Mensal:</span>
+                    <strong>R$ 45.000</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="step-info">
+          <div class="step-badge">
+            <i class="fas fa-crown"></i>
+            <span>Dono</span>
+          </div>
+          <h4>Gerencia Permissões e Sistema</h4>
+          <p>O dono garante a segurança e controle total:</p>
+          <ul>
+            <li><i class="fas fa-users-cog text-neocargo-cyan"></i> Gerencia permissões de usuários</li>
+            <li><i class="fas fa-user-shield text-success"></i> Pode promover usuários a Gerente ou Dono</li>
+            <li><i class="fas fa-lock text-neocargo-navy"></i> Garante a segurança do sistema</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Benefícios -->
+    <div class="row mt-5">
+      <div class="col-12">
+        <div class="beneficios-card">
+          <h4 class="text-center mb-4">Esse fluxo garante:</h4>
+          <div class="row">
+            <div class="col-md-4 text-center">
+              <div class="beneficio-item">
+                <div class="beneficio-icon">
+                  <i class="fas fa-eye"></i>
+                </div>
+                <h6>Transparência</h6>
+                <p>para o cliente</p>
+              </div>
+            </div>
+            <div class="col-md-4 text-center">
+              <div class="beneficio-item">
+                <div class="beneficio-icon">
+                  <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <h6>Eficiência</h6>
+                <p>para o gerente</p>
+              </div>
+            </div>
+            <div class="col-md-4 text-center">
+              <div class="beneficio-item">
+                <div class="beneficio-icon">
+                  <i class="fas fa-mobile-alt"></i>
+                </div>
+                <h6>Praticidade</h6>
+                <p>para o motorista</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
