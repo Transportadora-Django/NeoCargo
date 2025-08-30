@@ -193,7 +193,8 @@
 }
 
 @keyframes heartbeat {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
 
@@ -299,7 +300,8 @@
 /* Heart Animation - Deprecated (removido do footer) */
 
 @keyframes heartbeat {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
 
