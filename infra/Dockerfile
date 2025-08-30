@@ -23,14 +23,29 @@ RUN apt-get update \
 COPY backend/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project
+# Copy backend first
 COPY backend/ /app/backend/
+
+# Copy ui package.json first to leverage Docker layer caching
+COPY ui/package.json /app/ui/package.json
+
+# Install frontend dependencies in a separate step to ensure they're always installed
+RUN cd /app/ui && \
+    npm install && \
+    echo "=== NPM INSTALL COMPLETED ===" && \
+    ls -la node_modules/.bin/ && \
+    echo "=== ESLINT VERSION ===" && \
+    ./node_modules/.bin/eslint --version
+
+# Copy the rest of ui files
 COPY ui/ /app/ui/
 
-# Install frontend dependencies automatically
-RUN if [ -f "/app/ui/package.json" ]; then \
-        cd /app/ui && npm install; \
-    fi
+# Verify frontend tools are available after copying all files
+RUN cd /app/ui && \
+    echo "=== FINAL VERIFICATION ===" && \
+    ls -la && \
+    ls -la node_modules/.bin/ | head -5 && \
+    ./node_modules/.bin/eslint --version
 
 # Set working directory to backend
 WORKDIR /app/backend

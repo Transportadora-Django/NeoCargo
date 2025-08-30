@@ -98,7 +98,10 @@ lint: ## Verifica qualidade do código
 	@$(DOCKER_COMPOSE) run --rm web ruff format --check .
 	@echo "$(YELLOW)Frontend (ESLint/Prettier/Stylelint/HTMLHint)...$(NC)"
 	@if [ -f "ui/package.json" ]; then \
-		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint && npm run lint:css && npm run lint:html && npm run format:check"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:css"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:html"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run format:check"; \
 	else \
 		echo "$(YELLOW)Frontend não configurado$(NC)"; \
 	fi
@@ -117,7 +120,9 @@ fix: ## Corrige problemas automaticamente
 	@$(DOCKER_COMPOSE) run --rm web ruff check --fix .
 	@$(DOCKER_COMPOSE) run --rm web ruff format .
 	@if [ -f "ui/package.json" ]; then \
-		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:fix && npm run lint:css:fix && npm run format"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:fix"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:css:fix"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run format"; \
 	fi
 	@echo "$(GREEN)✅ Correções aplicadas!$(NC)"
 
