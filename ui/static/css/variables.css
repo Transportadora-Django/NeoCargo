@@ -2,36 +2,36 @@
 
 :root {
   /* Cores da Logo NeoCargo */
-  --neocargo-cyan: #06B6D4;
-  --neocargo-navy: #1D3557;
-  --neocargo-white: #ffffff;
-  
+  --neocargo-cyan: #06b6d4;
+  --neocargo-navy: #1d3557;
+  --neocargo-white: #fff;
+
   /* Novas cores para melhor contraste */
-  --neocargo-dark-slate: #0F172A;
-  --neocargo-slate: #1E293B;
+  --neocargo-dark-slate: #0f172a;
+  --neocargo-slate: #1e293b;
   --neocargo-light-slate: #334155;
-  
+
   /* Cores Bootstrap customizadas */
-  --primary-color: #06B6D4;
-  --secondary-color: #1D3557;
+  --primary-color: #06b6d4;
+  --secondary-color: #1d3557;
   --success-color: #198754;
   --info-color: #0dcaf0;
   --warning-color: #ffc107;
   --danger-color: #dc3545;
   --light-color: #f8f9fa;
   --dark-color: #212529;
-  
+
   /* Tamanhos e espaçamentos */
   --navbar-height: 70px;
   --border-radius: 8px;
   --border-radius-lg: 12px;
   --border-radius-xl: 20px;
-  
+
   /* Sombras */
-  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
-  --shadow-lg: 0 10px 30px rgba(15, 23, 42, 0.4);
-  
+  --shadow-sm: 0 2px 10px rgb(0 0 0 / 8%);
+  --shadow-md: 0 4px 20px rgb(0 0 0 / 12%);
+  --shadow-lg: 0 10px 30px rgb(15 23 42 / 40%);
+
   /* Transições */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
