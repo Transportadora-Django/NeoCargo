@@ -1,36 +1,52 @@
-<!-- Como Funciona Section -->
-<section class="como-funciona-section py-5">
+<!-- ============================================================ -->
+<!-- HOW IT WORKS SECTION COMPONENT                              -->
+<!-- ============================================================ -->
+<section class="como-funciona-section py-5" role="region" aria-labelledby="como-funciona-title">
   <div class="container">
-    <!-- Header da Seção -->
+    <!-- ============================================================ -->
+    <!-- SECTION HEADER                                              -->
+    <!-- ============================================================ -->
     <div class="row mb-5">
       <div class="col-12 text-center">
-        <h2 class="section-title mb-3">Como funciona o NeoCargo</h2>
+        <h2 id="como-funciona-title" class="section-title mb-3">
+          Como funciona o NeoCargo
+        </h2>
         <p class="section-subtitle">
-          O NeoCargo conecta <strong>Clientes, Gerentes, Motoristas e Donos</strong> em um fluxo integrado para simplificar a gestão de fretes
+          O NeoCargo conecta <strong>Clientes, Gerentes, Motoristas e Donos</strong> 
+          em um fluxo integrado para simplificar a gestão de fretes
         </p>
       </div>
     </div>
 
-    <!-- Fluxo Visual -->
+    <!-- ============================================================ -->
+    <!-- WORKFLOW VISUAL REPRESENTATION                              -->
+    <!-- ============================================================ -->
     <div class="workflow-container">
-      <!-- Etapa 1: Cliente -->
+      <!-- ============================================================ -->
+      <!-- STEP 1: CUSTOMER REQUEST                                    -->
+      <!-- ============================================================ -->
       <div class="workflow-step" data-step="1">
         <div class="step-mockup">
           <div class="mockup-phone">
+            <!-- Mockup Header -->
             <div class="mockup-header bg-neocargo-cyan">
               <span class="mockup-title">NeoCargo - Solicitar Frete</span>
               <div class="mockup-user-icon">
-                <i class="fas fa-user"></i>
+                <i class="fas fa-user" aria-hidden="true"></i>
               </div>
             </div>
+            
+            <!-- Mockup Content -->
             <div class="mockup-content">
-              <!-- Formulário Principal -->
+              <!-- Main Form Section -->
               <div class="cotacao-form">
                 <div class="form-title">
-                  <i class="fas fa-cube"></i>
+                  <i class="fas fa-cube" aria-hidden="true"></i>
                   <span>Solicitar Cotação de Frete</span>
                 </div>
-                <p class="form-subtitle">Preencha os dados da sua carga para receber as melhores opções</p>
+                <p class="form-subtitle">
+                  Preencha os dados da sua carga para receber as melhores opções
+                </p>
                 
                 <div class="form-group-mock">
                   <label>Cidade de Origem</label>

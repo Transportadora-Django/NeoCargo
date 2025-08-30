@@ -1,6 +1,16 @@
-/* NeoCargo - Botões */
+/* ============================================================ */
 
-/* Botões Base */
+/* BUTTON COMPONENT SYSTEM                                     */
+
+/* ============================================================ */
+
+/* Centralized button styles following Clean Code principles   */
+
+/* ========================================================== */
+
+/* BASE BUTTON STYLES                                        */
+
+/* ========================================================== */
 .btn {
   border-radius: var(--border-radius);
   font-weight: 500;
@@ -11,7 +21,13 @@
   transform: translateY(-1px);
 }
 
-/* Botões NeoCargo Primários */
+/* ========================================================== */
+
+/* PRIMARY BUTTON VARIANTS                                   */
+
+/* ========================================================== */
+
+/* Primary NeoCargo Button */
 .btn-neocargo-primary {
   background: var(--neocargo-cyan);
   border: 2px solid var(--neocargo-cyan);
@@ -29,7 +45,13 @@
   box-shadow: 0 6px 20px rgb(6 182 212 / 40%);
 }
 
-/* Botões NeoCargo Outline */
+/* ========================================================== */
+
+/* OUTLINE BUTTON VARIANTS                                   */
+
+/* ========================================================== */
+
+/* NeoCargo Outline Button */
 .btn-neocargo-outline {
   background: transparent;
   border: 2px solid var(--neocargo-cyan);
@@ -46,7 +68,7 @@
   box-shadow: 0 6px 20px rgb(6 182 212 / 40%);
 }
 
-/* Botões Outline para Cards */
+/* Card-specific Outline Button */
 .btn-outline-neocargo-cyan {
   border-color: var(--neocargo-cyan);
   color: var(--neocargo-cyan);

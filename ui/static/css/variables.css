@@ -1,17 +1,35 @@
-/* NeoCargo - Variáveis CSS */
+/* ============================================================ */
+
+/* NEOCARGO CSS CUSTOM PROPERTIES                              */
+
+/* ============================================================ */
+
+/* Design System Variables following Clean Code principles     */
 
 :root {
-  /* Cores da Logo NeoCargo */
+  /* ========================================================== */
+
+  /* BRAND COLOR PALETTE                                       */
+
+  /* ========================================================== */
+
+  /* Primary Brand Colors */
   --neocargo-cyan: #06b6d4;
   --neocargo-navy: #1d3557;
   --neocargo-white: #fff;
 
-  /* Novas cores para melhor contraste */
+  /* Extended Brand Colors */
   --neocargo-dark-slate: #0f172a;
   --neocargo-slate: #1e293b;
   --neocargo-light-slate: #334155;
 
-  /* Cores Bootstrap customizadas */
+  /* ========================================================== */
+
+  /* SEMANTIC COLOR SYSTEM                                     */
+
+  /* ========================================================== */
+
+  /* Bootstrap Compatible Color Scheme */
   --primary-color: #06b6d4;
   --secondary-color: #1d3557;
   --success-color: #198754;
@@ -21,18 +39,38 @@
   --light-color: #f8f9fa;
   --dark-color: #212529;
 
-  /* Tamanhos e espaçamentos */
+  /* ========================================================== */
+
+  /* LAYOUT MEASUREMENTS                                       */
+
+  /* ========================================================== */
+
+  /* Component Dimensions */
   --navbar-height: 70px;
+  
+  /* Border Radius Scale */
   --border-radius: 8px;
   --border-radius-lg: 12px;
   --border-radius-xl: 20px;
 
-  /* Sombras */
+  /* ========================================================== */
+
+  /* SHADOW SYSTEM                                             */
+
+  /* ========================================================== */
+
+  /* Elevation Levels */
   --shadow-sm: 0 2px 10px rgb(0 0 0 / 8%);
   --shadow-md: 0 4px 20px rgb(0 0 0 / 12%);
   --shadow-lg: 0 10px 30px rgb(15 23 42 / 40%);
 
-  /* Transições */
+  /* ========================================================== */
+
+  /* ANIMATION TIMING                                          */
+
+  /* ========================================================== */
+
+  /* Transition Duration Scale */
   --transition-fast: 0.2s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;

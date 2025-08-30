@@ -1,16 +1,20 @@
 {% extends 'base.html' %}
 {% load static %}
 
+<!-- ============================================================ -->
+<!-- HOME PAGE TEMPLATE                                           -->
+<!-- ============================================================ -->
+
 {% block title %}Início - NeoCargo{% endblock %}
 
 {% block content %}
-<!-- Hero Section -->
+<!-- ============================================================ -->
+<!-- HERO SECTION                                                 -->
+<!-- ============================================================ -->
 {% include 'home/components/hero.html' %}
 
-
-<!-- Como Funciona Section -->
+<!-- ============================================================ -->
+<!-- HOW IT WORKS SECTION                                         -->
+<!-- ============================================================ -->
 {% include 'home/components/como-funciona.html' %}
-
-<!-- Dashboard Section -->
-{% include 'home/components/dashboard.html' %}
 {% endblock %}

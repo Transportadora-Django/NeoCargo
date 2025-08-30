@@ -1,5 +1,16 @@
-/* NeoCargo - Navbar Styles */
+/* ============================================================ */
 
+/* NAVIGATION BAR COMPONENT STYLES                             */
+
+/* ============================================================ */
+
+/* Following Single Responsibility Principle for navbar only   */
+
+/* ========================================================== */
+
+/* MAIN NAVBAR CONTAINER                                     */
+
+/* ========================================================== */
 .navbar-neocargo {
   background: linear-gradient(
     135deg,
@@ -12,6 +23,11 @@
   height: var(--navbar-height);
 }
 
+/* ========================================================== */
+
+/* BRAND LOGO COMPONENT                                      */
+
+/* ========================================================== */
 .navbar-logo {
   height: 35px;
   width: auto;
@@ -25,6 +41,11 @@
   transform: scale(1.02);
 }
 
+/* ========================================================== */
+
+/* BRAND TEXT STYLING                                        */
+
+/* ========================================================== */
 .navbar-neocargo .navbar-brand {
   font-size: 1.5rem;
   font-weight: bold;

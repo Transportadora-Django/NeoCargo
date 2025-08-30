@@ -1,70 +1,103 @@
 {% load static %}
-<!-- NeoCargo Hero Section -->
-<section class="hero-banner">
-  <!-- Background Elements -->
-  <div class="hero-background">
+
+<!-- ============================================================ -->
+<!-- HERO BANNER COMPONENT                                       -->
+<!-- ============================================================ -->
+<section class="hero-banner" role="banner">
+  <!-- ============================================================ -->
+  <!-- BACKGROUND DECORATIVE ELEMENTS                              -->
+  <!-- ============================================================ -->
+  <div class="hero-background" aria-hidden="true">
     <div class="hero-symbols">
       <div class="hero-symbol hero-symbol-1">
-        <img src="{% static 'assets/Symbol-NeoCargo.svg' %}" alt="">
+        <img 
+          src="{% static 'assets/Symbol-NeoCargo.svg' %}" 
+          alt=""
+          role="presentation"
+        >
       </div>
       <div class="hero-symbol hero-symbol-2">
-        <img src="{% static 'assets/Symbol-NeoCargo.svg' %}" alt="">
+        <img 
+          src="{% static 'assets/Symbol-NeoCargo.svg' %}" 
+          alt=""
+          role="presentation"
+        >
       </div>
       <div class="hero-symbol hero-symbol-3">
-        <img src="{% static 'assets/Symbol-NeoCargo.svg' %}" alt="">
+        <img 
+          src="{% static 'assets/Symbol-NeoCargo.svg' %}" 
+          alt=""
+          role="presentation"
+        >
       </div>
     </div>
   </div>
 
-  <!-- Floating Elements -->
-  <div class="hero-decorative">
+  <!-- Floating Animation Elements -->
+  <div class="hero-decorative" aria-hidden="true">
     <div class="floating-element"></div>
     <div class="floating-element"></div>
     <div class="floating-element"></div>
   </div>
 
+  <!-- ============================================================ -->
+  <!-- MAIN HERO CONTENT                                           -->
+  <!-- ============================================================ -->
   <div class="container">
     <div class="hero-content">
       <!-- Hero Text Content -->
       <div class="hero-text">
+        <!-- Main Heading -->
         <h1 class="hero-title">
           Gestão <span class="highlight">inteligente</span><br>
           de <span class="highlight">fretes</span>
         </h1>
         
+        <!-- Description -->
         <p class="hero-description">
           Clientes, motoristas e gerentes conectados em uma única plataforma de gestão de fretes.
         </p>
 
+        <!-- Call-to-Action Buttons -->
         <div class="hero-buttons">
-          <a href="#" class="btn-hero-primary" onclick="alert('Em desenvolvimento')">
-            <i class="fas fa-user-plus me-2"></i>
+          <a 
+            href="#" 
+            class="btn-hero-primary" 
+            onclick="alert('Em desenvolvimento')"
+            role="button"
+          >
+            <i class="fas fa-user-plus me-2" aria-hidden="true"></i>
             Criar Conta
           </a>
-          <a href="#" class="btn-hero-secondary" onclick="alert('Em desenvolvimento')">
-            <i class="fas fa-info-circle me-2"></i>
+          <a 
+            href="#" 
+            class="btn-hero-secondary" 
+            onclick="alert('Em desenvolvimento')"
+            role="button"
+          >
+            <i class="fas fa-info-circle me-2" aria-hidden="true"></i>
             Saiba Mais
           </a>
         </div>
 
-        <!-- Hero Stats -->
+        <!-- Performance Statistics -->
         <div class="hero-stats">
           <div class="stat-item">
-            <span class="stat-number">1000+</span>
+            <span class="stat-number" aria-label="Mais de mil">1000+</span>
             <span class="stat-label">Cargas gerenciadas</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">50+</span>
+            <span class="stat-number" aria-label="Mais de cinquenta">50+</span>
             <span class="stat-label">Empresas atendidas</span>
           </div>
           <div class="stat-item">
-            <span class="stat-number">99%</span>
+            <span class="stat-number" aria-label="Noventa e nove porcento">99%</span>
             <span class="stat-label">Entregas no prazo</span>
           </div>
         </div>
       </div>
 
-      <!-- Hero Visual/Mockup -->
+      <!-- Hero Visual Component -->
       <div class="hero-visual">
         {% include 'home/components/hero-mockup.html' %}
       </div>
