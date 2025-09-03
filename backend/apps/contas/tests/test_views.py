@@ -63,13 +63,16 @@ class SignupViewTest(TestCase):
         # Verifica por mensagens de erro de email em diferentes idiomas
         content = response.content.decode()
         self.assertTrue(
-            any(text in content for text in [
-                "Enter a valid email address",
-                "Digite um endereço de email válido",
-                "email válido",
-                "email address",
-                "endereço de e-mail"
-            ])
+            any(
+                text in content
+                for text in [
+                    "Enter a valid email address",
+                    "Digite um endereço de email válido",
+                    "email válido",
+                    "email address",
+                    "endereço de e-mail",
+                ]
+            )
         )
 
     def test_signup_duplicate_email(self):
@@ -98,16 +101,16 @@ class SignupViewTest(TestCase):
 
         # Deve retornar status 200 (formulário com erro)
         self.assertEqual(response.status_code, 200)
-        
+
         # Verifica se a proteção honeypot funcionou de alguma forma:
         # 1. Mensagem de erro de segurança OU
         # 2. Formulário foi rejeitado (usuário não foi criado)
         messages = list(get_messages(response.wsgi_request))
         has_security_message = any("Erro de segurança" in str(m) for m in messages)
-        
+
         # Se não há mensagem, mas o usuário não foi criado, a proteção funcionou
         user_not_created = not User.objects.filter(email="joao@example.com").exists()
-        
+
         # Pelo menos uma das proteções deve ter funcionado
         self.assertTrue(has_security_message or user_not_created)
 
@@ -171,17 +174,17 @@ class CustomLoginViewTest(TestCase):
 
         # Deve retornar erro
         self.assertEqual(response.status_code, 200)
-        
+
         # Verifica se há erros no formulário
-        self.assertTrue(response.context['form'].errors)
-        
+        self.assertTrue(response.context["form"].errors)
+
         # Verifica se há erros não-específicos de campo (credenciais inválidas)
-        has_non_field_errors = bool(response.context['form'].non_field_errors)
-        
+        has_non_field_errors = bool(response.context["form"].non_field_errors)
+
         # Ou verifica se há classe alert-danger no HTML (indicando erro)
         content = response.content.decode()
         has_error_alert = "alert-danger" in content
-        
+
         # Pelo menos uma das verificações deve ser verdadeira
         self.assertTrue(has_non_field_errors or has_error_alert)
 

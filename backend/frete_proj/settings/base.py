@@ -111,8 +111,8 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # WhiteNoise configuration
 # Use simple static files storage for tests to avoid manifest errors
-if 'test' in sys.argv or 'pytest' in sys.modules or os.getenv('TESTING'):
-    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
+if "test" in sys.argv or "pytest" in sys.modules or os.getenv("TESTING"):
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
     WHITENOISE_USE_FINDERS = True
 else:
     STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

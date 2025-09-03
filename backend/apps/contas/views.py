@@ -70,19 +70,19 @@ class CustomLoginView(LoginView):
         Redireciona baseado no role do usuário.
         """
         user = self.request.user
-        if hasattr(user, 'profile'):
+        if hasattr(user, "profile"):
             profile = user.profile
             if profile.role == Role.CLIENTE:
-                return reverse('dashboard_cliente')
+                return reverse("dashboard_cliente")
             elif profile.role == Role.MOTORISTA:
-                return reverse('dashboard_motorista')
+                return reverse("dashboard_motorista")
             elif profile.role == Role.GERENTE:
-                return reverse('dashboard_gerente')
+                return reverse("dashboard_gerente")
             elif profile.role == Role.OWNER:
-                return reverse('dashboard_owner')
-        
+                return reverse("dashboard_owner")
+
         # Fallback para dashboard_cliente
-        return reverse('dashboard_cliente')
+        return reverse("dashboard_cliente")
 
     def form_valid(self, form):
         """
