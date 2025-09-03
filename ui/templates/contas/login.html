@@ -3,103 +3,105 @@
 
 {% block title %}Login - NeoCargo{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/auth.css' %}">
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="card shadow">
-                <div class="card-body">
-                    <div class="text-center mb-4">
-                        <img src="{% static 'assets/Logo-NeoCargo.svg' %}" alt="NeoCargo" height="50">
-                        <h2 class="h4 mt-3">Entrar</h2>
-                        <p class="text-muted">Acesse sua conta</p>
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <h1 class="auth-title">Entrar</h1>
+                        <p class="auth-subtitle">Acesse sua conta NeoCargo</p>
                     </div>
 
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
-                    <form method="post" novalidate>
-                        {% csrf_token %}
-
-                        <div class="mb-3">
-                            <label for="{{ form.username.id_for_label }}" class="form-label">
-                                E-mail
-                            </label>
-                            <input type="email" 
-                                   class="form-control{% if form.username.errors %} is-invalid{% endif %}" 
-                                   id="{{ form.username.id_for_label }}" 
-                                   name="username" 
-                                   value="{{ form.username.value|default:'' }}"
-                                   placeholder="Digite seu e-mail"
-                                   required>
-                            {% if form.username.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.username.errors %}
-                                        {{ error }}
-                                    {% endfor %}
+                    <div class="auth-body">
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="auth-alert auth-alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
+                                    {{ message }}
                                 </div>
-                            {% endif %}
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="{{ form.password.id_for_label }}" class="form-label">
-                                Senha
-                            </label>
-                            <input type="password" 
-                                   class="form-control{% if form.password.errors %} is-invalid{% endif %}" 
-                                   id="{{ form.password.id_for_label }}" 
-                                   name="password"
-                                   placeholder="Digite sua senha"
-                                   required>
-                            {% if form.password.errors %}
-                                <div class="invalid-feedback">
-                                    {% for error in form.password.errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
-                        </div>
-
-                        {% if form.non_field_errors %}
-                            <div class="alert alert-danger">
-                                {% for error in form.non_field_errors %}
-                                    {{ error }}
-                                {% endfor %}
-                            </div>
+                            {% endfor %}
                         {% endif %}
 
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="remember_me" name="remember_me">
-                            <label class="form-check-label" for="remember_me">
-                                Lembrar-me
-                            </label>
-                        </div>
+                        <form method="post" class="auth-form" novalidate>
+                            {% csrf_token %}
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary btn-lg">
+                            <div class="auth-form-group">
+                                <label for="{{ form.username.id_for_label }}" class="auth-form-label">
+                                    E-mail
+                                </label>
+                                <input type="email" 
+                                       class="auth-form-control{% if form.username.errors %} is-invalid{% endif %}" 
+                                       id="{{ form.username.id_for_label }}" 
+                                       name="username" 
+                                       value="{{ form.username.value|default:'' }}"
+                                       placeholder="Digite seu e-mail"
+                                       required>
+                                {% if form.username.errors %}
+                                    <div class="auth-invalid-feedback">
+                                        {% for error in form.username.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="auth-form-group">
+                                <label for="{{ form.password.id_for_label }}" class="auth-form-label">
+                                    Senha
+                                </label>
+                                <input type="password" 
+                                       class="auth-form-control{% if form.password.errors %} is-invalid{% endif %}" 
+                                       id="{{ form.password.id_for_label }}" 
+                                       name="password"
+                                       placeholder="Digite sua senha"
+                                       required>
+                                {% if form.password.errors %}
+                                    <div class="auth-invalid-feedback">
+                                        {% for error in form.password.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            {% if form.non_field_errors %}
+                                <div class="auth-alert auth-alert-error">
+                                    {% for error in form.non_field_errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            <div class="auth-checkbox">
+                                <input type="checkbox" class="auth-checkbox-input" id="remember_me" name="remember_me">
+                                <label class="auth-checkbox-label" for="remember_me">
+                                    Lembrar-me
+                                </label>
+                            </div>
+
+                            <button type="submit" class="auth-btn-primary">
                                 Entrar
                             </button>
-                        </div>
-                    </form>
+                        </form>
 
-                    <div class="text-center mt-4">
-                        <p class="mb-2">
-                            <a href="{% url 'contas:password_reset' %}" class="text-decoration-none text-muted">
-                                Esqueceu sua senha?
-                            </a>
-                        </p>
-                        <p class="mb-0">
-                            Não tem uma conta? 
-                            <a href="{% url 'contas:signup' %}" class="text-decoration-none">
-                                Criar conta
-                            </a>
-                        </p>
+                        <div class="auth-links">
+                            <p class="mb-2">
+                                <a href="{% url 'contas:password_reset' %}" class="auth-link-muted">
+                                    Esqueceu sua senha?
+                                </a>
+                            </p>
+                            <p class="mb-0">
+                                Não tem uma conta? 
+                                <a href="{% url 'contas:signup' %}" class="auth-link">
+                                    Criar conta
+                                </a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
