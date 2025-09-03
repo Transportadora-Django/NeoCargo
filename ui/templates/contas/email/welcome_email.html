@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bem-vindo ao NeoCargo!</title>
+    <style>
+        .header-logo {
+            max-width: 150px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f8fafc; line-height: 1.6;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc;">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <!-- Main Container -->
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="600" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #1d3557 0%, #1e293b 100%); padding: 40px 30px; text-align: center; border-top: 4px solid #06b6d4; border-radius: 8px 8px 0 0;">
+                            <img src="{% static 'assets/Logo-NeoCargo-White.svg' %}" alt="NeoCargo" class="header-logo">
+                            <p style="color: rgba(255, 255, 255, 0.9); font-size: 18px; margin: 0 0 15px 0;">
+                                Sistema de Gestão de Transportadora
+                            </p>
+                            <div style="background: linear-gradient(90deg, #06b6d4, #0891b2); color: white; padding: 8px 24px; border-radius: 25px; font-size: 14px; font-weight: 600; display: inline-block;">
+                                ✨ Conta criada com sucesso!
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            
+                            <!-- Greeting -->
+                            <h1 style="font-size: 24px; color: #1d3557; margin-bottom: 16px; font-weight: bold; text-align: center;">
+                                🎉 Bem-vindo(a), {{ user.get_full_name|default:user.username }}!
+                            </h1>
+                            
+                            <!-- Welcome Message -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border-left: 4px solid #06b6d4; border-radius: 0 12px 12px 0; margin: 24px 0;">
+                                <tr>
+                                    <td style="padding: 24px; text-align: center;">
+                                        <strong style="color: #1d3557; font-size: 18px;">Sua jornada no NeoCargo começa agora!</strong><br><br>
+                                        <span style="color: #1d3557; font-size: 16px;">Estamos muito felizes em tê-lo(a) conosco. Nossa plataforma foi criada para simplificar e otimizar a gestão de transportes.</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Content -->
+                            <p style="color: #334155; font-size: 16px; margin-bottom: 24px; line-height: 1.7;">
+                                Sua conta foi criada com sucesso e já está pronta para uso. Com o NeoCargo, você pode gerenciar seus fretes, acompanhar entregas e muito mais, tudo em um só lugar.
+                            </p>
+                            
+                            <!-- Features Grid using tables -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 32px 0;">
+                                <tr>
+                                    <td width="48%" style="padding: 10px; vertical-align: top;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;">
+                                            <tr>
+                                                <td style="padding: 24px; text-align: center;">
+                                                    <div style="font-size: 32px; margin-bottom: 16px;">📦</div>
+                                                    <div style="font-size: 18px; font-weight: 600; color: #1d3557; margin-bottom: 8px;">Gestão de Fretes</div>
+                                                    <div style="font-size: 14px; color: #64748b; line-height: 1.5;">Organize e acompanhe todos os seus fretes de forma eficiente</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="4%"></td>
+                                    <td width="48%" style="padding: 10px; vertical-align: top;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;">
+                                            <tr>
+                                                <td style="padding: 24px; text-align: center;">
+                                                    <div style="font-size: 32px; margin-bottom: 16px;">🚚</div>
+                                                    <div style="font-size: 18px; font-weight: 600; color: #1d3557; margin-bottom: 8px;">Rastreamento</div>
+                                                    <div style="font-size: 14px; color: #64748b; line-height: 1.5;">Monitore entregas em tempo real com atualizações automáticas</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr><td colspan="3" style="height: 16px;"></td></tr>
+                                <tr>
+                                    <td width="48%" style="padding: 10px; vertical-align: top;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;">
+                                            <tr>
+                                                <td style="padding: 24px; text-align: center;">
+                                                    <div style="font-size: 32px; margin-bottom: 16px;">📊</div>
+                                                    <div style="font-size: 18px; font-weight: 600; color: #1d3557; margin-bottom: 8px;">Relatórios</div>
+                                                    <div style="font-size: 14px; color: #64748b; line-height: 1.5;">Acesse dados detalhados para tomada de decisões estratégicas</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td width="4%"></td>
+                                    <td width="48%" style="padding: 10px; vertical-align: top;">
+                                        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background: #ffffff; border: 2px solid #e2e8f0; border-radius: 12px;">
+                                            <tr>
+                                                <td style="padding: 24px; text-align: center;">
+                                                    <div style="font-size: 32px; margin-bottom: 16px;">⚡</div>
+                                                    <div style="font-size: 18px; font-weight: 600; color: #1d3557; margin-bottom: 8px;">Automação</div>
+                                                    <div style="font-size: 14px; color: #64748b; line-height: 1.5;">Automatize processos e economize tempo valioso</div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Button -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 40px 0;">
+                                <tr>
+                                    <td align="center">
+                                        <a href="{{ protocol }}://{{ domain }}/dashboard/" style="display: inline-block; background: linear-gradient(135deg, #06b6d4, #0891b2); color: #ffffff; text-decoration: none; padding: 18px 40px; border-radius: 12px; font-weight: 600; font-size: 18px;">
+                                            🚀 Acessar Meu Dashboard
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Next Steps -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f8fafc; border-radius: 12px; margin: 32px 0;">
+                                <tr>
+                                    <td style="padding: 24px;">
+                                        <h4 style="color: #1d3557; font-size: 18px; margin-bottom: 16px; margin-top: 0;">🎯 Próximos passos recomendados:</h4>
+                                        <ul style="margin: 0; padding-left: 24px; color: #334155;">
+                                            <li style="margin-bottom: 8px; line-height: 1.6;"><strong>Complete seu perfil</strong> - Adicione informações da sua empresa</li>
+                                            <li style="margin-bottom: 8px; line-height: 1.6;"><strong>Explore a plataforma</strong> - Familiarize-se com todas as funcionalidades</li>
+                                            <li style="margin-bottom: 8px; line-height: 1.6;"><strong>Configure suas preferências</strong> - Personalize a experiência para suas necessidades</li>
+                                            <li style="margin-bottom: 8px; line-height: 1.6;"><strong>Cadastre seu primeiro frete</strong> - Comece a usar o sistema imediatamente</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Divider -->
+                            <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: 32px 0;">
+                                <tr>
+                                    <td style="height: 2px; background: linear-gradient(90deg, transparent, #06b6d4, transparent);"></td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Additional Content -->
+                            <p style="color: #334155; font-size: 16px; margin-bottom: 24px; line-height: 1.7;">
+                                <strong>💡 Dica:</strong> Mantenha seus dados de login em segurança e explore nossa central de ajuda caso tenha dúvidas. Nossa equipe está sempre disponível para ajudar!
+                            </p>
+                            
+                            <p style="color: #334155; font-size: 16px; margin-bottom: 0; line-height: 1.7;">
+                                <strong>Precisa de ajuda?</strong> Nossa equipe de suporte está pronta para ajudar você a aproveitar ao máximo a plataforma NeoCargo.
+                            </p>
+                            
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #f8fafc; padding: 32px 30px; text-align: center; border-top: 1px solid #e2e8f0; border-radius: 0 0 8px 8px;">
+                            <img src="{% static 'assets/Logo-NeoCargo.svg' %}" alt="NeoCargo" style="max-width: 100px; height: auto; margin-bottom: 10px;">
+                            <p style="color: #64748b; font-size: 14px; margin: 0 0 16px 0;">
+                                Este é um e-mail automático do sistema NeoCargo.<br>
+                                Obrigado por escolher nossa plataforma!
+                            </p>
+                            <div style="color: #1d3557; font-weight: 600;">
+                                Atenciosamente,<br>
+                                <strong>Equipe NeoCargo</strong> 🚛
+                            </div>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
