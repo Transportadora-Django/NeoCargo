@@ -1,0 +1,30 @@
+{% comment %}
+Componente de Alerta NeoCargo
+Uso:
+{% include 'components/alert.html' with type='info' message='Sua mensagem aqui' %}
+{% include 'components/alert.html' with type='success' title='Sucesso!' message='Operação realizada com sucesso' dismissible=True %}
+
+Parâmetros:
+- type: 'info', 'warning', 'error', 'success' (obrigatório)
+- message: texto da mensagem (obrigatório)
+- title: título opcional do alerta
+- dismissible: se True, adiciona botão de fechar
+- size: 'sm', 'lg' ou padrão
+- animated: se True, adiciona animação de entrada
+- no_icon: se True, remove o ícone
+{% endcomment %}
+
+<div class="alert-neocargo alert-neocargo-{{ type|default:'info' }}{% if size %} alert-neocargo-{{ size }}{% endif %}{% if animated %} alert-neocargo-animated{% endif %}{% if no_icon %} alert-neocargo-no-icon{% endif %}">
+    <div class="alert-neocargo-content">
+        {% if title %}
+            <div class="alert-neocargo-title">{{ title }}</div>
+        {% endif %}
+        <div>{{ message }}</div>
+    </div>
+    
+    {% if dismissible %}
+        <button type="button" class="alert-neocargo-close" onclick="this.parentElement.style.display='none'">
+            ×
+        </button>
+    {% endif %}
+</div>

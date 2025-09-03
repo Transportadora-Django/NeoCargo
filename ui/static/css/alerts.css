@@ -1,0 +1,207 @@
+/* ============================================================ */
+/* SISTEMA DE ALERTAS NEOCARGO                                 */
+/* ============================================================ */
+/* Sistema centralizado de alertas reutilizável em todo o site */
+
+/* Base do alerta */
+.alert-neocargo {
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  border: 1px solid;
+  font-weight: 500;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+  z-index: 999;
+}
+
+/* Ícone base */
+.alert-neocargo::before {
+  content: '';
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-top: 0.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: #ffffff;
+}
+
+/* Conteúdo do alerta */
+.alert-neocargo-content {
+  flex: 1;
+}
+
+/* Título do alerta (opcional) */
+.alert-neocargo-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+/* ALERTA INFORMATIVO - Azul claro */
+.alert-neocargo-info {
+  background-color: #eff6ff;
+  color: #1e40af;
+  border-color: #bfdbfe;
+}
+
+.alert-neocargo-info::before {
+  content: 'i';
+  background-color: #3b82f6;
+}
+
+/* ALERTA DE ATENÇÃO - Amarelo */
+.alert-neocargo-warning {
+  background-color: #fffbeb;
+  color: #92400e;
+  border-color: #fed7aa;
+}
+
+.alert-neocargo-warning::before {
+  content: '!';
+  background-color: #f59e0b;
+}
+
+/* ALERTA DE ERRO - Vermelho */
+.alert-neocargo-error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.alert-neocargo-error::before {
+  content: '×';
+  background-color: #dc2626;
+}
+
+/* ALERTA DE CONFIRMAÇÃO/SUCESSO - Verde */
+.alert-neocargo-success {
+  background-color: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.alert-neocargo-success::before {
+  content: '✓';
+  background-color: #16a34a;
+}
+
+/* Botão de fechar (opcional) */
+.alert-neocargo-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: 0.2s ease;
+}
+
+.alert-neocargo-close:hover {
+  opacity: 1;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Variantes de tamanho */
+.alert-neocargo-sm {
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+}
+
+.alert-neocargo-sm::before {
+  width: 16px;
+  height: 16px;
+}
+
+.alert-neocargo-lg {
+  padding: 1.25rem 1.5rem;
+  font-size: 1rem;
+}
+
+.alert-neocargo-lg::before {
+  width: 24px;
+  height: 24px;
+}
+
+/* Alerta sem ícone */
+.alert-neocargo-no-icon::before {
+  display: none;
+}
+
+.alert-neocargo-no-icon {
+  gap: 0;
+}
+
+/* Container de alertas fixo */
+.alert-overlay {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 1rem 0;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .alert-neocargo {
+    padding: 0.875rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .alert-neocargo::before {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* Animações */
+@keyframes alert-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.alert-neocargo-animated {
+  animation: alert-slide-in 0.3s ease-out;
+}
+
+/* Alerta fixo no topo */
+.alert-neocargo-fixed {
+  position: fixed;
+  top: 70px;
+  left: 0;
+  right: 0;
+  z-index: 1020;
+  border-radius: 0;
+  margin-bottom: 0;
+  border-left: none;
+  border-right: none;
+}

@@ -1,7 +1,7 @@
 # Makefile para NeoCargo
 # Sistema de gerenciamento de transportadora
 
-.PHONY: help setup start stop restart logs shell bash migrate test lint format fix ci clean
+.PHONY: help setup start stop restart logs shell bash migrate test lint format fix ci clean format-css lint-css
 
 # Configurações
 DOCKER_COMPOSE = docker-compose -f infra/docker-compose.yml -p neocargo
@@ -107,6 +107,15 @@ lint: ## Verifica qualidade do código
 	fi
 	@echo "$(GREEN)✅ Verificação concluída!$(NC)"
 
+lint-css: ## Verifica formatação dos arquivos CSS
+	@echo "$(GREEN)🔍 Verificando formatação CSS...$(NC)"
+	@if [ -f "ui/package.json" ]; then \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npx prettier --check 'static/css/**/*.css'"; \
+	else \
+		echo "$(YELLOW)Frontend não configurado$(NC)"; \
+	fi
+	@echo "$(GREEN)✅ Verificação CSS concluída!$(NC)"
+
 format: ## Formata todo o código
 	@echo "$(GREEN)✨ Formatando código...$(NC)"
 	@$(DOCKER_COMPOSE) run --rm web ruff format .
@@ -114,6 +123,15 @@ format: ## Formata todo o código
 		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run format"; \
 	fi
 	@echo "$(GREEN)✅ Formatação concluída!$(NC)"
+
+format-css: ## Formata arquivos CSS com Prettier
+	@echo "$(GREEN)✨ Formatando arquivos CSS...$(NC)"
+	@if [ -f "ui/package.json" ]; then \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npx prettier --write 'static/css/**/*.css'"; \
+	else \
+		echo "$(YELLOW)Frontend não configurado$(NC)"; \
+	fi
+	@echo "$(GREEN)✅ Formatação CSS concluída!$(NC)"
 
 fix: ## Corrige problemas automaticamente
 	@echo "$(GREEN)✨ Corrigindo problemas...$(NC)"
@@ -123,6 +141,7 @@ fix: ## Corrige problemas automaticamente
 		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:fix"; \
 		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:css:fix"; \
 		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run format"; \
+		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npx prettier --write 'static/css/**/*.css'"; \
 	fi
 	@echo "$(GREEN)✅ Correções aplicadas!$(NC)"
 
