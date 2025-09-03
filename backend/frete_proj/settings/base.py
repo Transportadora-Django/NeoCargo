@@ -5,6 +5,7 @@ Common settings that are shared across all environments.
 
 import os
 from pathlib import Path
+import sys
 
 from dotenv import load_dotenv
 
@@ -34,6 +35,8 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "apps.contas",
+    "core",
     # Add local apps here
 ]
 
@@ -107,4 +110,9 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # WhiteNoise configuration
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# Use simple static files storage for tests to avoid manifest errors
+if "test" in sys.argv or "pytest" in sys.modules or os.getenv("TESTING"):
+    STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"
+    WHITENOISE_USE_FINDERS = True
+else:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

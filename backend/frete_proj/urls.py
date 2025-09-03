@@ -20,7 +20,7 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.http import HttpResponse
 from django.shortcuts import render
-from django.urls import path
+from django.urls import path, include
 
 
 def health(_request):
@@ -31,9 +31,37 @@ def home(request):
     return render(request, "home/index.html")
 
 
+# Temporary dashboard views
+def dashboard(request):
+    return HttpResponse("Dashboard Geral - Em desenvolvimento")
+
+
+def dashboard_cliente(request):
+    return HttpResponse("Dashboard Cliente - Em desenvolvimento")
+
+
+def dashboard_motorista(request):
+    return HttpResponse("Dashboard Motorista - Em desenvolvimento")
+
+
+def dashboard_gerente(request):
+    return HttpResponse("Dashboard Gerente - Em desenvolvimento")
+
+
+def dashboard_owner(request):
+    return HttpResponse("Dashboard Owner - Em desenvolvimento")
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("health/", health),
+    path("auth/", include("apps.contas.urls")),
+    # Temporary dashboard URLs
+    path("dashboard/", dashboard, name="dashboard"),
+    path("dashboard/cliente/", dashboard_cliente, name="dashboard_cliente"),
+    path("dashboard/motorista/", dashboard_motorista, name="dashboard_motorista"),
+    path("dashboard/gerente/", dashboard_gerente, name="dashboard_gerente"),
+    path("dashboard/owner/", dashboard_owner, name="dashboard_owner"),
     path("", home, name="home"),
 ]
 

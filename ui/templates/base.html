@@ -104,6 +104,59 @@
                             Clientes
                         </a>
                     </li>
+                    
+                    <!-- Authentication Links -->
+                    {% if user.is_authenticated %}
+                        <!-- User Menu for Authenticated Users -->
+                        <li class="nav-item dropdown">
+                            <a 
+                                class="nav-link dropdown-toggle" 
+                                href="#" 
+                                id="userDropdown" 
+                                role="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="false"
+                            >
+                                <i class="fas fa-user me-1" aria-hidden="true"></i>
+                                {{ user.get_full_name|default:user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'dashboard_cliente' %}">
+                                        <i class="fas fa-tachometer-alt me-2"></i>
+                                        Dashboard
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="fas fa-user-edit me-2"></i>
+                                        Meu Perfil
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'contas:logout' %}">
+                                        <i class="fas fa-sign-out-alt me-2"></i>
+                                        Sair
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <!-- Login/Signup Links for Unauthenticated Users -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'contas:login' %}">
+                                <i class="fas fa-sign-in-alt me-1" aria-hidden="true"></i>
+                                Entrar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary ms-2" href="{% url 'contas:signup' %}">
+                                <i class="fas fa-user-plus me-1" aria-hidden="true"></i>
+                                Criar Conta
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
