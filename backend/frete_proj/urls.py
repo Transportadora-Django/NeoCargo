@@ -37,7 +37,7 @@ def dashboard(request):
 
 
 def dashboard_cliente(request):
-    return HttpResponse("Dashboard Cliente - Em desenvolvimento")
+    return render(request, "dashboard/cliente.html")
 
 
 def dashboard_motorista(request):
