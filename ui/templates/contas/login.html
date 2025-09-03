@@ -19,14 +19,6 @@
                     </div>
 
                     <div class="auth-body">
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="auth-alert auth-alert-{% if message.tags == 'error' %}error{% elif message.tags == 'success' %}success{% elif message.tags == 'warning' %}warning{% else %}info{% endif %}">
-                                    {{ message }}
-                                </div>
-                            {% endfor %}
-                        {% endif %}
-
                         <form method="post" class="auth-form" novalidate>
                             {% csrf_token %}
 
@@ -70,11 +62,9 @@
                             </div>
 
                             {% if form.non_field_errors %}
-                                <div class="auth-alert auth-alert-error">
-                                    {% for error in form.non_field_errors %}
-                                        {{ error }}
-                                    {% endfor %}
-                                </div>
+                                {% for error in form.non_field_errors %}
+                                    {% include 'components/alert.html' with type='error' message=error %}
+                                {% endfor %}
                             {% endif %}
 
                             <div class="auth-checkbox">
