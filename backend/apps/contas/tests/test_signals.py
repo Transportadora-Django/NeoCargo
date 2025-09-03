@@ -57,11 +57,11 @@ class SignalsTest(TestCase):
 
         # Verifica o conteúdo do email
         email = mail.outbox[0]
-        self.assertEqual(email.subject, "Bem-vindo ao NeoCargo!")
+        self.assertEqual(email.subject, "🎉 Bem-vindo ao NeoCargo!")
         self.assertEqual(email.to, ["testuser@example.com"])
         self.assertEqual(email.from_email, "test@neocargo.local")
         self.assertIn("Test User", email.body)
-        self.assertIn("Seja bem-vindo ao NeoCargo", email.body)
+        self.assertIn("Bem-vindo ao NeoCargo", email.body)
 
     @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
     def test_welcome_email_uses_username_when_no_full_name(self):

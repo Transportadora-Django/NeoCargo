@@ -135,7 +135,7 @@ class SignupViewTest(TestCase):
         # Verifica se email foi enviado
         self.assertEqual(len(mail.outbox), 1)
         email = mail.outbox[0]
-        self.assertEqual(email.subject, "Bem-vindo ao NeoCargo!")
+        self.assertEqual(email.subject, "🎉 Bem-vindo ao NeoCargo!")
         self.assertEqual(email.to, ["joao@example.com"])
 
 
