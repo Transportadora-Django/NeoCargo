@@ -95,6 +95,15 @@
   box-shadow: 0 0 0 3px rgb(220 53 69 / 10%);
 }
 
+/* Form help text */
+.auth-form-help {
+  color: var(--neocargo-light-slate);
+  font-size: 0.8rem;
+  margin-top: 0.5rem;
+  display: block;
+  font-weight: 400;
+}
+
 /* Checkbox customizado */
 .auth-checkbox {
   display: flex;
@@ -125,7 +134,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #ffffff;
+  color: #fff;
   font-size: 12px;
   font-weight: bold;
 }
@@ -191,40 +200,6 @@
 .auth-link-muted:hover {
   color: var(--neocargo-navy);
   text-decoration: underline;
-}
-
-/* Mensagens de erro e sucesso */
-.auth-alert {
-  padding: 1rem;
-  border-radius: var(--border-radius);
-  margin-bottom: 1.5rem;
-  font-size: 0.9rem;
-  border: 1px solid transparent;
-  font-weight: 500;
-}
-
-.auth-alert-error {
-  background-color: #fef2f2;
-  color: #991b1b;
-  border-color: #fecaca;
-}
-
-.auth-alert-success {
-  background-color: #f0fdf4;
-  color: #166534;
-  border-color: #bbf7d0;
-}
-
-.auth-alert-info {
-  background-color: #eff6ff;
-  color: #1e40af;
-  border-color: #bfdbfe;
-}
-
-.auth-alert-warning {
-  background-color: #fffbeb;
-  color: #92400e;
-  border-color: #fed7aa;
 }
 
 /* Feedback de validação */
@@ -298,7 +273,7 @@
   width: 20px;
   height: 20px;
   border: 2px solid transparent;
-  border-top: 2px solid #ffffff;
+  border-top: 2px solid #fff;
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
