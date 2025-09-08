@@ -112,17 +112,9 @@ jobs:
         cd ui
         npm run lint:css
 
-    - name: Run HTMLHint (HTML)
-      if: steps.check-package.outputs.exists == 'true'
-      run: |
-        cd ui
-        npm run lint:html
-
-    - name: Run Prettier check
-      if: steps.check-package.outputs.exists == 'true'
-      run: |
-        cd ui
-        npm run format:check
+    # Removendo comandos que não existem no package.json
+    # - name: Run HTMLHint (HTML) - script não existe
+    # - name: Run Prettier check - script não existe
 
     - name: Skip frontend (no package.json)
       if: steps.check-package.outputs.exists == 'false'
