@@ -64,7 +64,7 @@ Recursos disponíveis:
 • 📊 Relatórios - Acesse dados detalhados para decisões estratégicas
 • ⚡ Automação - Automatize processos e economize tempo
 
-Acesse sua conta: {context['protocol']}://{context['domain']}/dashboard/
+Acesse sua conta: {context["protocol"]}://{context["domain"]}/dashboard/
 
 Próximos passos recomendados:
 1. Complete seu perfil - Adicione informações da sua empresa
