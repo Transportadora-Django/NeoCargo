@@ -15,7 +15,7 @@ from django.contrib.auth.views import (
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import never_cache
 
-from .forms import SignupForm
+from .forms import SignupForm, CustomPasswordResetForm
 from .models import Role
 
 
@@ -124,6 +124,7 @@ class CustomPasswordResetView(PasswordResetView):
     email_template_name = "contas/email/password_reset_email.html"
     subject_template_name = "contas/email/password_reset_subject.txt"
     success_url = reverse_lazy("contas:password_reset_done")
+    form_class = CustomPasswordResetForm  # Usa o formulário customizado
 
     def form_valid(self, form):
         messages.success(
