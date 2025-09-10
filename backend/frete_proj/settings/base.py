@@ -31,7 +31,8 @@ DJANGO_APPS = [
 ]
 
 THIRD_PARTY_APPS = [
-    # Add third party apps here
+    # Documentação automática
+    "django_extensions",
 ]
 
 LOCAL_APPS = [
