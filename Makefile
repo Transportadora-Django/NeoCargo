@@ -94,8 +94,8 @@ test-cov: ## Testes com coverage
 lint: ## Verifica qualidade do código
 	@echo "$(GREEN)🔍 Verificando código...$(NC)"
 	@echo "$(YELLOW)Backend (Ruff)...$(NC)"
-	@cd backend && python3 -m ruff check .
-	@cd backend && python3 -m ruff format --check .
+	@$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/backend && python -m ruff check ."
+	@$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/backend && python -m ruff format --check ."
 	@echo "$(YELLOW)Frontend (ESLint/Prettier/Stylelint/HTMLHint)...$(NC)"
 	@if [ -f "ui/package.json" ]; then \
 		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint"; \
@@ -116,10 +116,10 @@ lint-css: ## Verifica formatação dos arquivos CSS
 	fi
 	@echo "$(GREEN)✅ Verificação CSS concluída!$(NC)"
 
-format: ## Formata todo o código (idêntico ao CI)
+format: ## Formata todo o código
 	@echo "$(GREEN)✨ Formatando código...$(NC)"
 	@echo "$(YELLOW)Backend (Ruff)...$(NC)"
-	@cd backend && python3 -m ruff format .
+	@$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/backend && python -m ruff format ."
 	@echo "$(YELLOW)Frontend (Prettier)...$(NC)"
 	@if [ -f "ui/package.json" ]; then \
 		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run format"; \
@@ -140,8 +140,8 @@ format-css: ## Formata arquivos CSS com Prettier
 fix: ## Corrige problemas automaticamente
 	@echo "$(GREEN)✨ Corrigindo problemas...$(NC)"
 	@echo "$(YELLOW)Backend (Ruff)...$(NC)"
-	@cd backend && python3 -m ruff check --fix .
-	@cd backend && python3 -m ruff format .
+	@$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/backend && python -m ruff check --fix ."
+	@$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/backend && python -m ruff format ."
 	@echo "$(YELLOW)Frontend...$(NC)"
 	@if [ -f "ui/package.json" ]; then \
 		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:fix"; \
@@ -154,30 +154,18 @@ fix: ## Corrige problemas automaticamente
 	@echo "$(GREEN)✅ Correções aplicadas!$(NC)"
 
 # === CI/CD ===
-ci: ## Executa todas as verificações do CI (idêntico ao GitHub Actions)
-	@echo "$(GREEN)🚀 Executando CI completo (idêntico ao GitHub Actions)...$(NC)"
-	@echo "$(YELLOW)1. Verificando se Ruff está instalado...$(NC)"
-	@which python3 >/dev/null 2>&1 || (echo "$(RED)❌ Python3 não encontrado!$(NC)" && exit 1)
-	@python3 -m ruff --version >/dev/null 2>&1 || (echo "$(YELLOW)📦 Instalando Ruff...$(NC)" && python3 -m pip install ruff)
-	@echo "$(YELLOW)2. Backend Linting (Ruff Check)...$(NC)"
-	@cd backend && python3 -m ruff check .
-	@echo "$(YELLOW)3. Backend Formatting Check (Ruff Format)...$(NC)"
-	@cd backend && python3 -m ruff format --check .
-	@echo "$(YELLOW)4. Frontend Linting...$(NC)"
-	@if [ -f "ui/package.json" ]; then \
-		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint"; \
-		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:css"; \
-		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run lint:html"; \
-		$(DOCKER_COMPOSE) run --rm web sh -c "cd /app/ui && npm run format:check"; \
-	else \
-		echo "$(YELLOW)Frontend não configurado$(NC)"; \
-	fi
-	@echo "$(YELLOW)5. Preparando ambiente de teste...$(NC)"
+ci: ## Executa todas as verificações do CI (sequencial)
+	@echo "$(GREEN)🚀 Executando CI completo (sequencial)...$(NC)"
+	@echo "$(YELLOW)1. Docker Build Test...$(NC)"
 	@$(DOCKER_COMPOSE) build --no-cache
+	@$(DOCKER_COMPOSE) run --rm web python --version
+	@echo "$(YELLOW)2. Backend & Frontend Linting...$(NC)"
+	@$(MAKE) lint
+	@echo "$(YELLOW)3. Preparando ambiente de teste...$(NC)"
 	@$(DOCKER_COMPOSE) run --rm web python manage.py collectstatic --noinput
-	@echo "$(YELLOW)6. Backend Tests...$(NC)"
+	@echo "$(YELLOW)4. Backend Tests...$(NC)"
 	@$(MAKE) test
-	@echo "$(GREEN)✅ CI passou em todas as verificações! 🎉$(NC)"
+	@echo "$(GREEN)✅ CI passou em todas as verificações!$(NC)"
 
 security: ## Verificações de segurança
 	@echo "$(GREEN)🔒 Verificações de segurança...$(NC)"
