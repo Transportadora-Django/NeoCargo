@@ -70,6 +70,27 @@ class CustomLoginView(LoginView):
         Redireciona baseado no role do usuário.
         """
         user = self.request.user
+
+        # Se for superuser, redireciona para dashboard owner ou cria perfil se necessário
+        if user.is_superuser:
+            # Cria ou obtém perfil de superuser como OWNER
+            from .models import Profile
+
+            profile, created = Profile.objects.get_or_create(user=user, defaults={"role": Role.OWNER})
+            if created:
+                messages.info(self.request, "Perfil de administrador criado automaticamente.")
+            return reverse("dashboard_owner")
+
+        # Se for staff sem ser superuser, trata como gerente
+        if user.is_staff and not hasattr(user, "profile"):
+            from .models import Profile
+
+            profile, created = Profile.objects.get_or_create(user=user, defaults={"role": Role.GERENTE})
+            if created:
+                messages.info(self.request, "Perfil de gerente criado automaticamente.")
+            return reverse("dashboard_gerente")
+
+        # Usuários normais com profile
         if hasattr(user, "profile"):
             profile = user.profile
             if profile.role == Role.CLIENTE:
