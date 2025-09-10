@@ -56,13 +56,14 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("health/", health),
     path("auth/", include("apps.contas.urls")),
+    # Include core URLs (including documentation)
+    path("", include("core.urls")),
     # Temporary dashboard URLs
     path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/cliente/", dashboard_cliente, name="dashboard_cliente"),
     path("dashboard/motorista/", dashboard_motorista, name="dashboard_motorista"),
     path("dashboard/gerente/", dashboard_gerente, name="dashboard_gerente"),
     path("dashboard/owner/", dashboard_owner, name="dashboard_owner"),
-    path("", home, name="home"),
 ]
 
 # Serve static files in development
