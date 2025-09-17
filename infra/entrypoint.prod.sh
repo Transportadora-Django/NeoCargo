@@ -11,6 +11,17 @@ echo "DJANGO_SETTINGS_MODULE: ${DJANGO_SETTINGS_MODULE:-'não definido'}"
 echo "PORT (Render): ${PORT:-'não definido (usando 8000)'}"
 echo "DATABASE_URL: ${DATABASE_URL:+configurado}"
 
+# Validar arquivos estáticos críticos antes do deploy
+echo "📋 Validando arquivos estáticos..."
+if [ -f "/app/infra/validate-static.sh" ]; then
+    /app/infra/validate-static.sh
+    if [ $? -ne 0 ]; then
+        echo "❌ Validação de arquivos estáticos falhou! Continuando com deploy (modo resiliente)..."
+    fi
+else
+    echo "⚠️  Script de validação não encontrado, continuando..."
+fi
+
 # Executar migrações do banco de dados
 echo "📦 Executando migrações..."
 python manage.py migrate --settings=frete_proj.settings.prod
