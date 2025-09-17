@@ -21,7 +21,20 @@ DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL", "sqlite:
 # WhiteNoise configuration for production
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 WHITENOISE_MAX_AGE = 31536000  # 1 year cache
-WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp", "zip", "gz", "tgz", "bz2", "tbz", "xz", "br"]
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = [
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "webp",
+    "zip",
+    "gz",
+    "tgz",
+    "bz2",
+    "tbz",
+    "xz",
+    "br",
+]
 
 # Security settings for production
 SECURE_BROWSER_XSS_FILTER = True
