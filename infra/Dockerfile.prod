@@ -33,7 +33,7 @@ RUN mkdir -p backend/logs
 # Definir o diretório de trabalho para o backend
 WORKDIR /app/backend
 
-# Expor a porta 8000
+# Expor porta padrão (Render sobrescreverá com PORT=10000)
 EXPOSE 8000
 
 # Usar o entrypoint script
