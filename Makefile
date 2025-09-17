@@ -116,6 +116,35 @@ lint-css: ## Verifica formatação dos arquivos CSS
 	fi
 	@echo "$(GREEN)✅ Verificação CSS concluída!$(NC)"
 
+# === Produção ===
+build-prod: ## Testa build de produção (Render)
+	@echo "$(GREEN)🏭 Testando build de produção...$(NC)"
+	@docker build -f infra/Dockerfile.prod -t neocargo-prod .
+	@echo "$(GREEN)✅ Build de produção concluído!$(NC)"
+
+test-prod: ## Testa container de produção localmente
+	@echo "$(GREEN)🧪 Testando container de produção...$(NC)"
+	@docker run --rm -it \
+		-p 8000:8000 \
+		-e DEBUG=False \
+		-e SECRET_KEY=test-secret-key \
+		-e DATABASE_URL=sqlite:///db.sqlite3 \
+		neocargo-prod
+	@echo "$(GREEN)✅ Teste de produção concluído!$(NC)"
+
+deploy-check: ## Verifica configurações para deploy no Render
+	@echo "$(GREEN)🔍 Verificando configurações de deploy...$(NC)"
+	@echo "$(YELLOW)Arquivos de produção:$(NC)"
+	@ls -la infra/Dockerfile.prod infra/entrypoint.prod.sh infra/healthcheck.sh
+	@echo "$(YELLOW)Permissões dos scripts:$(NC)"
+	@ls -la infra/*.sh
+	@echo "$(YELLOW)Configurações importantes:$(NC)"
+	@echo "  - PORT: Dinâmico (variável \$$PORT do Render)"
+	@echo "  - ALLOWED_HOSTS: Configurado para RENDER_EXTERNAL_HOSTNAME"
+	@echo "  - Database: PostgreSQL via DATABASE_URL"
+	@echo "  - Static files: WhiteNoise configurado"
+	@echo "$(GREEN)✅ Verificação concluída!$(NC)"
+
 format: ## Formata todo o código
 	@echo "$(GREEN)✨ Formatando código...$(NC)"
 	@echo "$(YELLOW)Backend (Ruff)...$(NC)"
