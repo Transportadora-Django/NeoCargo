@@ -27,7 +27,7 @@ DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL", "sqlite:
 # Configuração de timeout para evitar problemas de conexão
 DATABASES["default"]["CONN_MAX_AGE"] = 600
 
-# WhiteNoise configuration for production
+# WhiteNoise configuration for production - Mais resiliente
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 WHITENOISE_MAX_AGE = 31536000  # 1 year cache
 WHITENOISE_SKIP_COMPRESS_EXTENSIONS = [
@@ -44,6 +44,10 @@ WHITENOISE_SKIP_COMPRESS_EXTENSIONS = [
     "xz",
     "br",
 ]
+
+# Configuração mais resiliente para arquivos estáticos ausentes
+WHITENOISE_MANIFEST_STRICT = False
+WHITENOISE_USE_FINDERS = False
 
 # Security settings for production
 SECURE_BROWSER_XSS_FILTER = True
