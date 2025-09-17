@@ -10,12 +10,18 @@ import dj_database_url
 from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+# Permitir todos os hosts para Render (será restrito por variável de ambiente)
+ALLOWED_HOSTS = ["*"] if not os.getenv("ALLOWED_HOSTS") else os.getenv("ALLOWED_HOSTS", "").split(",")
 
 # Database - PostgreSQL for production
 DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"))}
+
+# WhiteNoise configuration for production
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+WHITENOISE_MAX_AGE = 31536000  # 1 year cache
+WHITENOISE_SKIP_COMPRESS_EXTENSIONS = ["jpg", "jpeg", "png", "gif", "webp", "zip", "gz", "tgz", "bz2", "tbz", "xz", "br"]
 
 # Security settings for production
 SECURE_BROWSER_XSS_FILTER = True
@@ -23,14 +29,16 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_SECONDS = 31536000
 SECURE_REDIRECT_EXEMPT = []
-SECURE_SSL_REDIRECT = True
+
+# Para Render, não forçar SSL redirect (será gerenciado pelo Render)
+SECURE_SSL_REDIRECT = os.getenv("SECURE_SSL_REDIRECT", "False").lower() == "true"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_TZ = True
 
 # Session security
 SESSION_COOKIE_HTTPONLY = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = os.getenv("SESSION_COOKIE_SECURE", "True").lower() == "true"
+CSRF_COOKIE_SECURE = os.getenv("CSRF_COOKIE_SECURE", "True").lower() == "true"
 CSRF_COOKIE_HTTPONLY = True
 
 # Email configuration for production
@@ -52,25 +60,19 @@ LOGGING = {
         },
     },
     "handlers": {
-        "file": {
-            "level": "INFO",
-            "class": "logging.FileHandler",
-            "filename": BASE_DIR / "logs" / "django.log",
-            "formatter": "verbose",
-        },
         "console": {
-            "level": "ERROR",
+            "level": "INFO",
             "class": "logging.StreamHandler",
             "formatter": "verbose",
         },
     },
     "root": {
         "level": "INFO",
-        "handlers": ["file", "console"],
+        "handlers": ["console"],
     },
     "loggers": {
         "django": {
-            "handlers": ["file", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },

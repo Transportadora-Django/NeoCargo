@@ -1,0 +1,40 @@
+# Dockerfile para produção na Render
+FROM python:3.12-slim
+
+# Definir variáveis de ambiente
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV DJANGO_SETTINGS_MODULE=frete_proj.settings.prod
+
+# Definir diretório de trabalho
+WORKDIR /app
+
+# Instalar dependências do sistema necessárias para psycopg2
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libpq-dev \
+        gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar requirements.txt e instalar dependências Python
+COPY backend/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt gunicorn
+
+# Copiar todo o código do projeto
+COPY . .
+
+# Copiar e dar permissão ao script de entrypoint
+COPY infra/entrypoint.prod.sh /app/entrypoint.prod.sh
+RUN chmod +x /app/entrypoint.prod.sh
+
+# Criar diretório para logs se necessário
+RUN mkdir -p backend/logs
+
+# Definir o diretório de trabalho para o backend
+WORKDIR /app/backend
+
+# Expor a porta 8000
+EXPOSE 8000
+
+# Usar o entrypoint script
+CMD ["/app/entrypoint.prod.sh"]
