@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h1 class="h3 mb-1">Criar Pedido</h1>
+                    <p class="text-muted mb-0">Preencha os dados do seu pedido</p>
+                </div>
+                <a href="{% url 'pedidos:listar' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-list me-2"></i>
+                    Meus Pedidos
+                </a>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <i class="fas fa-calculator me-2"></i>
+                    Solicitar Cotação
+                </div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        <!-- Origem e Destino -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.cidade_origem.id_for_label }}" class="form-label fw-bold">
+                                    {{ form.cidade_origem.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.cidade_origem }}
+                                {% if form.cidade_origem.help_text %}
+                                    <div class="form-text">{{ form.cidade_origem.help_text }}</div>
+                                {% endif %}
+                                {% if form.cidade_origem.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.cidade_origem.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.cidade_destino.id_for_label }}" class="form-label fw-bold">
+                                    {{ form.cidade_destino.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                {{ form.cidade_destino }}
+                                {% if form.cidade_destino.help_text %}
+                                    <div class="form-text">{{ form.cidade_destino.help_text }}</div>
+                                {% endif %}
+                                {% if form.cidade_destino.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.cidade_destino.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Peso e Prazo -->
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <label for="{{ form.peso_carga.id_for_label }}" class="form-label fw-bold">
+                                    {{ form.peso_carga.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    {{ form.peso_carga }}
+                                    <span class="input-group-text">kg</span>
+                                </div>
+                                {% if form.peso_carga.help_text %}
+                                    <div class="form-text">{{ form.peso_carga.help_text }}</div>
+                                {% endif %}
+                                {% if form.peso_carga.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.peso_carga.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.prazo_desejado.id_for_label }}" class="form-label fw-bold">
+                                    {{ form.prazo_desejado.label }}
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="input-group">
+                                    {{ form.prazo_desejado }}
+                                    <span class="input-group-text">dias</span>
+                                </div>
+                                {% if form.prazo_desejado.help_text %}
+                                    <div class="form-text">{{ form.prazo_desejado.help_text }}</div>
+                                {% endif %}
+                                {% if form.prazo_desejado.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {{ form.prazo_desejado.errors.0 }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <!-- Observações -->
+                        <div class="mb-4">
+                            <label for="{{ form.observacoes.id_for_label }}" class="form-label fw-bold">
+                                {{ form.observacoes.label }}
+                            </label>
+                            {{ form.observacoes }}
+                            {% if form.observacoes.help_text %}
+                                <div class="form-text">{{ form.observacoes.help_text }}</div>
+                            {% endif %}
+                            {% if form.observacoes.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.observacoes.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{% url 'pedidos:listar' %}" class="btn btn-outline-secondary me-md-2">
+                                <i class="fas fa-times me-2"></i>
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-calculator me-2"></i>
+                                Gerar Cotação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Informações sobre o processo -->
+            <div class="alert alert-info mt-4">
+                <h6 class="alert-heading">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Como funciona
+                </h6>
+                <ol class="mb-0 small">
+                    <li>Preencha os dados da sua carga</li>
+                    <li>Receba 3 opções de transporte personalizadas</li>
+                    <li>Escolha a opção que melhor se adequa às suas necessidades</li>
+                    <li>Confirme seu pedido e aguarde o contato da nossa equipe</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

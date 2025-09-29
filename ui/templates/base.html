@@ -1,7 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <!-- ============================================================ -->
+    <!-- ==============================                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'pedidos:listar' %}">
+                            <i class="fas fa-clipboard-list me-1" aria-hidden="true"></i>
+                            Meus Pedidos
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a 
+                            class="nav-link" 
+                            href="#" 
+                            onclick="alert('Em desenvolvimento')"
+                            role="button"
+                        >
+                            <i class="fas fa-box me-1" aria-hidden="true"></i>
+                            Cargas
+                        </a>
+                    </li>=================== -->
     <!-- DOCUMENT META INFORMATION                                    -->
     <!-- ============================================================ -->
     <meta charset="UTF-8">
@@ -72,17 +90,14 @@
                             Início
                         </a>
                     </li>
+                    {% if user.is_authenticated %}
                     <li class="nav-item">
-                        <a 
-                            class="nav-link" 
-                            href="#" 
-                            onclick="alert('Em desenvolvimento')"
-                            role="button"
-                        >
+                        <a class="nav-link" href="{% url 'pedidos:listar' %}">
                             <i class="fas fa-box me-1" aria-hidden="true"></i>
-                            Cargas
+                            Meus Pedidos
                         </a>
                     </li>
+                    {% endif %}
                     <li class="nav-item">
                         <a 
                             class="nav-link" 
