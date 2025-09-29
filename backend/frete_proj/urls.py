@@ -56,6 +56,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("health/", health),
     path("auth/", include("apps.contas.urls")),
+    path("pedidos/", include("apps.pedidos.urls")),
     # Include core URLs (including documentation)
     path("", include("core.urls")),
     # Temporary dashboard URLs
