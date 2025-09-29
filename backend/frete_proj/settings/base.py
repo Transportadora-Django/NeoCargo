@@ -28,6 +28,7 @@ DJANGO_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 ]
 
 THIRD_PARTY_APPS = [
@@ -75,6 +76,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "frete_proj.wsgi.application"
 
+# Authentication backends
+AUTHENTICATION_BACKENDS = [
+    "apps.contas.backends.EmailBackend",  # Login apenas por email
+    "django.contrib.auth.backends.ModelBackend",  # Fallback para admin e superuser
+]
+
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -111,8 +118,16 @@ MEDIA_ROOT = BASE_DIR / "media"
 # Email configuration
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@neocargo.local")
 
+# Authentication URLs
+LOGIN_URL = "/contas/login/"
+LOGIN_REDIRECT_URL = "/pedidos/"
+LOGOUT_REDIRECT_URL = "/"
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Site framework
+SITE_ID = 1
 
 # WhiteNoise configuration
 # Use simple static files storage for tests to avoid manifest errors
