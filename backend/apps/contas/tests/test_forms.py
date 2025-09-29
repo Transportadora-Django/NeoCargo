@@ -248,9 +248,9 @@ class CustomPasswordChangeFormTest(TestCase):
         """Testa se os campos têm os atributos CSS corretos"""
         form = CustomPasswordChangeForm(user=self.user)
 
-        self.assertEqual(form.fields["old_password"].widget.attrs["class"], "form-control")
-        self.assertEqual(form.fields["new_password1"].widget.attrs["class"], "form-control")
-        self.assertEqual(form.fields["new_password2"].widget.attrs["class"], "form-control")
+        self.assertEqual(form.fields["old_password"].widget.attrs["class"], "profile-input")
+        self.assertEqual(form.fields["new_password1"].widget.attrs["class"], "profile-input")
+        self.assertEqual(form.fields["new_password2"].widget.attrs["class"], "profile-input")
 
     def test_form_labels_in_portuguese(self):
         """Testa se os labels estão em português"""

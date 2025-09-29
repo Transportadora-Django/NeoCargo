@@ -364,7 +364,7 @@ class PerfilViewTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         # Check that password form has errors
-        self.assertContains(response, "form-control")
+        self.assertContains(response, "profile-input")
 
     def test_perfil_view_post_invalid_form_type(self):
         """Testa POST com tipo de formulário inválido"""
