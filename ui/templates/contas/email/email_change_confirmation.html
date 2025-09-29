@@ -3,149 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmação de Alteração de Email - {{ site_name }}</title>
+    <title>Confirmação de Alteração de Email - NeoCargo</title>
     <style>
+        /* Modern Email Template - NeoCargo Design System */
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.6;
-            color: #333;
+            color: #1d3557;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fff 0%, #f0f9ff 25%, #e0f2fe 50%, #f1f5f9 75%, #f8fafc 100%);
+        }
+        
+        .email-container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-            background-color: #f4f4f4;
         }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        
+        .email-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 0;
+            margin: 0 auto;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
         }
-        .header {
+        
+        .email-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #1d3557, #334155);
+        }
+        
+        .email-header {
             text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #007bff;
+            padding: 40px 40px 20px;
+            background: rgba(248, 250, 252, 0.5);
         }
-        .header h1 {
-            color: #007bff;
+        
+        .logo-container {
+            margin-bottom: 24px;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1d3557;
             margin: 0;
+            letter-spacing: -0.5px;
+        }
+        
+        .logo-accent {
+            color: #06b6d4;
+        }
+        
+        .email-title {
             font-size: 24px;
-        }
-        .content {
-            margin-bottom: 30px;
-        }
-        .email-info {
-            background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .email-change {
+            font-weight: 600;
+            color: #1d3557;
+            margin: 0 0 8px 0;
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin: 10px 0;
+            justify-content: center;
+            gap: 8px;
         }
-        .email-old, .email-new {
-            padding: 10px;
-            border-radius: 5px;
-            font-weight: bold;
+        
+        .email-subtitle {
+            color: #334155;
+            font-size: 16px;
+            margin: 0;
+            opacity: 0.8;
         }
+        
+        .email-content {
+            padding: 0 40px 40px;
+        }
+        
+        .greeting {
+            font-size: 18px;
+            color: #1d3557;
+            margin-bottom: 24px;
+            font-weight: 500;
+        }
+        
+        .email-change-card {
+            background: rgba(240, 249, 255, 0.8);
+            border: 1px solid rgba(6, 182, 212, 0.1);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+        }
+        
+        .change-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #334155;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            opacity: 0.8;
+        }
+        
+        .email-transition {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        
+        .email-badge {
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            flex: 1;
+            max-width: 200px;
+            min-width: 160px;
+            text-align: center;
+            word-break: break-word;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        
         .email-old {
-            background-color: #fff3cd;
-            color: #856404;
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            border: 1px solid #fbbf24;
         }
+        
         .email-new {
-            background-color: #d1ecf1;
-            color: #0c5460;
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+            border: 1px solid #3b82f6;
         }
-        .arrow {
-            font-size: 20px;
-            color: #007bff;
-            margin: 0 10px;
+        
+        .arrow-icon {
+            font-size: 18px;
+            color: #64748b;
+            opacity: 0.7;
+            flex-shrink: 0;
+            margin: 0 4px;
         }
-        .btn {
+        
+        @media (max-width: 600px) {
+            .email-transition {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+            }
+            
+            .email-badge {
+                max-width: none;
+                min-width: unset;
+                flex: none;
+            }
+            
+            .arrow-icon {
+                transform: rotate(90deg);
+                align-self: center;
+            }
+        }        .cta-section {
+            text-align: center;
+            margin: 32px 0;
+        }
+        
+        .cta-button {
             display: inline-block;
-            padding: 15px 30px;
-            background-color: #28a745;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #1d3557, #334155);
             color: white;
             text-decoration: none;
-            border-radius: 5px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 16px rgba(29, 53, 87, 0.25);
+            transition: all 0.3s ease;
+        }
+        
+        .security-info {
+            background: rgba(254, 243, 199, 0.8);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+        
+        .security-title {
+            color: #92400e;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .security-list {
+            margin: 12px 0 0 0;
+            padding-left: 20px;
+            color: #92400e;
+        }
+        
+        .security-list li {
+            margin-bottom: 8px;
+        }
+        
+        .expires-text {
+            font-weight: 700;
+            color: #dc2626;
+        }
+        
+        .email-footer {
+            background: rgba(248, 250, 252, 0.8);
+            padding: 24px 40px;
             text-align: center;
-            margin: 20px 0;
+            border-top: 1px solid rgba(29, 53, 87, 0.1);
         }
-        .btn:hover {
-            background-color: #218838;
-        }
-        .warning {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #ddd;
-            color: #666;
+        
+        .footer-text {
+            color: #64748b;
             font-size: 14px;
+            margin: 8px 0;
+            line-height: 1.5;
         }
-        .expires {
-            color: #dc3545;
-            font-weight: bold;
+        
+        .footer-brand {
+            font-weight: 600;
+            color: #1d3557;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .email-container {
+                padding: 10px;
+            }
+            
+            .email-header,
+            .email-content,
+            .email-footer {
+                padding-left: 24px;
+                padding-right: 24px;
+            }
+            
+            .email-transition {
+                flex-direction: column;
+                gap: 12px;
+            }
+            
+            .arrow-icon {
+                transform: rotate(90deg);
+            }
+            
+            .email-badge {
+                min-width: auto;
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🔐 Confirmação de Alteração de Email</h1>
-            <p><strong>{{ site_name }}</strong></p>
-        </div>
-
-        <div class="content">
-            <p>Olá <strong>{{ user_name }}</strong>,</p>
-            
-            <p>Você solicitou a alteração do email da sua conta. Para sua segurança, precisamos confirmar esta alteração.</p>
-            
-            <div class="email-info">
-                <h3>📧 Alteração Solicitada:</h3>
-                <div class="email-change">
-                    <div class="email-old">{{ old_email }}</div>
-                    <div class="arrow">→</div>
-                    <div class="email-new">{{ new_email }}</div>
+    <div class="email-container">
+        <div class="email-card">
+            <!-- Header -->
+            <div class="email-header">
+                <div class="logo-container">
+                    <h1 class="logo-text">Neo<span class="logo-accent">Cargo</span></h1>
                 </div>
+                
+                <h2 class="email-title">
+                    <span>🔐</span>
+                    Confirmação de Alteração de Email
+                </h2>
+                <p class="email-subtitle">Verificação de segurança necessária</p>
             </div>
 
-            <div style="text-align: center;">
-                <a href="{{ confirmation_url }}" class="btn">
-                    ✅ Confirmar Alteração
-                </a>
+            <!-- Content -->
+            <div class="email-content">
+                <div class="greeting">
+                    Olá, <strong>{{ user_name }}</strong>! 👋
+                </div>
+                
+                <p>Você solicitou a alteração do email da sua conta no NeoCargo. Para garantir a segurança da sua conta, precisamos confirmar esta alteração através do seu email atual.</p>
+                
+                <div class="email-change-card">
+                    <div class="change-label">📧 Alteração Solicitada</div>
+                    
+                    <div class="email-transition">
+                        <div class="email-badge email-old">
+                            {{ old_email }}
+                        </div>
+                        <div class="arrow-icon">→</div>
+                        <div class="email-badge email-new">
+                            {{ new_email }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cta-section">
+                    <a href="{{ confirmation_url }}" class="cta-button">
+                        ✅ Confirmar Alteração de Email
+                    </a>
+                </div>
+
+                <div class="security-info">
+                    <div class="security-title">
+                        <span>⚠️</span>
+                        <strong>Informações Importantes de Segurança</strong>
+                    </div>
+                    <ul class="security-list">
+                        <li>Este link de confirmação expira em <span class="expires-text">{{ expires_at|date:"d/m/Y às H:i" }}</span></li>
+                        <li>Se você <strong>não solicitou</strong> esta alteração, ignore este email</li>
+                        <li>Apenas você tem acesso a este link de confirmação único</li>
+                        <li>Após a confirmação, você usará o <strong>novo email</strong> para fazer login</li>
+                    </ul>
+                </div>
+
+                <p><strong>O que acontece depois?</strong></p>
+                <p>Após clicar no botão de confirmação, seu email será alterado automaticamente para <strong>{{ new_email }}</strong> e você poderá utilizá-lo imediatamente para acessar sua conta no NeoCargo.</p>
             </div>
 
-            <div class="warning">
-                <strong>⚠️ Importante:</strong>
-                <ul>
-                    <li>Este link expira em <span class="expires">{{ expires_at|date:"d/m/Y \à\s H:i" }}</span></li>
-                    <li>Se você não solicitou esta alteração, ignore este email</li>
-                    <li>Apenas você pode acessar este link de confirmação</li>
-                </ul>
+            <!-- Footer -->
+            <div class="email-footer">
+                <p class="footer-text">
+                    Esta mensagem foi enviada automaticamente pelo sistema <span class="footer-brand">NeoCargo</span>.<br>
+                    Se você tem dúvidas sobre esta alteração, entre em contato conosco.
+                </p>
+                <p class="footer-text">
+                    <span class="footer-brand">{{ domain }}</span> • Sistema de Gestão de Transportadora
+                </p>
             </div>
-
-            <p>Após confirmar, seu novo email será <strong>{{ new_email }}</strong> e você poderá usá-lo para fazer login.</p>
-        </div>
-
-        <div class="footer">
-            <p>
-                Esta mensagem foi enviada automaticamente pelo sistema {{ site_name }}.<br>
-                Se você tem dúvidas, entre em contato conosco.
-            </p>
-            <p>
-                <strong>{{ domain }}</strong>
-            </p>
         </div>
     </div>
 </body>

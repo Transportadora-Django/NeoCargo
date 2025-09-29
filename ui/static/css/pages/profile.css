@@ -1,0 +1,416 @@
+/* NeoCargo - Profile Page */
+
+/* Modern, Minimalist Design inspired by Hero section */
+
+/* Container principal com gradiente similar ao hero */
+.profile-container {
+  position: relative;
+  min-height: 100vh;
+  background: linear-gradient(
+    135deg,
+    #fff 0%,
+    #f0f9ff 25%,
+    #e0f2fe 50%,
+    #f1f5f9 75%,
+    #f8fafc 100%
+  );
+  overflow: hidden;
+}
+
+/* Element  box-shadow: 0 0 0 3px var(--neocargo-cyan-light);
+  color: #fff;
+}decorativos de fundo */
+.profile-container::before {
+  content: '';
+  position: absolute;
+  top: -20%;
+  right: -15%;
+  width: 300px;
+  height: 280px;
+  background-image: url('../../assets/logo-sem-nome.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.05;
+  transform: rotate(25deg);
+  pointer-events: none;
+  z-index: 1;
+  filter: brightness(0) saturate(100%) invert(75%) sepia(6%) saturate(1018%)
+    hue-rotate(182deg) brightness(94%) contrast(92%);
+}
+
+.profile-container::after {
+  content: '';
+  position: absolute;
+  bottom: -10%;
+  left: -10%;
+  width: 250px;
+  height: 235px;
+  background-image: url('../../assets/logo-sem-nome.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.03;
+  transform: rotate(-30deg);
+  pointer-events: none;
+  z-index: 1;
+  filter: brightness(0) saturate(100%) invert(75%) sepia(6%) saturate(1018%)
+    hue-rotate(182deg) brightness(94%) contrast(92%);
+}
+
+/* Conteúdo principal */
+.profile-content {
+  position: relative;
+  z-index: 10;
+  padding: 2rem 0;
+}
+
+/* Header moderno e clean */
+.profile-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  padding: 0;
+}
+
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(
+    135deg,
+    var(--neocargo-navy),
+    var(--neocargo-slate)
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: #fff;
+  font-size: 2rem;
+  box-shadow: 0 20px 40px rgb(6 182 212 / 20%);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-avatar::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgb(255 255 255 / 10%),
+    transparent
+  );
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+.profile-title {
+  font-size: 2.25rem;
+  font-weight: 400;
+  color: var(--neocargo-navy);
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.profile-subtitle {
+  color: var(--neocargo-light-slate);
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.8;
+}
+
+/* Cards modernos com glassmorphism */
+.profile-card {
+  background: rgb(255 255 255 / 85%);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgb(255 255 255 / 20%);
+  border-radius: 16px;
+  padding: 1.75rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 6px 24px rgb(0 0 0 / 8%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(
+    90deg,
+    var(--neocargo-navy),
+    var(--neocargo-slate)
+  );
+}
+
+.profile-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgb(0 0 0 / 15%);
+  background: rgb(255 255 255 / 95%);
+}
+
+.profile-card-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(29 53 87 / 10%);
+}
+
+.profile-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--neocargo-navy);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-card-title i {
+  color: var(--neocargo-cyan);
+  font-size: 1.25rem;
+}
+
+/* Grid de informações moderno */
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-info-item {
+  background: rgb(248 250 252 / 50%);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+  border: 1px solid rgb(29 53 87 / 5%);
+}
+
+.profile-info-item:hover {
+  background: rgb(240 249 255 / 80%);
+  transform: translateY(-2px);
+}
+
+.profile-info-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neocargo-light-slate);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  opacity: 0.8;
+}
+
+.profile-info-value {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: var(--neocargo-navy);
+  margin: 0;
+}
+
+/* Status badges modernos */
+.profile-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-top: 0.5rem;
+}
+
+.profile-badge.cliente {
+  background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+  color: #1e40af;
+  border: 1px solid #93c5fd;
+}
+
+.profile-badge.administrador {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  color: #92400e;
+  border: 1px solid #fbbf24;
+}
+
+.profile-badge.active {
+  background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+  color: #065f46;
+  border: 1px solid #34d399;
+}
+
+/* Formulários modernos */
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.profile-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.profile-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--neocargo-navy);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.profile-label i {
+  color: var(--neocargo-cyan);
+  font-size: 0.875rem;
+}
+
+.profile-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 2px solid rgb(29 53 87 / 10%);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: rgb(248 250 252 / 50%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: inherit;
+}
+
+.profile-input:focus {
+  outline: none;
+  border-color: var(--neocargo-cyan);
+  background: rgb(255 255 255 / 90%);
+  box-shadow: 0 0 0 4px rgb(6 182 212 / 10%);
+  transform: translateY(-1px);
+}
+
+.profile-input::placeholder {
+  color: rgb(51 65 85 / 50%);
+}
+
+.profile-help-text {
+  font-size: 0.825rem;
+  color: var(--neocargo-light-slate);
+  margin-top: 0.25rem;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+.profile-error {
+  font-size: 0.875rem;
+  color: #dc2626;
+  margin-top: 0.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+}
+
+/* Botões modernos */
+.profile-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-btn-primary {
+  background: linear-gradient(
+    135deg,
+    var(--neocargo-navy),
+    var(--neocargo-slate)
+  );
+  color: #fff;
+  box-shadow: 0 3px 12px rgb(29 53 87 / 25%);
+}
+
+.profile-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgb(29 53 87 / 35%);
+  color: #fff;
+}
+
+.profile-btn-secondary {
+  background: linear-gradient(135deg, var(--neocargo-cyan), #0891b2);
+  color: #fff;
+  box-shadow: 0 3px 12px rgb(6 182 212 / 25%);
+}
+
+.profile-btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgb(6 182 212 / 35%);
+  color: #fff;
+}
+
+.profile-btn-outline {
+  background: rgb(255 255 255 / 10%);
+  color: var(--neocargo-navy);
+  border: 2px solid rgb(29 53 87 / 20%);
+}
+
+.profile-btn-outline:hover {
+  background: rgb(29 53 87 / 5%);
+  border-color: var(--neocargo-navy);
+  transform: translateY(-1px);
+}
+
+/* Sidebar moderna */
+.profile-sidebar .profile-card {
+  background: rgb(255 255 255 / 70%);
+}
+
+.profile-quick-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+/* Badge styles are already defined above */
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .profile-container {
+    padding: 1rem 0;
+  }
+
+  .profile-header h1 {
+    font-size: 1.75rem;
+  }
+
+  .profile-info-row {
+    padding: 1rem;
+  }
+}

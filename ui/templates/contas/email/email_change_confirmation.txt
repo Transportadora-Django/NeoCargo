@@ -1,32 +1,38 @@
-======================================================
-🔐 CONFIRMAÇÃO DE ALTERAÇÃO DE EMAIL - {{ site_name }}
-======================================================
+========================================================
+🔐 NEOCARGO - CONFIRMAÇÃO DE ALTERAÇÃO DE EMAIL
+========================================================
 
-Olá {{ user_name }},
+Olá, {{ user_name }}! 👋
 
-Você solicitou a alteração do email da sua conta.
-Para sua segurança, precisamos confirmar esta alteração.
+Você solicitou a alteração do email da sua conta no NeoCargo. 
+Para garantir a segurança da sua conta, precisamos confirmar 
+esta alteração através do seu email atual.
 
 📧 ALTERAÇÃO SOLICITADA:
-De: {{ old_email }}
+───────────────────────────────────────────────────────
+De:   {{ old_email }}
 Para: {{ new_email }}
 
-✅ PARA CONFIRMAR A ALTERAÇÃO:
-Acesse o link abaixo em seu navegador:
+✅ CONFIRME SUA ALTERAÇÃO:
+Clique no link abaixo para confirmar:
 
 {{ confirmation_url }}
 
-⚠️ IMPORTANTE:
-• Este link expira em {{ expires_at|date:"d/m/Y às H:i" }}
-• Se você não solicitou esta alteração, ignore este email
-• Apenas você pode acessar este link de confirmação
+⚠️ INFORMAÇÕES IMPORTANTES DE SEGURANÇA:
+───────────────────────────────────────────────────────
+• Este link expira em: {{ expires_at|date:"d/m/Y às H:i" }}
+• Se você NÃO solicitou esta alteração, ignore este email
+• Apenas você tem acesso a este link de confirmação único
+• Após a confirmação, use o NOVO email para fazer login
 
-Após confirmar, seu novo email será {{ new_email }} e você 
-poderá usá-lo para fazer login.
+🔄 O QUE ACONTECE DEPOIS?
+Após clicar no link de confirmação, seu email será alterado 
+automaticamente para {{ new_email }} e você poderá utilizá-lo 
+imediatamente para acessar sua conta no NeoCargo.
 
-======================================================
-Esta mensagem foi enviada automaticamente pelo sistema {{ site_name }}.
-Se você tem dúvidas, entre em contato conosco.
+========================================================
+Esta mensagem foi enviada automaticamente pelo NeoCargo.
+Se você tem dúvidas sobre esta alteração, entre em contato.
 
-{{ domain }}
-======================================================
+{{ domain }} • Sistema de Gestão de Transportadora
+========================================================
