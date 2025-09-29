@@ -57,8 +57,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-ruff-
 
-    - name: Install Ruff
-      run: pip install ruff
+    - name: Install dependencies
+      run: |
+        cd backend  
+        pip install -r requirements.txt
 
     - name: Run Ruff Linting
       run: |
