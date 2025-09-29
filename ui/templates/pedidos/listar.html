@@ -1,0 +1,361 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/tables.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <!-- Page Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h3 mb-1">{{ titulo }}</h1>
+            <p class="text-muted mb-0">Acompanhe o status dos seus pedidos de transporte</p>
+        </div>
+        <a href="{% url 'pedidos:criar' %}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>
+            Novo Pedido
+        </a>
+    </div>
+
+    {% if pedidos %}
+        <!-- Pedidos Table -->
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <div class="row align-items-center">
+                    <div class="col">
+                        <h6 class="card-title mb-0">
+                            <i class="fas fa-list me-2"></i>
+                            Lista de Pedidos
+                        </h6>
+                    </div>
+                    <div class="col-auto">
+                        <small class="text-muted">
+                            Total: {{ pedidos.paginator.count }} pedido{{ pedidos.paginator.count|pluralize }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col">Pedido</th>
+                                <th scope="col">Origem → Destino</th>
+                                <th scope="col">Opção</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Data</th>
+                                <th scope="col" class="text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for pedido in pedidos %}
+                            <tr>
+                                <td>
+                                    <strong>#{{ pedido.id }}</strong>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="badge bg-light text-dark me-2">{{ pedido.cidade_origem }}</span>
+                                        <i class="fas fa-arrow-right text-muted mx-1"></i>
+                                        <span class="badge bg-light text-dark ms-2">{{ pedido.cidade_destino }}</span>
+                                    </div>
+                                    <small class="text-muted d-block">{{ pedido.peso_carga }} kg</small>
+                                </td>
+                                <td>
+                                    {% if pedido.opcao == 'economico' %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-dollar-sign me-1"></i>
+                                            Mais Econômico
+                                        </span>
+                                    {% elif pedido.opcao == 'rapido' %}
+                                        <span class="badge bg-primary">
+                                            <i class="fas fa-tachometer-alt me-1"></i>
+                                            Mais Rápido
+                                        </span>
+                                    {% elif pedido.opcao == 'custo_beneficio' %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-balance-scale me-1"></i>
+                                            Custo-Benefício
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Aguardando
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if pedido.status == 'cotacao' %}
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-calculator me-1"></i>
+                                            Cotação Gerada
+                                        </span>
+                                    {% elif pedido.status == 'pendente' %}
+                                        <span class="badge bg-warning">
+                                            <i class="fas fa-clock me-1"></i>
+                                            Pendente
+                                        </span>
+                                    {% elif pedido.status == 'aprovado' %}
+                                        <span class="badge bg-success">
+                                            <i class="fas fa-check me-1"></i>
+                                            Aprovado
+                                        </span>
+                                    {% elif pedido.status == 'recusado' %}
+                                        <span class="badge bg-danger">
+                                            <i class="fas fa-times me-1"></i>
+                                            Recusado
+                                        </span>
+                                    {% elif pedido.status == 'cancelado' %}
+                                        <span class="badge bg-secondary">
+                                            <i class="fas fa-ban me-1"></i>
+                                            Cancelado
+                                        </span>
+                                    {% elif pedido.status == 'em_transporte' %}
+                                        <span class="badge bg-info">
+                                            <i class="fas fa-truck me-1"></i>
+                                            Em Transporte
+                                        </span>
+                                    {% elif pedido.status == 'concluido' %}
+                                        <span class="badge bg-dark">
+                                            <i class="fas fa-flag-checkered me-1"></i>
+                                            Concluído
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div>
+                                        <strong>{{ pedido.created_at|date:"d/m/Y" }}</strong>
+                                    </div>
+                                    <small class="text-muted">{{ pedido.created_at|date:"H:i" }}</small>
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        {% if pedido.status == 'cotacao' %}
+                                            <a href="{% url 'pedidos:gerar_cotacao' pedido.id %}" 
+                                               class="btn btn-success"
+                                               title="Escolher opção">
+                                                <i class="fas fa-hand-pointer"></i>
+                                            </a>
+                                        {% endif %}
+                                        {% if pedido.pode_ser_cancelado %}
+                                            <button 
+                                                type="button" 
+                                                class="btn btn-outline-danger"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modalCancelar{{ pedido.id }}"
+                                                title="Cancelar pedido"
+                                            >
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        {% endif %}
+                                        <button 
+                                            type="button" 
+                                            class="btn btn-outline-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalDetalhes{{ pedido.id }}"
+                                            title="Ver detalhes"
+                                        >
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Pagination -->
+            {% if pedidos.has_other_pages %}
+            <div class="card-footer bg-white">
+                <nav aria-label="Navegação de pedidos">
+                    <ul class="pagination pagination-sm justify-content-center mb-0">
+                        {% if pedidos.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page=1">
+                                    <i class="fas fa-angle-double-left"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ pedidos.previous_page_number }}">
+                                    <i class="fas fa-angle-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        {% for num in pedidos.paginator.page_range %}
+                            {% if pedidos.number == num %}
+                                <li class="page-item active">
+                                    <span class="page-link">{{ num }}</span>
+                                </li>
+                            {% elif num|add:0 != pedidos.number and num %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if pedidos.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ pedidos.next_page_number }}">
+                                    <i class="fas fa-angle-right"></i>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ pedidos.paginator.num_pages }}">
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Modais de Detalhes -->
+        {% for pedido in pedidos %}
+        <div class="modal fade" id="modalDetalhes{{ pedido.id }}" tabindex="-1" aria-labelledby="modalDetalhes{{ pedido.id }}Label" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalDetalhes{{ pedido.id }}Label">
+                            <i class="fas fa-file-alt me-2"></i>
+                            Detalhes do Pedido #{{ pedido.id }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">Informações Gerais</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>Pedido:</strong> #{{ pedido.id }}</li>
+                                    <li><strong>Data:</strong> {{ pedido.created_at|date:"d/m/Y H:i" }}</li>
+                                    <li><strong>Status:</strong> {{ pedido.get_status_display }}</li>
+                                    {% if pedido.opcao %}
+                                        <li><strong>Opção:</strong> {{ pedido.get_opcao_display }}</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">Trajeto e Carga</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>Origem:</strong> {{ pedido.cidade_origem }}</li>
+                                    <li><strong>Destino:</strong> {{ pedido.cidade_destino }}</li>
+                                    <li><strong>Peso:</strong> {{ pedido.peso_carga }} kg</li>
+                                    <li><strong>Prazo desejado:</strong> {{ pedido.prazo_desejado }} dias</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        {% if pedido.preco_final %}
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h6 class="fw-bold">Opção Escolhida</h6>
+                                <div class="p-3 bg-light rounded">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Preço:</strong><br>
+                                            <span class="text-success fs-5">R$ {{ pedido.preco_final|floatformat:2 }}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Prazo:</strong><br>
+                                            {{ pedido.prazo_final }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Veículo:</strong><br>
+                                            {{ pedido.veiculo_final }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if pedido.observacoes %}
+                        <hr>
+                        <h6 class="fw-bold">Observações</h6>
+                        <p class="mb-0">{{ pedido.observacoes|linebreaks }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Modais de Cancelamento -->
+        {% for pedido in pedidos %}
+        {% if pedido.pode_ser_cancelado %}
+        <div class="modal fade" id="modalCancelar{{ pedido.id }}" tabindex="-1" aria-labelledby="modalCancelar{{ pedido.id }}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="modalCancelar{{ pedido.id }}Label">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Cancelar Pedido #{{ pedido.id }}
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza que deseja cancelar este pedido?</p>
+                        <div class="alert alert-warning">
+                            <strong>Atenção:</strong> Esta ação não pode ser desfeita. O pedido será marcado como cancelado e não poderá ser reativado.
+                        </div>
+                        <div class="p-3 bg-light rounded">
+                            <strong>Resumo do pedido:</strong><br>
+                            <small>
+                                <strong>Origem:</strong> {{ pedido.cidade_origem }}<br>
+                                <strong>Destino:</strong> {{ pedido.cidade_destino }}<br>
+                                <strong>Peso:</strong> {{ pedido.peso_carga }} kg
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Voltar
+                        </button>
+                        <form method="post" action="{% url 'pedidos:cancelar' pedido.id %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-ban me-2"></i>
+                                Confirmar Cancelamento
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+    {% else %}
+        <!-- Empty State -->
+        <div class="text-center py-5">
+            <div class="mb-4">
+                <i class="fas fa-inbox fa-4x text-muted"></i>
+            </div>
+            <h4 class="text-muted mb-3">Nenhum pedido encontrado</h4>
+            <p class="text-muted mb-4">Você ainda não fez nenhum pedido de transporte.</p>
+            <a href="{% url 'pedidos:criar' %}" class="btn btn-primary">
+                <i class="fas fa-plus me-2"></i>
+                Criar Primeiro Pedido
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
