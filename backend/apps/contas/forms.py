@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, PasswordResetForm
+from django.contrib.auth.forms import UserCreationForm, PasswordResetForm, PasswordChangeForm
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.mail import EmailMultiAlternatives
@@ -9,6 +9,7 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
 from django.conf import settings
+from .models import Profile
 
 
 class SignupForm(UserCreationForm):
@@ -155,3 +156,116 @@ class CustomPasswordResetForm(PasswordResetForm):
 
             # Envia o email
             email_message.send(fail_silently=False)
+
+
+class UserEditForm(forms.ModelForm):
+    """
+    Formulário para edição de dados básicos do usuário (nome e email).
+    """
+
+    full_name = forms.CharField(
+        max_length=150,
+        required=True,
+        label="Nome completo",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Digite seu nome completo"}),
+    )
+
+    class Meta:
+        model = User
+        fields = ("email",)
+        widgets = {
+            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "Digite seu e-mail"}),
+        }
+        labels = {
+            "email": "E-mail",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance:
+            # Preenche o campo full_name com os dados atuais
+            full_name = f"{self.instance.first_name} {self.instance.last_name}".strip()
+            if full_name:
+                self.fields["full_name"].initial = full_name
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if email:
+            email = email.lower().strip()
+            # Verifica se o email já existe para outro usuário
+            if User.objects.filter(email=email).exclude(pk=self.instance.pk).exists():
+                raise ValidationError("Este e-mail já está em uso por outro usuário.")
+        return email
+
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get("full_name")
+        if full_name:
+            full_name = full_name.strip()
+            if len(full_name.split()) < 2:
+                raise ValidationError("Por favor, digite seu nome completo.")
+        return full_name
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+
+        # Atualiza o username com o email
+        user.username = self.cleaned_data["email"]
+
+        # Divide o nome completo
+        full_name = self.cleaned_data["full_name"]
+        name_parts = full_name.split()
+        user.first_name = name_parts[0]
+        if len(name_parts) > 1:
+            user.last_name = " ".join(name_parts[1:])
+
+        if commit:
+            user.save()
+
+        return user
+
+
+class ProfileEditForm(forms.ModelForm):
+    """
+    Formulário para edição do perfil do usuário.
+    """
+
+    class Meta:
+        model = Profile
+        fields = ("role",)
+        widgets = {
+            "role": forms.Select(attrs={"class": "form-control"}),
+        }
+        labels = {
+            "role": "Função",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Desabilita o campo role para usuários não administradores
+        # (isso pode ser controlado na view se necessário)
+        self.fields["role"].disabled = True
+
+
+class CustomPasswordChangeForm(PasswordChangeForm):
+    """
+    Formulário customizado para alteração de senha.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Customiza os widgets
+        self.fields["old_password"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Digite sua senha atual"}
+        )
+        self.fields["new_password1"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Digite sua nova senha"}
+        )
+        self.fields["new_password2"].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Confirme sua nova senha"}
+        )
+
+        # Customiza os labels
+        self.fields["old_password"].label = "Senha atual"
+        self.fields["new_password1"].label = "Nova senha"
+        self.fields["new_password2"].label = "Confirmar nova senha"

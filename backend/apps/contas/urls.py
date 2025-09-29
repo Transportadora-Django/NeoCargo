@@ -7,6 +7,8 @@ urlpatterns = [
     path("cadastro/", views.signup, name="signup"),
     path("login/", views.CustomLoginView.as_view(), name="login"),
     path("logout/", views.CustomLogoutView.as_view(), name="logout"),
+    path("perfil/", views.perfil, name="perfil"),
+    path("confirmar-email/<uuid:token>/", views.confirmar_mudanca_email, name="confirmar_mudanca_email"),
     # Password Reset URLs
     path("esqueci-senha/", views.CustomPasswordResetView.as_view(), name="password_reset"),
     path("esqueci-senha/enviado/", views.CustomPasswordResetDoneView.as_view(), name="password_reset_done"),

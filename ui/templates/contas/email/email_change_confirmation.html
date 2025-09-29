@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Alteração de Email - {{ site_name }}</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #007bff;
+        }
+        .header h1 {
+            color: #007bff;
+            margin: 0;
+            font-size: 24px;
+        }
+        .content {
+            margin-bottom: 30px;
+        }
+        .email-info {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .email-change {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        .email-old, .email-new {
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .email-old {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .email-new {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        .arrow {
+            font-size: 20px;
+            color: #007bff;
+            margin: 0 10px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn:hover {
+            background-color: #218838;
+        }
+        .warning {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            color: #666;
+            font-size: 14px;
+        }
+        .expires {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔐 Confirmação de Alteração de Email</h1>
+            <p><strong>{{ site_name }}</strong></p>
+        </div>
+
+        <div class="content">
+            <p>Olá <strong>{{ user_name }}</strong>,</p>
+            
+            <p>Você solicitou a alteração do email da sua conta. Para sua segurança, precisamos confirmar esta alteração.</p>
+            
+            <div class="email-info">
+                <h3>📧 Alteração Solicitada:</h3>
+                <div class="email-change">
+                    <div class="email-old">{{ old_email }}</div>
+                    <div class="arrow">→</div>
+                    <div class="email-new">{{ new_email }}</div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="{{ confirmation_url }}" class="btn">
+                    ✅ Confirmar Alteração
+                </a>
+            </div>
+
+            <div class="warning">
+                <strong>⚠️ Importante:</strong>
+                <ul>
+                    <li>Este link expira em <span class="expires">{{ expires_at|date:"d/m/Y \à\s H:i" }}</span></li>
+                    <li>Se você não solicitou esta alteração, ignore este email</li>
+                    <li>Apenas você pode acessar este link de confirmação</li>
+                </ul>
+            </div>
+
+            <p>Após confirmar, seu novo email será <strong>{{ new_email }}</strong> e você poderá usá-lo para fazer login.</p>
+        </div>
+
+        <div class="footer">
+            <p>
+                Esta mensagem foi enviada automaticamente pelo sistema {{ site_name }}.<br>
+                Se você tem dúvidas, entre em contato conosco.
+            </p>
+            <p>
+                <strong>{{ domain }}</strong>
+            </p>
+        </div>
+    </div>
+</body>
+</html>

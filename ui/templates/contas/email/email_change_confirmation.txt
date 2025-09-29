@@ -1,0 +1,32 @@
+======================================================
+🔐 CONFIRMAÇÃO DE ALTERAÇÃO DE EMAIL - {{ site_name }}
+======================================================
+
+Olá {{ user_name }},
+
+Você solicitou a alteração do email da sua conta.
+Para sua segurança, precisamos confirmar esta alteração.
+
+📧 ALTERAÇÃO SOLICITADA:
+De: {{ old_email }}
+Para: {{ new_email }}
+
+✅ PARA CONFIRMAR A ALTERAÇÃO:
+Acesse o link abaixo em seu navegador:
+
+{{ confirmation_url }}
+
+⚠️ IMPORTANTE:
+• Este link expira em {{ expires_at|date:"d/m/Y às H:i" }}
+• Se você não solicitou esta alteração, ignore este email
+• Apenas você pode acessar este link de confirmação
+
+Após confirmar, seu novo email será {{ new_email }} e você 
+poderá usá-lo para fazer login.
+
+======================================================
+Esta mensagem foi enviada automaticamente pelo sistema {{ site_name }}.
+Se você tem dúvidas, entre em contato conosco.
+
+{{ domain }}
+======================================================
