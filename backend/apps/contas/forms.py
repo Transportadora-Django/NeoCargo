@@ -167,14 +167,14 @@ class UserEditForm(forms.ModelForm):
         max_length=150,
         required=True,
         label="Nome completo",
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Digite seu nome completo"}),
+        widget=forms.TextInput(attrs={"class": "profile-input", "placeholder": "Digite seu nome completo"}),
     )
 
     class Meta:
         model = User
         fields = ("email",)
         widgets = {
-            "email": forms.EmailInput(attrs={"class": "form-control", "placeholder": "Digite seu e-mail"}),
+            "email": forms.EmailInput(attrs={"class": "profile-input", "placeholder": "Digite seu e-mail"}),
         }
         labels = {
             "email": "E-mail",
@@ -256,13 +256,13 @@ class CustomPasswordChangeForm(PasswordChangeForm):
 
         # Customiza os widgets
         self.fields["old_password"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Digite sua senha atual"}
+            {"class": "profile-input", "placeholder": "Digite sua senha atual"}
         )
         self.fields["new_password1"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Digite sua nova senha"}
+            {"class": "profile-input", "placeholder": "Digite sua nova senha"}
         )
         self.fields["new_password2"].widget.attrs.update(
-            {"class": "form-control", "placeholder": "Confirme sua nova senha"}
+            {"class": "profile-input", "placeholder": "Confirme sua nova senha"}
         )
 
         # Customiza os labels
