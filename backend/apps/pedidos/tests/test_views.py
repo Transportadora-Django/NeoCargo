@@ -15,7 +15,7 @@ class PedidoViewTest(TestCase):
         """Testa acesso à página de criar pedido"""
         response = self.client.get(reverse("pedidos:criar"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Criar Pedido")
+        self.assertContains(response, "Novo Pedido")
         self.assertContains(response, "form")
 
     def test_criar_pedido_post_valido(self):
@@ -30,16 +30,16 @@ class PedidoViewTest(TestCase):
 
         response = self.client.post(reverse("pedidos:criar"), data)
 
-        # Deve redirecionar para listagem
+        # Deve redirecionar para cotação
         self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, reverse("pedidos:listar"))
+        pedido = Pedido.objects.first()
+        self.assertRedirects(response, reverse("pedidos:gerar_cotacao", args=[pedido.id]))
 
         # Verifica se pedido foi criado
         self.assertEqual(Pedido.objects.count(), 1)
-        pedido = Pedido.objects.first()
         self.assertEqual(pedido.cliente, self.user)
         self.assertEqual(pedido.cidade_origem, "São Paulo")
-        self.assertEqual(pedido.status, StatusPedido.PENDENTE)
+        self.assertEqual(pedido.status, StatusPedido.COTACAO)
 
     def test_criar_pedido_post_invalido(self):
         """Testa criação com dados inválidos"""

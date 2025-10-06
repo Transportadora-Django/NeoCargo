@@ -5,12 +5,19 @@ from decimal import Decimal
 
 
 class StatusPedido(models.TextChoices):
+    COTACAO = "cotacao", "Cotação Gerada"
     PENDENTE = "pendente", "Pendente"
     APROVADO = "aprovado", "Aprovado"
     RECUSADO = "recusado", "Recusado"
     CANCELADO = "cancelado", "Cancelado"
     EM_TRANSPORTE = "em_transporte", "Em Transporte"
     CONCLUIDO = "concluido", "Concluído"
+
+
+class OpcaoCotacao(models.TextChoices):
+    ECONOMICO = "economico", "Mais Econômico"
+    RAPIDO = "rapido", "Mais Rápido"
+    CUSTO_BENEFICIO = "custo_beneficio", "Melhor Custo-Benefício"
 
 
 class Pedido(models.Model):
@@ -38,8 +45,34 @@ class Pedido(models.Model):
         blank=True, null=True, verbose_name="Observações", help_text="Informações adicionais sobre a carga (opcional)"
     )
 
+    # Opção de cotação escolhida pelo cliente
+    opcao = models.CharField(
+        max_length=20,
+        choices=OpcaoCotacao.choices,
+        blank=True,
+        null=True,
+        verbose_name="Opção Escolhida",
+        help_text="Opção de cotação selecionada pelo cliente",
+    )
+
+    # Campos que serão preenchidos pelo gerente posteriormente
+    preco_final = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        blank=True,
+        null=True,
+        verbose_name="Preço Final",
+        help_text="Preço calculado pelo gerente",
+    )
+    prazo_final = models.CharField(
+        max_length=50, blank=True, null=True, verbose_name="Prazo Final", help_text="Prazo calculado pelo gerente"
+    )
+    veiculo_final = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Veículo Final", help_text="Veículo definido pelo gerente"
+    )
+
     status = models.CharField(
-        max_length=20, choices=StatusPedido.choices, default=StatusPedido.PENDENTE, verbose_name="Status"
+        max_length=20, choices=StatusPedido.choices, default=StatusPedido.COTACAO, verbose_name="Status"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
@@ -54,6 +87,10 @@ class Pedido(models.Model):
         return f"Pedido #{self.id} - {nome} ({self.get_status_display()})"
 
     @property
+    def is_cotacao(self):
+        return self.status == StatusPedido.COTACAO
+
+    @property
     def is_pendente(self):
         return self.status == StatusPedido.PENDENTE
 
@@ -62,8 +99,8 @@ class Pedido(models.Model):
         return self.status == StatusPedido.CANCELADO
 
     def pode_ser_cancelado(self):
-        """Verifica se o pedido pode ser cancelado - apenas pedidos pendentes"""
-        return self.status == StatusPedido.PENDENTE
+        """Verifica se o pedido pode ser cancelado - apenas pedidos em cotação ou pendentes"""
+        return self.status in [StatusPedido.COTACAO, StatusPedido.PENDENTE]
 
     def cancelar(self):
         """Cancela o pedido se possível - apenas pedidos pendentes"""

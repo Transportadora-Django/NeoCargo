@@ -22,8 +22,8 @@ class IntegracaoTest(TestCase):
         )
 
         # 2. Verificar status inicial
-        self.assertEqual(pedido.status, StatusPedido.PENDENTE)
-        self.assertTrue(pedido.is_pendente)
+        self.assertEqual(pedido.status, StatusPedido.COTACAO)
+        self.assertTrue(pedido.is_cotacao)
         self.assertTrue(pedido.pode_ser_cancelado())
 
         # 3. Tentar cancelar (deve funcionar)

@@ -4,225 +4,248 @@
 {% block title %}Meu Perfil - NeoCargo{% endblock %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/pages/profile.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/profile.css' %}?v=4">
 {% endblock %}
 
 {% block content %}
-<div class="profile-container">
-    <div class="profile-content">
-        <div class="container">
-            <!-- Header moderno -->
-            <div class="profile-header">
-                <div class="profile-avatar">
-                    <i class="fas fa-user"></i>
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-user-circle me-2"></i>
+                    Meu Perfil
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Gerencie suas informações pessoais
+                </p>
+            </div>
+            <a href="{% url 'pedidos:listar' %}" class="btn btn-new-pedido">
+                <i class="fas fa-box me-2"></i>
+                Meus Pedidos
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row">
+        <!-- Conteúdo Principal -->
+        <div class="col-lg-8">
+            <!-- Card: Dados Pessoais -->
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-user-circle me-1"></i>
+                            Dados Pessoais
+                        </div>
+                    </div>
                 </div>
-                <h1 class="profile-title">Meu Perfil</h1>
-                <p class="profile-subtitle">Gerencie suas informações pessoais de forma segura</p>
+
+                <!-- Informações Atuais -->
+                <div class="pedido-body mb-3">
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-user me-1"></i>
+                            Nome Completo
+                        </div>
+                        <div class="pedido-info-value">
+                            {{ user.get_full_name|default:user.username }}
+                        </div>
+                    </div>
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-envelope me-1"></i>
+                            Email
+                        </div>
+                        <div class="pedido-info-value">
+                            {{ user.email }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Formulário -->
+                <form method="post" class="mt-3">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="user_data">
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label for="{{ user_form.full_name.id_for_label }}" class="form-label">
+                                <i class="fas fa-user me-1"></i>
+                                {{ user_form.full_name.label }}
+                            </label>
+                            {{ user_form.full_name }}
+                            {% if user_form.full_name.errors %}
+                                <div class="invalid-feedback d-block">{{ user_form.full_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            <label for="{{ user_form.email.id_for_label }}" class="form-label">
+                                <i class="fas fa-envelope me-1"></i>
+                                {{ user_form.email.label }}
+                            </label>
+                            {{ user_form.email }}
+                            {% if user_form.email.errors %}
+                                <div class="invalid-feedback d-block">{{ user_form.email.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-text">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Alterações de email requerem confirmação
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="pedido-actions">
+                        <button type="submit" class="btn btn-action btn-action-primary">
+                            <i class="fas fa-save"></i>
+                            Salvar Alterações
+                        </button>
+                    </div>
+                </form>
             </div>
 
-            <div class="row">
-                <!-- Conteúdo principal -->
-                <div class="col-lg-8">
-                    <!-- Dados Pessoais -->
-                    <div class="profile-card">
-                        <div class="profile-card-header">
-                            <h2 class="profile-card-title">
-                                <i class="fas fa-user-circle"></i>
-                                Dados Pessoais
-                            </h2>
-                        </div>
-
-                        <!-- Informações atuais -->
-                        <div class="profile-info-grid">
-                            <div class="profile-info-item">
-                                <div class="profile-info-label">Nome Completo</div>
-                                <div class="profile-info-value">{{ user.get_full_name|default:user.username }}</div>
-                            </div>
-                            <div class="profile-info-item">
-                                <div class="profile-info-label">Email Atual</div>
-                                <div class="profile-info-value">{{ user.email }}</div>
-                            </div>
-                        </div>
-
-                        <!-- Formulário de edição -->
-                        <form method="post" class="profile-form">
-                            {% csrf_token %}
-                            <input type="hidden" name="form_type" value="user_data">
-                            
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="profile-field-group">
-                                        <label for="{{ user_form.full_name.id_for_label }}" class="profile-label">
-                                            <i class="fas fa-user"></i>{{ user_form.full_name.label }}
-                                        </label>
-                                        {{ user_form.full_name }}
-                                        {% if user_form.full_name.errors %}
-                                            {% for error in user_form.full_name.errors %}
-                                                <div class="profile-error">
-                                                    <i class="fas fa-exclamation-circle"></i>{{ error }}
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="profile-field-group">
-                                        <label for="{{ user_form.email.id_for_label }}" class="profile-label">
-                                            <i class="fas fa-envelope"></i>{{ user_form.email.label }}
-                                        </label>
-                                        {{ user_form.email }}
-                                        {% if user_form.email.errors %}
-                                            {% for error in user_form.email.errors %}
-                                                <div class="profile-error">
-                                                    <i class="fas fa-exclamation-circle"></i>{{ error }}
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                        <div class="profile-help-text">
-                                            <i class="fas fa-info-circle"></i>
-                                            Alterações de email requerem confirmação por segurança
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="profile-btn profile-btn-primary">
-                                <i class="fas fa-save"></i>Salvar Alterações
-                            </button>
-                        </form>
-                    </div>
-
-                    <!-- Alteração de Senha -->
-                    <div class="profile-card">
-                        <div class="profile-card-header">
-                            <h2 class="profile-card-title">
-                                <i class="fas fa-key"></i>
-                                Alterar Senha
-                            </h2>
-                        </div>
-
-                        <form method="post" class="profile-form">
-                            {% csrf_token %}
-                            <input type="hidden" name="form_type" value="password_change">
-                            
-                            <div class="profile-field-group">
-                                <label for="{{ password_form.old_password.id_for_label }}" class="profile-label">
-                                    <i class="fas fa-lock"></i>{{ password_form.old_password.label }}
-                                </label>
-                                {{ password_form.old_password }}
-                                {% if password_form.old_password.errors %}
-                                    {% for error in password_form.old_password.errors %}
-                                        <div class="profile-error">
-                                            <i class="fas fa-exclamation-circle"></i>{{ error }}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="profile-field-group">
-                                        <label for="{{ password_form.new_password1.id_for_label }}" class="profile-label">
-                                            <i class="fas fa-key"></i>{{ password_form.new_password1.label }}
-                                        </label>
-                                        {{ password_form.new_password1 }}
-                                        {% if password_form.new_password1.errors %}
-                                            {% for error in password_form.new_password1.errors %}
-                                                <div class="profile-error">
-                                                    <i class="fas fa-exclamation-circle"></i>{{ error }}
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="profile-field-group">
-                                        <label for="{{ password_form.new_password2.id_for_label }}" class="profile-label">
-                                            <i class="fas fa-key"></i>{{ password_form.new_password2.label }}
-                                        </label>
-                                        {{ password_form.new_password2 }}
-                                        {% if password_form.new_password2.errors %}
-                                            {% for error in password_form.new_password2.errors %}
-                                                <div class="profile-error">
-                                                    <i class="fas fa-exclamation-circle"></i>{{ error }}
-                                                </div>
-                                            {% endfor %}
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <button type="submit" class="profile-btn profile-btn-secondary">
-                                <i class="fas fa-key"></i>Alterar Senha
-                            </button>
-                        </form>
-
-                        <div class="profile-help-text mt-3 text-center">
-                            Ou <a href="{% url 'contas:password_reset' %}" class="text-decoration-none">clique aqui</a> 
-                            para redefinir sua senha por e-mail.
+            <!-- Card: Alterar Senha -->
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-key me-1"></i>
+                            Alterar Senha
                         </div>
                     </div>
-
                 </div>
 
-                <!-- Sidebar -->
-                <div class="col-lg-4 profile-sidebar">
-                    <!-- Status da conta -->
-                    <div class="profile-card">
-                        <div class="profile-card-header">
-                            <h2 class="profile-card-title">
-                                <i class="fas fa-shield-alt"></i>
-                                Status da Conta
-                            </h2>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_type" value="password_change">
+                    
+                    <div class="mb-3">
+                        <label for="{{ password_form.old_password.id_for_label }}" class="form-label">
+                            <i class="fas fa-lock me-1"></i>
+                            {{ password_form.old_password.label }}
+                        </label>
+                        {{ password_form.old_password }}
+                        {% if password_form.old_password.errors %}
+                            <div class="invalid-feedback d-block">{{ password_form.old_password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label for="{{ password_form.new_password1.id_for_label }}" class="form-label">
+                                <i class="fas fa-key me-1"></i>
+                                {{ password_form.new_password1.label }}
+                            </label>
+                            {{ password_form.new_password1 }}
+                            {% if password_form.new_password1.errors %}
+                                <div class="invalid-feedback d-block">{{ password_form.new_password1.errors.0 }}</div>
+                            {% endif %}
                         </div>
+                        <div class="col-md-6">
+                            <label for="{{ password_form.new_password2.id_for_label }}" class="form-label">
+                                <i class="fas fa-key me-1"></i>
+                                {{ password_form.new_password2.label }}
+                            </label>
+                            {{ password_form.new_password2 }}
+                            {% if password_form.new_password2.errors %}
+                                <div class="invalid-feedback d-block">{{ password_form.new_password2.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="pedido-actions">
+                        <button type="submit" class="btn btn-action btn-action-primary">
+                            <i class="fas fa-key"></i>
+                            Alterar Senha
+                        </button>
+                    </div>
 
-                        <div class="profile-info-grid">
-                            <div class="profile-info-item text-center">
-                                <div class="profile-info-label">Função</div>
-                                <div class="profile-badge {% if user.is_superuser %}administrador{% else %}cliente{% endif %}">
-                                    {% if user.is_superuser %}
-                                        <i class="fas fa-crown"></i>Administrador
-                                    {% else %}
-                                        <i class="fas fa-user"></i>Cliente
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="profile-info-item text-center">
-                                <div class="profile-info-label">Status</div>
-                                <div class="profile-badge active">
-                                    <i class="fas fa-check-circle"></i>Verificada
-                                </div>
-                            </div>
+                    <div class="form-text text-center mt-3">
+                        Ou <a href="{% url 'contas:password_reset' %}">clique aqui</a> para redefinir por e-mail.
+                    </div>
+                </form>
+            </div>
+        </div>
 
-                            <div class="profile-info-item text-center">
-                                <div class="profile-info-label">Membro desde</div>
-                                <div class="profile-info-value">{{ user.date_joined|date:"F Y" }}</div>
-                            </div>
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- Status -->
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-shield-alt me-1"></i>
+                            Status da Conta
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pedido-body">
+                    <div class="pedido-info-item text-center">
+                        <div class="pedido-info-label">Função</div>
+                        <div>
+                            {% if user.is_superuser %}
+                                <span class="opcao-badge opcao-rapido">
+                                    <i class="fas fa-crown"></i>
+                                    Administrador
+                                </span>
+                            {% else %}
+                                <span class="opcao-badge opcao-custo-beneficio">
+                                    <i class="fas fa-user"></i>
+                                    Cliente
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="pedido-info-item text-center">
+                        <div class="pedido-info-label">Status</div>
+                        <div>
+                            <span class="opcao-badge opcao-economico">
+                                <i class="fas fa-check-circle"></i>
+                                Verificada
+                            </span>
                         </div>
                     </div>
 
-                    <!-- Ações rápidas -->
-                    <div class="profile-card">
-                        <div class="profile-card-header">
-                            <h2 class="profile-card-title">
-                                <i class="fas fa-bolt"></i>
-                                Ações Rápidas
-                            </h2>
-                        </div>
+                    <div class="pedido-info-item text-center">
+                        <div class="pedido-info-label">Membro desde</div>
+                        <div class="pedido-info-value">{{ user.date_joined|date:"F Y" }}</div>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="profile-quick-actions">
-                            <a href="{% url 'pedidos:listar' %}" class="profile-btn profile-btn-primary">
-                                <i class="fas fa-box"></i>Meus Pedidos
-                            </a>
-                            <a href="{% url 'home' %}" class="profile-btn profile-btn-outline">
-                                <i class="fas fa-home"></i>Voltar ao Início
-                            </a>
-                            <a href="{% url 'contas:logout' %}" class="profile-btn profile-btn-outline">
-                                <i class="fas fa-sign-out-alt"></i>Sair da Conta
-                            </a>
+            <!-- Ações -->
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-bolt me-1"></i>
+                            Ações Rápidas
                         </div>
                     </div>
+                </div>
+
+                <div class="pedido-actions">
+                    <a href="{% url 'pedidos:criar' %}" class="btn btn-action btn-action-primary">
+                        <i class="fas fa-plus"></i>
+                        Novo Pedido
+                    </a>
+                    <a href="{% url 'pedidos:listar' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-box"></i>
+                        Meus Pedidos
+                    </a>
+                    <a href="{% url 'home' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-home"></i>
+                        Início
+                    </a>
+                    <a href="{% url 'contas:logout' %}" class="btn btn-action btn-action-danger">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Sair
+                    </a>
                 </div>
             </div>
         </div>
