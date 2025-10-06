@@ -81,7 +81,6 @@ DJANGO_SETTINGS_MODULE = "frete_proj.settings.dev"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
 addopts = [
     "--reuse-db",
-    "--nomigrations",
     "--tb=short",
 ]
 
