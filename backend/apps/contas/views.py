@@ -133,7 +133,7 @@ def signup(request):
     """
     if request.user.is_authenticated:
         # Se já estiver logado, redireciona para o dashboard
-        return redirect("dashboard_cliente")
+        return redirect("dashboard:cliente")
 
     if request.method == "POST":
         form = SignupForm(request.POST)
@@ -151,7 +151,7 @@ def signup(request):
             messages.success(request, f"Bem-vindo, {user.get_full_name()}! Sua conta foi criada com sucesso.")
 
             # Todos os novos usuários são clientes, então sempre redireciona para dashboard_cliente
-            return redirect("dashboard_cliente")
+            return redirect("dashboard:cliente")
         else:
             messages.error(request, "Por favor, corrija os erros abaixo.")
     else:
@@ -198,7 +198,7 @@ class CustomLoginView(LoginView):
         if hasattr(user, "profile"):
             profile = user.profile
             if profile.role == Role.CLIENTE:
-                return reverse("dashboard_cliente")
+                return reverse("dashboard:cliente")
             elif profile.role == Role.MOTORISTA:
                 return reverse("dashboard_motorista")
             elif profile.role == Role.GERENTE:
@@ -207,7 +207,7 @@ class CustomLoginView(LoginView):
                 return reverse("dashboard_owner")
 
         # Fallback para dashboard_cliente
-        return reverse("dashboard_cliente")
+        return reverse("dashboard:cliente")
 
     def form_valid(self, form):
         """
