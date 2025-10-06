@@ -75,6 +75,11 @@ class Pedido(models.Model):
         max_length=20, choices=StatusPedido.choices, default=StatusPedido.COTACAO, verbose_name="Status"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
+    numero_pedido_cliente = models.PositiveIntegerField(
+        default=1,
+        verbose_name="Número do Pedido (Cliente)",
+        help_text="Número sequencial do pedido por cliente",
+    )
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
 
     class Meta:
@@ -109,3 +114,13 @@ class Pedido(models.Model):
             self.save()
             return True
         return False
+
+    def save(self, *args, **kwargs):
+        # Auto-incrementar numero_pedido_cliente se for um novo pedido
+        if not self.pk:
+            ultimo_pedido = Pedido.objects.filter(cliente=self.cliente).order_by("-numero_pedido_cliente").first()
+            if ultimo_pedido:
+                self.numero_pedido_cliente = ultimo_pedido.numero_pedido_cliente + 1
+            else:
+                self.numero_pedido_cliente = 1
+        super().save(*args, **kwargs)
