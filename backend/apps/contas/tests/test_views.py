@@ -47,7 +47,7 @@ class SignupViewTest(TestCase):
         self.assertTrue(user.is_authenticated)
 
         # Verifica redirecionamento (deve ir para dashboard_cliente)
-        self.assertRedirects(response, reverse("dashboard_cliente"))
+        self.assertRedirects(response, reverse("dashboard:cliente"))
 
     def test_signup_view_post_invalid_data(self):
         """Testa cadastro com dados inválidos"""
@@ -124,7 +124,7 @@ class SignupViewTest(TestCase):
         self.client.force_login(user)
 
         response = self.client.get(self.signup_url)
-        self.assertRedirects(response, reverse("dashboard_cliente"))
+        self.assertRedirects(response, reverse("dashboard:cliente"))
 
     @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
     def test_signup_sends_welcome_email(self):
@@ -164,7 +164,7 @@ class CustomLoginViewTest(TestCase):
         response = self.client.post(self.login_url, {"username": "testuser@example.com", "password": "testpass123"})
 
         # Verifica redirecionamento para dashboard do cliente
-        self.assertRedirects(response, reverse("dashboard_cliente"))
+        self.assertRedirects(response, reverse("dashboard:cliente"))
 
         # Verifica se usuário está autenticado
         self.assertTrue("_auth_user_id" in self.client.session)
@@ -204,7 +204,7 @@ class CustomLoginViewTest(TestCase):
         self.client.force_login(self.user)
 
         response = self.client.get(self.login_url)
-        self.assertRedirects(response, reverse("dashboard_cliente"))
+        self.assertRedirects(response, reverse("dashboard:cliente"))
 
 
 class CustomLogoutViewTest(TestCase):

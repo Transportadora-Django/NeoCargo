@@ -39,6 +39,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "apps.contas",
     "apps.pedidos",
+    "apps.dashboard",
     "core",
     # Add local apps here
 ]
@@ -120,7 +121,7 @@ DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "noreply@neocargo.local")
 
 # Authentication URLs
 LOGIN_URL = "/contas/login/"
-LOGIN_REDIRECT_URL = "/pedidos/"
+LOGIN_REDIRECT_URL = "/dashboard/cliente/"
 LOGOUT_REDIRECT_URL = "/"
 
 # Default primary key field type

@@ -38,7 +38,7 @@
             <div class="pedido-header">
                 <div>
                     <div class="pedido-id">
-                        <i class="fas fa-hashtag"></i>{{ pedido.id }}
+                        <i class="fas fa-hashtag"></i>{{ pedido.numero_pedido_cliente }}
                     </div>
                     <div class="pedido-date">
                         <i class="far fa-calendar me-1"></i>
@@ -191,7 +191,7 @@
                     <div class="modal-header">
                         <h5 class="modal-title">
                             <i class="fas fa-file-alt me-2"></i>
-                            Detalhes do Pedido #{{ pedido.id }}
+                            Detalhes do Pedido #{{ pedido.numero_pedido_cliente }}
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
@@ -200,7 +200,7 @@
                             <div class="col-md-6">
                                 <h6 class="fw-bold">Informações Gerais</h6>
                                 <ul class="list-unstyled">
-                                    <li><strong>Pedido:</strong> #{{ pedido.id }}</li>
+                                    <li><strong>Pedido:</strong> #{{ pedido.numero_pedido_cliente }}</li>
                                     <li><strong>Data:</strong> {{ pedido.created_at|date:"d/m/Y H:i" }}</li>
                                     <li><strong>Status:</strong> {{ pedido.get_status_display }}</li>
                                     {% if pedido.opcao %}
@@ -270,7 +270,7 @@
                     <div class="modal-header bg-danger text-white">
                         <h5 class="modal-title">
                             <i class="fas fa-exclamation-triangle me-2"></i>
-                            Cancelar Pedido #{{ pedido.id }}
+                            Cancelar Pedido #{{ pedido.numero_pedido_cliente }}
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
