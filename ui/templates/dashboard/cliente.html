@@ -3,52 +3,378 @@
 
 {% block title %}Dashboard Cliente - NeoCargo{% endblock %}
 
-{% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-12">
-            <h1 class="mb-4">Dashboard Cliente</h1>
-            
-            {% include 'components/alert.html' with type='info' title='🚧 Em Desenvolvimento' message='Esta página está sendo desenvolvida. Em breve você terá acesso a todas as funcionalidades do cliente.' %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/dashboard.css' %}">
+{% endblock %}
 
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">📦 Minhas Cargas</h5>
-                            <p class="card-text">Gerencie suas cargas e acompanhe entregas.</p>
-                            <button class="btn btn-outline-primary" onclick="alert('Em desenvolvimento')">
-                                Ver Cargas
-                            </button>
+{% block content %}
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Bem-vindo, {{ user.get_full_name|default:user.username }}!
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Gerencie seus pedidos e acompanhe suas entregas de forma simples e eficiente.
+                </p>
+            </div>
+            <div>
+                <span class="status-badge status-aprovado">
+                    <i class="fas fa-user me-2"></i>
+                    {{ profile.get_role_display }}
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+
+    <!-- Statistics Cards -->
+    <div class="dashboard-stats">
+        <div class="row mb-4">
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <div>
+                            <div class="pedido-id">
+                                <i class="fas fa-clipboard-list"></i>
+                                Total de Pedidos
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge status-total">
+                                {{ total_pedidos }}
+                            </span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">🚚 Entregas</h5>
-                            <p class="card-text">Acompanhe o status das suas entregas.</p>
-                            <button class="btn btn-outline-primary" onclick="alert('Em desenvolvimento')">
-                                Ver Entregas
-                            </button>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <div>
+                            <div class="pedido-id">
+                                <i class="fas fa-clock"></i>
+                                Pedidos Pendentes
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge status-pendentes">
+                                {{ pedidos_pendentes }}
+                            </span>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-4">
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">📋 Histórico</h5>
-                            <p class="card-text">Consulte o histórico de suas operações.</p>
-                            <button class="btn btn-outline-primary" onclick="alert('Em desenvolvimento')">
-                                Ver Histórico
-                            </button>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <div>
+                            <div class="pedido-id">
+                                <i class="fas fa-check-circle"></i>
+                                Pedidos Concluídos
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge status-concluidos">
+                                {{ pedidos_concluidos }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-3">
+                <div class="pedido-card">
+                    <div class="pedido-header">
+                        <div>
+                            <div class="pedido-id">
+                                <i class="fas fa-star"></i>
+                                Avaliação Média
+                            </div>
+                        </div>
+                        <div>
+                            <span class="status-badge status-avaliacao">
+                                4.8
+                            </span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Quick Actions -->
+    <div class="dashboard-actions">
+        <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-plus-circle"></i>
+                            Nova Cotação/Pedido
+                        </div>
+                        <div class="pedido-date">
+                            Solicite uma cotação ou crie um novo pedido de transporte.
+                        </div>
+                    </div>
+                </div>
+                <div class="pedido-actions">
+                    <a href="{% url 'pedidos:criar' %}" class="btn btn-action btn-action-primary">
+                        <i class="fas fa-plus"></i>
+                        Criar Pedido
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-list-alt"></i>
+                            Meus Pedidos
+                        </div>
+                        <div class="pedido-date">
+                            Visualize e acompanhe todos os seus pedidos e cotações.
+                        </div>
+                    </div>
+                </div>
+                <div class="pedido-actions">
+                    <a href="{% url 'pedidos:listar' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-eye"></i>
+                        Ver Todos
+                    </a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <!-- Last Order -->
+    <h5 class="pedido-id mb-3">
+        <i class="fas fa-history me-2"></i>
+        Último Pedido
+    </h5>
+    {% if pedidos_recentes %}
+        {% for pedido in pedidos_recentes %}
+        <div class="pedido-card">
+            <!-- Header do Card -->
+            <div class="pedido-header">
+                <div>
+                    <div class="pedido-id">
+                        <i class="fas fa-hashtag"></i>{{ pedido.numero_pedido_cliente }}
+                    </div>
+                    <div class="pedido-date">
+                        <i class="far fa-calendar me-1"></i>
+                        {{ pedido.created_at|date:"d/m/Y" }} às {{ pedido.created_at|date:"H:i" }}
+                    </div>
+                </div>
+                <div>
+                    {% if pedido.status == 'cotacao' %}
+                        <span class="status-badge status-cotacao">
+                            <i class="fas fa-calculator"></i>
+                            Cotação Gerada
+                        </span>
+                    {% elif pedido.status == 'pendente' %}
+                        <span class="status-badge status-pendente">
+                            <i class="fas fa-clock"></i>
+                            Aguardando Análise
+                        </span>
+                    {% elif pedido.status == 'aprovado' %}
+                        <span class="status-badge status-aprovado">
+                            <i class="fas fa-check-circle"></i>
+                            Aprovado
+                        </span>
+                    {% elif pedido.status == 'cancelado' %}
+                        <span class="status-badge status-cancelado">
+                            <i class="fas fa-ban"></i>
+                            Cancelado
+                        </span>
+                    {% elif pedido.status == 'em_transporte' %}
+                        <span class="status-badge status-em-transporte">
+                            <i class="fas fa-truck"></i>
+                            Em Transporte
+                        </span>
+                    {% elif pedido.status == 'concluido' %}
+                        <span class="status-badge status-concluido">
+                            <i class="fas fa-flag-checkered"></i>
+                            Concluído
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Body do Card -->
+            <div class="pedido-body">
+                <!-- Rota -->
+                <div class="pedido-info-item">
+                    <div class="pedido-info-label">
+                        <i class="fas fa-route me-1"></i>
+                        Rota
+                    </div>
+                    <div class="route-display">
+                        <span class="route-city">{{ pedido.cidade_origem }}</span>
+                        <i class="fas fa-arrow-right route-arrow"></i>
+                        <span class="route-city">{{ pedido.cidade_destino }}</span>
+                    </div>
+                </div>
+
+                <!-- Peso -->
+                <div class="pedido-info-item">
+                    <div class="pedido-info-label">
+                        <i class="fas fa-weight-hanging me-1"></i>
+                        Peso da Carga
+                    </div>
+                    <div class="pedido-info-value">
+                        {{ pedido.peso_carga }} kg
+                    </div>
+                </div>
+
+                <!-- Prazo Desejado -->
+                <div class="pedido-info-item">
+                    <div class="pedido-info-label">
+                        <i class="fas fa-calendar-alt me-1"></i>
+                        Prazo Desejado
+                    </div>
+                    <div class="pedido-info-value">
+                        {{ pedido.prazo_desejado }} dias
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="pedido-actions">
+                <a href="{% url 'pedidos:listar' %}" class="btn btn-action btn-action-info">
+                    <i class="fas fa-eye"></i>
+                    Ver Detalhes
+                </a>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-inbox"></i>
+            </div>
+            <h2 class="empty-title">Nenhum pedido encontrado</h2>
+            <p class="empty-description">
+                Você ainda não fez nenhum pedido de transporte.<br>
+                Comece agora e experimente nosso serviço!
+            </p>
+            <a href="{% url 'pedidos:criar' %}" class="btn btn-new-pedido">
+                <i class="fas fa-plus me-2"></i>
+                Criar Primeiro Pedido
+            </a>
+        </div>
+    {% endif %}
+
+    <!-- Profile Actions -->
+    <div class="dashboard-profile-actions">
+        <div class="row">
+        <div class="col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-user-circle"></i>
+                            Meu Perfil
+                        </div>
+                        <div class="pedido-date">
+                            Gerencie suas informações pessoais e configurações da conta.
+                        </div>
+                    </div>
+                </div>
+                <div class="pedido-actions">
+                    <a href="{% url 'contas:perfil' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-edit"></i>
+                        Editar Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-user-cog"></i>
+                            Mudança de Perfil
+                        </div>
+                        <div class="pedido-date">
+                            {% if solicitacao_pendente %}
+                                Solicitação pendente para: {{ solicitacao_pendente.get_perfil_solicitado_display }}
+                            {% else %}
+                                Deseja se tornar motorista ou ter outro tipo de acesso?
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if solicitacao_pendente %}
+                        <div>
+                            <span class="status-badge status-pendente">
+                                <i class="fas fa-clock"></i>
+                                Pendente
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if not solicitacao_pendente %}
+                <div class="pedido-actions">
+                    <button class="btn btn-action btn-action-info" data-bs-toggle="modal" data-bs-target="#mudancaPerfilModal">
+                        <i class="fas fa-paper-plane"></i>
+                        Solicitar Mudança
+                    </button>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Mudança de Perfil -->
+<div class="modal fade" id="mudancaPerfilModal" tabindex="-1" aria-labelledby="mudancaPerfilModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="{% url 'dashboard:solicitar_mudanca_perfil' %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mudancaPerfilModalLabel">
+                        <i class="fas fa-user-cog me-2"></i>
+                        Solicitar Mudança de Perfil
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="perfil_solicitado" class="form-label">Perfil Desejado</label>
+                        <select class="form-select" id="perfil_solicitado" name="perfil_solicitado" required>
+                            <option value="">Selecione um perfil</option>
+                            <option value="motorista">Motorista</option>
+                            <option value="gerente">Gerente</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="justificativa" class="form-label">Justificativa</label>
+                        <textarea class="form-control" id="justificativa" name="justificativa" rows="4" 
+                                  placeholder="Explique o motivo da solicitação de mudança de perfil..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-new-pedido">
+                        <i class="fas fa-paper-plane me-2"></i>Enviar Solicitação
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
