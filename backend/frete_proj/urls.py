@@ -31,13 +31,9 @@ def home(request):
     return render(request, "home/index.html")
 
 
-# Temporary dashboard views
+# Temporary dashboard views (mantendo para compatibilidade)
 def dashboard(request):
     return HttpResponse("Dashboard Geral - Em desenvolvimento")
-
-
-def dashboard_cliente(request):
-    return render(request, "dashboard/cliente.html")
 
 
 def dashboard_motorista(request):
@@ -57,11 +53,11 @@ urlpatterns = [
     path("health/", health),
     path("contas/", include("apps.contas.urls")),
     path("pedidos/", include("apps.pedidos.urls")),
+    path("dashboard/", include("apps.dashboard.urls")),
     # Include core URLs (including documentation)
     path("", include("core.urls")),
-    # Temporary dashboard URLs
-    path("dashboard/", dashboard, name="dashboard"),
-    path("dashboard/cliente/", dashboard_cliente, name="dashboard_cliente"),
+    # Temporary dashboard URLs (mantendo para compatibilidade)
+    path("dashboard-old/", dashboard, name="dashboard"),
     path("dashboard/motorista/", dashboard_motorista, name="dashboard_motorista"),
     path("dashboard/gerente/", dashboard_gerente, name="dashboard_gerente"),
     path("dashboard/owner/", dashboard_owner, name="dashboard_owner"),
