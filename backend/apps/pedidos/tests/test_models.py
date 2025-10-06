@@ -23,8 +23,8 @@ class PedidoModelTest(TestCase):
         self.assertEqual(pedido.cidade_destino, "Rio de Janeiro")
         self.assertEqual(pedido.peso_carga, Decimal("100.00"))
         self.assertEqual(pedido.prazo_desejado, 7)
-        self.assertEqual(pedido.status, StatusPedido.PENDENTE)
-        self.assertTrue(pedido.is_pendente)
+        self.assertEqual(pedido.status, StatusPedido.COTACAO)
+        self.assertTrue(pedido.is_cotacao)
 
     def test_pedido_com_observacoes(self):
         """Testa pedido com observações"""
@@ -86,5 +86,5 @@ class PedidoModelTest(TestCase):
             prazo_desejado=7,
         )
 
-        expected = f"Pedido #{pedido.id} - {self.user.username} (Pendente)"
+        expected = f"Pedido #{pedido.id} - {self.user.username} (Cotação Gerada)"
         self.assertEqual(str(pedido), expected)
