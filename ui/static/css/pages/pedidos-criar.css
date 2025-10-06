@@ -1,0 +1,183 @@
+/* ============================================================ */
+
+/* CRIAR PEDIDO - MODERN DESIGN (COMPACTO)                     */
+
+/* ============================================================ */
+
+.criar-pedido-header {
+  background: linear-gradient(
+    135deg,
+    var(--neocargo-navy) 0%,
+    var(--neocargo-slate) 100%
+  );
+  padding: 2rem 0 1.25rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0 0 20px 20px;
+  box-shadow: var(--shadow-lg);
+}
+
+.criar-pedido-title {
+  color: #fff;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.4rem;
+}
+
+.criar-pedido-subtitle {
+  color: rgb(255 255 255 / 85%);
+  font-size: 0.95rem;
+}
+
+.btn-back {
+  background: rgb(255 255 255 / 20%);
+  border: 2px solid rgb(255 255 255 / 30%);
+  color: #fff;
+  padding: 0.45rem 1.1rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all var(--transition-normal);
+}
+
+.btn-back:hover {
+  background: rgb(255 255 255 / 30%);
+  border-color: rgb(255 255 255 / 50%);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.form-card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  border: none;
+}
+
+.form-section-title {
+  color: var(--neocargo-navy);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--neocargo-cyan);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-label {
+  color: var(--neocargo-navy);
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.form-control,
+.form-select {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.6rem 0.85rem;
+  transition: all var(--transition-fast);
+  font-size: 0.95rem;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--neocargo-cyan);
+  box-shadow: 0 0 0 3px rgb(6 182 212 / 10%);
+}
+
+.input-group-text {
+  background: var(--neocargo-cyan);
+  color: #fff;
+  border: 2px solid var(--neocargo-cyan);
+  border-radius: 0 8px 8px 0;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.input-group .form-control {
+  border-radius: 8px 0 0 8px;
+}
+
+.form-text {
+  color: #64748b;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, var(--neocargo-cyan) 0%, #0891b2 100%);
+  border: none;
+  padding: 0.75rem 2.25rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  transition: all var(--transition-normal);
+  box-shadow: 0 4px 15px rgb(6 182 212 / 30%);
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgb(6 182 212 / 40%);
+  color: #fff;
+}
+
+.btn-cancel {
+  background: #f1f5f9;
+  border: 2px solid #cbd5e1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #475569;
+  transition: all var(--transition-fast);
+}
+
+.btn-cancel:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #334155;
+}
+
+.info-box {
+  background: linear-gradient(135deg, #ecfeff 0%, #cffafe 100%);
+  border-left: 4px solid var(--neocargo-cyan);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1.25rem;
+}
+
+.info-box-title {
+  color: var(--neocargo-navy);
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.info-box ol {
+  margin-bottom: 0;
+  padding-left: 1.5rem;
+}
+
+.info-box li {
+  color: #0e7490;
+  margin-bottom: 0.35rem;
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .criar-pedido-title {
+    font-size: 1.4rem;
+  }
+
+  .form-card {
+    padding: 1.25rem;
+  }
+}
