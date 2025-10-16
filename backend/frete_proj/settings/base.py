@@ -39,6 +39,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "apps.contas",
     "apps.pedidos",
+    "apps.gestao",
+    "apps.veiculos",
     "apps.dashboard",
     "core",
     # Add local apps here
