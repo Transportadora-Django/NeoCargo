@@ -92,24 +92,74 @@
                         </a>
                     </li>
                     {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard:cliente' %}">
-                            <i class="fas fa-tachometer-alt me-1" aria-hidden="true"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'pedidos:criar' %}">
-                            <i class="fas fa-plus-circle me-1" aria-hidden="true"></i>
-                            Criar Pedido
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'pedidos:listar' %}">
-                            <i class="fas fa-clipboard-list me-1" aria-hidden="true"></i>
-                            Meus Pedidos
-                        </a>
-                    </li>
+                        {% if user.profile.is_owner %}
+                            <!-- Menu para Owner -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'gestao:dashboard_dono' %}">
+                                    <i class="fas fa-crown me-1" aria-hidden="true"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownGestao" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-cog me-1" aria-hidden="true"></i>
+                                    Gestão
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownGestao">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'gestao:listar_usuarios' %}">
+                                            <i class="fas fa-users me-2"></i>
+                                            Usuários
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'gestao:listar_solicitacoes' %}">
+                                            <i class="fas fa-tasks me-2"></i>
+                                            Solicitações
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'veiculos:listar_especificacoes' %}">
+                                            <i class="fas fa-cogs me-2"></i>
+                                            Especificações
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'veiculos:listar_veiculos' %}">
+                                            <i class="fas fa-truck me-2"></i>
+                                            Veículos
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'pedidos:listar' %}">
+                                    <i class="fas fa-box me-1" aria-hidden="true"></i>
+                                    Pedidos
+                                </a>
+                            </li>
+                        {% else %}
+                            <!-- Menu para Cliente/Motorista -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'dashboard:cliente' %}">
+                                    <i class="fas fa-tachometer-alt me-1" aria-hidden="true"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'pedidos:criar' %}">
+                                    <i class="fas fa-plus-circle me-1" aria-hidden="true"></i>
+                                    Criar Pedido
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'pedidos:listar' %}">
+                                    <i class="fas fa-clipboard-list me-1" aria-hidden="true"></i>
+                                    Meus Pedidos
+                                </a>
+                            </li>
+                        {% endif %}
                     {% endif %}
                     <li class="nav-item">
                         <a 
@@ -164,6 +214,24 @@
                                         Meu Perfil
                                     </a>
                                 </li>
+                                
+                                <!-- Links de Mudança de Perfil (apenas para não-owners) -->
+                                {% if not user.profile.is_owner %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'gestao:minhas_solicitacoes' %}">
+                                        <i class="fas fa-exchange-alt me-2"></i>
+                                        Minhas Solicitações
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'gestao:solicitar_mudanca' %}">
+                                        <i class="fas fa-user-plus me-2"></i>
+                                        Solicitar Mudança de Perfil
+                                    </a>
+                                </li>
+                                {% endif %}
+                                
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <a class="dropdown-item" href="{% url 'contas:logout' %}">

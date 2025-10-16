@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    Minhas Solicitações
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Acompanhe o status das suas solicitações de mudança de perfil
+                </p>
+            </div>
+            {% if config.solicitacoes_abertas %}
+            <a href="{% url 'gestao:solicitar_mudanca' %}" class="btn btn-new-pedido">
+                <i class="fas fa-plus me-2"></i>
+                Nova Solicitação
+            </a>
+            {% else %}
+            <button class="btn btn-secondary" disabled title="Solicitações pausadas">
+                <i class="fas fa-pause me-2"></i>
+                Solicitações Pausadas
+            </button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    {% if not config.solicitacoes_abertas %}
+    <div class="alert alert-warning mt-4">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        {{ config.mensagem_solicitacoes_fechadas }}
+    </div>
+    {% endif %}
+    
+    {% if solicitacoes %}
+    {% for solicitacao in solicitacoes %}
+    <div class="pedido-card">
+        <div class="pedido-header">
+            <div>
+                <div class="pedido-id">
+                    <i class="fas fa-exchange-alt me-1"></i>
+                    Solicitação #{{ solicitacao.id }}
+                </div>
+                <div class="pedido-date">
+                    Enviada em {{ solicitacao.created_at|date:"d/m/Y H:i" }}
+                </div>
+            </div>
+            
+            {% if solicitacao.status == 'pendente' %}
+                <span class="status-badge status-cotacao">
+                    <i class="fas fa-clock"></i>
+                    Pendente
+                </span>
+            {% elif solicitacao.status == 'aprovada' %}
+                <span class="status-badge status-aprovado">
+                    <i class="fas fa-check"></i>
+                    Aprovada
+                </span>
+            {% else %}
+                <span class="status-badge status-cancelado">
+                    <i class="fas fa-times"></i>
+                    Rejeitada
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="pedido-body">
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-arrow-right me-1"></i>
+                    Mudança Solicitada
+                </div>
+                <div class="pedido-info-value">
+                    {{ solicitacao.get_role_atual_display }} → {{ solicitacao.get_role_solicitada_display }}
+                </div>
+            </div>
+            
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-comment me-1"></i>
+                    Justificativa
+                </div>
+                <div class="pedido-info-value">{{ solicitacao.justificativa }}</div>
+            </div>
+            
+            {% if solicitacao.role_solicitada == 'motorista' and solicitacao.tipo_veiculo %}
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-car me-1"></i>
+                    Veículo
+                </div>
+                <div class="pedido-info-value">
+                    {{ solicitacao.get_tipo_veiculo_display }} - {{ solicitacao.modelo_veiculo }} ({{ solicitacao.placa_veiculo }})
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if solicitacao.data_aprovacao %}
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-calendar-check me-1"></i>
+                    Data de Aprovação
+                </div>
+                <div class="pedido-info-value">{{ solicitacao.data_aprovacao|date:"d/m/Y H:i" }}</div>
+            </div>
+            {% endif %}
+            
+            {% if solicitacao.aprovado_por %}
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-user-check me-1"></i>
+                    Aprovado por
+                </div>
+                <div class="pedido-info-value">{{ solicitacao.aprovado_por.get_full_name|default:solicitacao.aprovado_por.username }}</div>
+            </div>
+            {% endif %}
+            
+            {% if solicitacao.observacoes_admin %}
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-sticky-note me-1"></i>
+                    Observações do Administrador
+                </div>
+                <div class="pedido-info-value">{{ solicitacao.observacoes_admin }}</div>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if solicitacao.status == 'pendente' %}
+        <div class="pedido-actions">
+            <button class="btn btn-action btn-action-info" disabled>
+                <i class="fas fa-hourglass-half"></i>
+                Aguardando Análise
+            </button>
+        </div>
+        {% elif solicitacao.status == 'aprovada' %}
+        <div class="pedido-actions">
+            <span class="btn btn-action btn-action-primary" style="cursor: default;">
+                <i class="fas fa-check-circle"></i>
+                Solicitação Aprovada
+            </span>
+        </div>
+        {% else %}
+        <div class="pedido-actions">
+            <span class="btn btn-action btn-action-danger" style="cursor: default;">
+                <i class="fas fa-times-circle"></i>
+                Solicitação Rejeitada
+            </span>
+        </div>
+        {% endif %}
+    </div>
+    {% empty %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-exchange-alt"></i>
+        </div>
+        <h3 class="empty-title">Nenhuma solicitação encontrada</h3>
+        <p class="empty-description">
+            Você ainda não fez nenhuma solicitação de mudança de perfil.
+        </p>
+        <a href="{% url 'gestao:solicitar_mudanca' %}" class="btn btn-new-pedido">
+            <i class="fas fa-plus me-2"></i>
+            Fazer Primeira Solicitação
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

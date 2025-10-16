@@ -1,0 +1,275 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-tasks me-2"></i>
+                    Solicitações de Mudança de Perfil
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Gerencie as solicitações de mudança de perfil dos usuários
+                </p>
+            </div>
+            <a href="{% url 'gestao:dashboard_dono' %}" class="btn btn-new-pedido">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filtros -->
+    <div class="pedido-card mb-4">
+        <div class="pedido-header">
+            <div>
+                <div class="pedido-id">
+                    <i class="fas fa-filter me-1"></i>
+                    Filtros
+                </div>
+            </div>
+        </div>
+        
+        <div class="pedido-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-6">
+                    <label for="status" class="form-label">Status</label>
+                    <select class="form-select" id="status" name="status">
+                        <option value="">Todos os status</option>
+                        {% for value, label in status_choices %}
+                        <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-6 d-flex align-items-end">
+                    <button type="submit" class="btn btn-action btn-action-primary me-2">
+                        <i class="fas fa-search"></i>
+                        Filtrar
+                    </button>
+                    <a href="{% url 'gestao:listar_solicitacoes' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-times"></i>
+                        Limpar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Solicitações -->
+    {% for solicitacao in page_obj %}
+    <div class="pedido-card">
+        <div class="pedido-header">
+            <div>
+                <div class="pedido-id">
+                    <i class="fas fa-user me-1"></i>
+                    {{ solicitacao.usuario.get_full_name|default:solicitacao.usuario.username }}
+                </div>
+                <div class="pedido-date">
+                    Solicitação #{{ solicitacao.id }} - {{ solicitacao.created_at|date:"d/m/Y H:i" }}
+                </div>
+            </div>
+            
+            {% if solicitacao.status == 'pendente' %}
+                <span class="status-badge status-cotacao">
+                    <i class="fas fa-clock"></i>
+                    Pendente
+                </span>
+            {% elif solicitacao.status == 'aprovada' %}
+                <span class="status-badge status-aprovado">
+                    <i class="fas fa-check"></i>
+                    Aprovada
+                </span>
+            {% else %}
+                <span class="status-badge status-cancelado">
+                    <i class="fas fa-times"></i>
+                    Rejeitada
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="pedido-body">
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-arrow-right me-1"></i>
+                    Mudança Solicitada
+                </div>
+                <div class="pedido-info-value">
+                    <span class="opcao-badge opcao-custo-beneficio">{{ solicitacao.get_role_atual_display }}</span>
+                    <i class="fas fa-arrow-right mx-2"></i>
+                    {% if solicitacao.role_solicitada == 'motorista' %}
+                        <span class="opcao-badge opcao-rapido">{{ solicitacao.get_role_solicitada_display }}</span>
+                    {% else %}
+                        <span class="opcao-badge opcao-economico">{{ solicitacao.get_role_solicitada_display }}</span>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-envelope me-1"></i>
+                    Email do Usuário
+                </div>
+                <div class="pedido-info-value">{{ solicitacao.usuario.email }}</div>
+            </div>
+            
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-comment me-1"></i>
+                    Justificativa
+                </div>
+                <div class="pedido-info-value">{{ solicitacao.justificativa|truncatewords:20 }}</div>
+            </div>
+            
+            {% if solicitacao.role_solicitada == 'motorista' and solicitacao.tipo_veiculo %}
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-car me-1"></i>
+                    Veículo
+                </div>
+                <div class="pedido-info-value">
+                    {{ solicitacao.get_tipo_veiculo_display }} - {{ solicitacao.modelo_veiculo }} ({{ solicitacao.placa_veiculo }})
+                </div>
+            </div>
+            {% endif %}
+            
+            {% if solicitacao.telefone %}
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-phone me-1"></i>
+                    Telefone
+                </div>
+                <div class="pedido-info-value">{{ solicitacao.telefone }}</div>
+            </div>
+            {% endif %}
+            
+            {% if solicitacao.data_aprovacao %}
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-calendar-check me-1"></i>
+                    Processada em
+                </div>
+                <div class="pedido-info-value">
+                    {{ solicitacao.data_aprovacao|date:"d/m/Y H:i" }}
+                    {% if solicitacao.aprovado_por %}
+                        por {{ solicitacao.aprovado_por.get_full_name|default:solicitacao.aprovado_por.username }}
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="pedido-actions">
+            {% if solicitacao.status == 'pendente' %}
+                <a href="{% url 'gestao:aprovar_solicitacao' solicitacao.id %}" class="btn btn-action btn-action-primary">
+                    <i class="fas fa-gavel"></i>
+                    Analisar
+                </a>
+            {% endif %}
+            
+            <button class="btn btn-action btn-action-info" onclick="verDetalhes({{ solicitacao.id }})">
+                <i class="fas fa-eye"></i>
+                Ver Detalhes
+            </button>
+            
+            <a href="mailto:{{ solicitacao.usuario.email }}" class="btn btn-action btn-action-info">
+                <i class="fas fa-envelope"></i>
+                Contatar
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-tasks"></i>
+        </div>
+        <h3 class="empty-title">Nenhuma solicitação encontrada</h3>
+        <p class="empty-description">
+            {% if status_filter %}
+                Não há solicitações com o status "{{ status_filter|title }}".
+            {% else %}
+                Não há solicitações de mudança de perfil no momento.
+            {% endif %}
+        </p>
+    </div>
+    {% endfor %}
+
+    <!-- Paginação -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Navegação de páginas">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if status_filter %}&status={{ status_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<!-- Modal para detalhes -->
+<div class="modal fade" id="detalhesModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes da Solicitação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="detalhes-content">
+                <!-- Conteúdo será carregado via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function verDetalhes(solicitacaoId) {
+    // Por enquanto, apenas mostra um alerta
+    // Em uma implementação completa, faria uma requisição AJAX para buscar os detalhes
+    alert('Funcionalidade de ver detalhes será implementada em breve!\\nSolicitação ID: ' + solicitacaoId);
+}
+</script>
+{% endblock %}

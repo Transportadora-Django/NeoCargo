@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Especificações de Veículos - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .vehicle-card {
+        background: white;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .vehicle-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        transform: translateY(-2px);
+    }
+    
+    .vehicle-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+        padding-bottom: 16px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .vehicle-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin: 0;
+    }
+    
+    .vehicle-actions {
+        display: flex;
+        gap: 8px;
+    }
+    
+    .vehicle-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+    }
+    
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .info-label {
+        font-size: 0.85rem;
+        color: #7f8c8d;
+        margin-bottom: 4px;
+    }
+    
+    .info-value {
+        font-size: 1rem;
+        color: #2c3e50;
+        font-weight: 500;
+    }
+    
+    .btn-add-vehicle {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-add-vehicle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .empty-icon {
+        font-size: 4rem;
+        color: #bdc3c7;
+        margin-bottom: 20px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-2">
+                <i class="fas fa-cogs me-2"></i>
+                Especificações de Veículos
+            </h1>
+            <p class="text-muted mb-0">
+                Total de {{ total_especificacoes }} especificaç{{ total_especificacoes|pluralize:"ão,ões" }} cadastrada{{ total_especificacoes|pluralize }}
+            </p>
+        </div>
+        <a href="{% url 'gestao:adicionar_especificacao' %}" class="btn btn-add-vehicle">
+            <i class="fas fa-plus me-2"></i>
+            Adicionar Especificação
+        </a>
+    </div>
+    
+    {% if especificacoes %}
+        {% for especificacao in especificacoes %}
+        <div class="vehicle-card">
+            <div class="vehicle-header">
+                <h3 class="vehicle-title">
+                    <i class="fas fa-truck-moving me-2"></i>
+                    {{ especificacao.get_tipo_display }}
+                </h3>
+                <div class="vehicle-actions">
+                    <a href="{% url 'gestao:editar_especificacao' especificacao.id %}" 
+                       class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-edit me-1"></i>
+                        Editar
+                    </a>
+                    <a href="{% url 'gestao:remover_especificacao' especificacao.id %}" 
+                       class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash me-1"></i>
+                        Remover
+                    </a>
+                </div>
+            </div>
+            
+            <div class="vehicle-info">
+                <div class="info-item">
+                    <span class="info-label">Combustível Principal</span>
+                    <span class="info-value">{{ especificacao.get_combustivel_principal_display }}</span>
+                </div>
+                
+                {% if especificacao.combustivel_alternativo %}
+                <div class="info-item">
+                    <span class="info-label">Combustível Alternativo</span>
+                    <span class="info-value">{{ especificacao.get_combustivel_alternativo_display }}</span>
+                </div>
+                {% endif %}
+                
+                <div class="info-item">
+                    <span class="info-label">Rendimento Principal</span>
+                    <span class="info-value">{{ especificacao.rendimento_principal }} km/l</span>
+                </div>
+                
+                {% if especificacao.rendimento_alternativo %}
+                <div class="info-item">
+                    <span class="info-label">Rendimento Alternativo</span>
+                    <span class="info-value">{{ especificacao.rendimento_alternativo }} km/l</span>
+                </div>
+                {% endif %}
+                
+                <div class="info-item">
+                    <span class="info-label">Carga Máxima</span>
+                    <span class="info-value">{{ especificacao.carga_maxima }} kg</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Velocidade Média</span>
+                    <span class="info-value">{{ especificacao.velocidade_media }} km/h</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Redução Rendimento Principal</span>
+                    <span class="info-value">{{ especificacao.reducao_rendimento_principal }}</span>
+                </div>
+                
+                {% if especificacao.reducao_rendimento_alternativo %}
+                <div class="info-item">
+                    <span class="info-label">Redução Rendimento Alternativo</span>
+                    <span class="info-value">{{ especificacao.reducao_rendimento_alternativo }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-truck"></i>
+            </div>
+            <h3>Nenhuma especificação cadastrada</h3>
+            <p class="text-muted">Comece adicionando a primeira especificação de veículo ao sistema.</p>
+            <a href="{% url 'gestao:adicionar_especificacao' %}" class="btn btn-add-vehicle mt-3">
+                <i class="fas fa-plus me-2"></i>
+                Adicionar Primeira Especificação
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

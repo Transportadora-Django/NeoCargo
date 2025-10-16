@@ -308,71 +308,22 @@
                             Mudança de Perfil
                         </div>
                         <div class="pedido-date">
-                            {% if solicitacao_pendente %}
-                                Solicitação pendente para: {{ solicitacao_pendente.get_perfil_solicitado_display }}
-                            {% else %}
-                                Deseja se tornar motorista ou ter outro tipo de acesso?
-                            {% endif %}
+                            Deseja se tornar motorista? Solicite a mudança de perfil!
                         </div>
                     </div>
-                    {% if solicitacao_pendente %}
-                        <div>
-                            <span class="status-badge status-pendente">
-                                <i class="fas fa-clock"></i>
-                                Pendente
-                            </span>
-                        </div>
-                    {% endif %}
                 </div>
-                {% if not solicitacao_pendente %}
                 <div class="pedido-actions">
-                    <button class="btn btn-action btn-action-info" data-bs-toggle="modal" data-bs-target="#mudancaPerfilModal">
+                    <a href="{% url 'gestao:minhas_solicitacoes' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-list"></i>
+                        Minhas Solicitações
+                    </a>
+                    <a href="{% url 'gestao:solicitar_mudanca' %}" class="btn btn-action btn-action-primary">
                         <i class="fas fa-paper-plane"></i>
                         Solicitar Mudança
-                    </button>
+                    </a>
                 </div>
-                {% endif %}
             </div>
         </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal para Mudança de Perfil -->
-<div class="modal fade" id="mudancaPerfilModal" tabindex="-1" aria-labelledby="mudancaPerfilModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <form method="post" action="{% url 'dashboard:solicitar_mudanca_perfil' %}">
-                {% csrf_token %}
-                <div class="modal-header">
-                    <h5 class="modal-title" id="mudancaPerfilModalLabel">
-                        <i class="fas fa-user-cog me-2"></i>
-                        Solicitar Mudança de Perfil
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="perfil_solicitado" class="form-label">Perfil Desejado</label>
-                        <select class="form-select" id="perfil_solicitado" name="perfil_solicitado" required>
-                            <option value="">Selecione um perfil</option>
-                            <option value="motorista">Motorista</option>
-                            <option value="gerente">Gerente</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="justificativa" class="form-label">Justificativa</label>
-                        <textarea class="form-control" id="justificativa" name="justificativa" rows="4" 
-                                  placeholder="Explique o motivo da solicitação de mudança de perfil..." required></textarea>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="submit" class="btn btn-new-pedido">
-                        <i class="fas fa-paper-plane me-2"></i>Enviar Solicitação
-                    </button>
-                </div>
-            </form>
         </div>
     </div>
 </div>

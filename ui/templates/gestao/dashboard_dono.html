@@ -1,0 +1,282 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-crown me-2"></i>
+                    Dashboard do Dono
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Gestão completa do sistema NeoCargo
+                </p>
+            </div>
+            <a href="{% url 'gestao:listar_usuarios' %}" class="btn btn-new-pedido">
+                <i class="fas fa-users me-2"></i>
+                Gerenciar Usuários
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Estatísticas -->
+    <div class="row mb-4 mx-auto">
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-body text-center">
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-users text-primary"></i>
+                            Total de Usuários
+                        </div>
+                        <div class="pedido-info-value display-6">{{ total_usuarios }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-body text-center">
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-user text-success"></i>
+                            Clientes
+                        </div>
+                        <div class="pedido-info-value display-6">{{ total_clientes }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-body text-center">
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-truck text-info"></i>
+                            Motoristas
+                        </div>
+                        <div class="pedido-info-value display-6">{{ total_motoristas }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-body text-center">
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-clock text-warning"></i>
+                            Solicitações Pendentes
+                        </div>
+                        <div class="pedido-info-value display-6">{{ total_solicitacoes_pendentes }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-3 col-md-6 mb-3">
+            <div class="pedido-card">
+                <div class="pedido-body text-center">
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-truck-moving text-primary"></i>
+                            Tipos de Veículos
+                        </div>
+                        <div class="pedido-info-value display-6">{{ total_veiculos }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Controle de Solicitações -->
+    <div class="row mb-4 mx-auto">
+        <div class="col-12">
+            <div class="pedido-card">
+                <div class="pedido-header mb-3">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-toggle-on me-2"></i>
+                            Controle de Solicitações
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 px-3 py-3">
+                    <div>
+                        <p class="text-muted mb-0">
+                            {% if config.solicitacoes_abertas %}
+                                <i class="fas fa-check-circle text-success me-1"></i>
+                                Sistema aceitando novas solicitações de mudança de perfil
+                            {% else %}
+                                <i class="fas fa-pause-circle text-danger me-1"></i>
+                                Solicitações pausadas - Usuários não podem solicitar mudanças
+                            {% endif %}
+                        </p>
+                    </div>
+                    <form method="post" action="{% url 'gestao:toggle_solicitacoes' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn {% if config.solicitacoes_abertas %}btn-danger{% else %}btn-success{% endif %}">
+                            {% if config.solicitacoes_abertas %}
+                                <i class="fas fa-pause me-2"></i>
+                                Pausar Solicitações
+                            {% else %}
+                                <i class="fas fa-play me-2"></i>
+                                Abrir Solicitações
+                            {% endif %}
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mx-auto">
+        <!-- Usuários Recentes -->
+        <div class="col-lg-6 mb-4">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-user-plus me-1"></i>
+                            Usuários Recentes
+                        </div>
+                    </div>
+                    <a href="{% url 'gestao:listar_usuarios' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-eye"></i>
+                        Ver Todos
+                    </a>
+                </div>
+                
+                <div class="pedido-body">
+                    {% for usuario in usuarios_recentes %}
+                    <div class="d-flex justify-content-between align-items-center py-3 {% if not forloop.last %}border-bottom{% endif %}">
+                        <div>
+                            <strong>{{ usuario.get_full_name|default:usuario.username }}</strong>
+                            <br>
+                            <small class="text-muted">{{ usuario.email }}</small>
+                        </div>
+                        <div class="text-end">
+                            {% if usuario.profile %}
+                                <span class="opcao-badge opcao-custo-beneficio">
+                                    {{ usuario.profile.get_role_display }}
+                                </span>
+                            {% else %}
+                                <span class="opcao-badge opcao-aguardando">
+                                    Sem Perfil
+                                </span>
+                            {% endif %}
+                            <br>
+                            <small class="text-muted">{{ usuario.date_joined|date:"d/m/Y" }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-4 mb-0">Nenhum usuário encontrado.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Solicitações Recentes -->
+        <div class="col-lg-6 mb-4">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-exchange-alt me-1"></i>
+                            Solicitações Recentes
+                        </div>
+                    </div>
+                    <a href="{% url 'gestao:listar_solicitacoes' %}" class="btn btn-action btn-action-primary">
+                        <i class="fas fa-tasks"></i>
+                        Gerenciar
+                    </a>
+                </div>
+                
+                <div class="pedido-body">
+                    {% for solicitacao in solicitacoes_recentes %}
+                    <div class="d-flex justify-content-between align-items-center py-3 {% if not forloop.last %}border-bottom{% endif %}">
+                        <div>
+                            <strong>{{ solicitacao.usuario.get_full_name|default:solicitacao.usuario.username }}</strong>
+                            <br>
+                            <small class="text-muted">
+                                {{ solicitacao.get_role_atual_display }} → {{ solicitacao.get_role_solicitada_display }}
+                            </small>
+                        </div>
+                        <div class="text-end">
+                            {% if solicitacao.status == 'pendente' %}
+                                <span class="status-badge status-cotacao">
+                                    <i class="fas fa-clock"></i>
+                                    Pendente
+                                </span>
+                            {% elif solicitacao.status == 'aprovada' %}
+                                <span class="status-badge status-aprovado">
+                                    <i class="fas fa-check"></i>
+                                    Aprovada
+                                </span>
+                            {% else %}
+                                <span class="status-badge status-cancelado">
+                                    <i class="fas fa-times"></i>
+                                    Rejeitada
+                                </span>
+                            {% endif %}
+                            <br>
+                            <small class="text-muted">{{ solicitacao.created_at|date:"d/m/Y" }}</small>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted text-center py-4 mb-0">Nenhuma solicitação encontrada.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="row mx-auto">
+        <div class="col-12">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div>
+                        <div class="pedido-id">
+                            <i class="fas fa-bolt me-1"></i>
+                            Ações Rápidas
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pedido-actions">
+                    <a href="{% url 'gestao:listar_usuarios' %}" class="btn btn-action btn-action-primary">
+                        <i class="fas fa-users"></i>
+                        Gerenciar Usuários
+                    </a>
+                    <a href="{% url 'gestao:listar_solicitacoes' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-tasks"></i>
+                        Aprovar Solicitações
+                    </a>
+                    <a href="{% url 'pedidos:listar' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-box"></i>
+                        Ver Pedidos
+                    </a>
+                    <a href="{% url 'admin:index' %}" class="btn btn-action btn-action-danger">
+                        <i class="fas fa-cog"></i>
+                        Admin Django
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

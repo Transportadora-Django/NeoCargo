@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-criar.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container pb-5 pt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Breadcrumb/Voltar -->
+            <div class="mb-3">
+                <a href="{% url 'veiculos:listar_veiculos' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Voltar para Veículos
+                </a>
+            </div>
+            
+            <!-- Card do Formulário -->
+            <div class="form-card">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+                
+                    <!-- Seção: Tipo de Veículo -->
+                    <div class="form-section-title">
+                        <i class="fas fa-cog"></i>
+                        Tipo de Veículo
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="{{ form.especificacao.id_for_label }}" class="form-label">
+                                <i class="fas fa-truck me-1"></i>
+                                {{ form.especificacao.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.especificacao }}
+                            {% if form.especificacao.help_text %}
+                                <div class="form-text">{{ form.especificacao.help_text }}</div>
+                            {% endif %}
+                            {% if form.especificacao.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.especificacao.errors.0 }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text">Selecione o tipo de veículo (define rendimento, combustível, carga máxima, etc.)</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Seção: Dados do Veículo -->
+                    <div class="form-section-title mt-3">
+                        <i class="fas fa-car"></i>
+                        Dados do Veículo
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label for="{{ form.marca.id_for_label }}" class="form-label">
+                                <i class="fas fa-tag me-1"></i>
+                                {{ form.marca.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.marca }}
+                            {% if form.marca.help_text %}
+                                <div class="form-text">{{ form.marca.help_text }}</div>
+                            {% endif %}
+                            {% if form.marca.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.marca.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.modelo.id_for_label }}" class="form-label">
+                                <i class="fas fa-car me-1"></i>
+                                {{ form.modelo.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.modelo }}
+                            {% if form.modelo.help_text %}
+                                <div class="form-text">{{ form.modelo.help_text }}</div>
+                            {% endif %}
+                            {% if form.modelo.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.modelo.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <label for="{{ form.placa.id_for_label }}" class="form-label">
+                                <i class="fas fa-id-card me-1"></i>
+                                {{ form.placa.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.placa }}
+                            {% if form.placa.help_text %}
+                                <div class="form-text">{{ form.placa.help_text }}</div>
+                            {% endif %}
+                            {% if form.placa.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.placa.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4 mb-3 mb-md-0">
+                            <label for="{{ form.ano.id_for_label }}" class="form-label">
+                                <i class="fas fa-calendar me-1"></i>
+                                {{ form.ano.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.ano }}
+                            {% if form.ano.help_text %}
+                                <div class="form-text">{{ form.ano.help_text }}</div>
+                            {% endif %}
+                            {% if form.ano.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.ano.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <label for="{{ form.cor.id_for_label }}" class="form-label">
+                                <i class="fas fa-palette me-1"></i>
+                                {{ form.cor.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.cor }}
+                            {% if form.cor.help_text %}
+                                <div class="form-text">{{ form.cor.help_text }}</div>
+                            {% endif %}
+                            {% if form.cor.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.cor.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Seção: Status -->
+                    <div class="form-section-title mt-3">
+                        <i class="fas fa-toggle-on"></i>
+                        Status do Veículo
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="form-check">
+                                {{ form.ativo }}
+                                <label class="form-check-label" for="{{ form.ativo.id_for_label }}">
+                                    {{ form.ativo.label }}
+                                </label>
+                            </div>
+                            <div class="form-text">Veículos inativos não podem ser utilizados em novos pedidos</div>
+                            {% if form.ativo.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.ativo.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <!-- Botões de Ação -->
+                    <div class="form-actions">
+                        <a href="{% url 'veiculos:listar_veiculos' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-new-pedido">
+                            <i class="fas fa-save me-2"></i>
+                            {{ acao }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

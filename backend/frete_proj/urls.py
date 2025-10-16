@@ -45,7 +45,9 @@ def dashboard_gerente(request):
 
 
 def dashboard_owner(request):
-    return HttpResponse("Dashboard Owner - Em desenvolvimento")
+    from django.shortcuts import redirect
+
+    return redirect("gestao:dashboard_dono")
 
 
 urlpatterns = [
@@ -53,6 +55,8 @@ urlpatterns = [
     path("health/", health),
     path("contas/", include("apps.contas.urls")),
     path("pedidos/", include("apps.pedidos.urls")),
+    path("gestao/", include("apps.gestao.urls")),
+    path("veiculos/", include("apps.veiculos.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
     # Include core URLs (including documentation)
     path("", include("core.urls")),
