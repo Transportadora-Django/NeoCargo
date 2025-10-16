@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-criar.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container pb-5 pt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <!-- Breadcrumb/Voltar -->
+            <div class="mb-3">
+                <a href="{% url 'veiculos:listar_especificacoes' %}" class="btn btn-outline-secondary btn-sm">
+                    <i class="fas fa-arrow-left me-2"></i>
+                    Voltar para Especificações
+                </a>
+            </div>
+            
+            <!-- Card do Formulário -->
+            <div class="form-card">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+            
+                    <!-- Seção: Tipo de Veículo -->
+                    <div class="form-section-title">
+                        <i class="fas fa-truck"></i>
+                        Tipo de Veículo
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <label for="{{ form.tipo.id_for_label }}" class="form-label">
+                                <i class="fas fa-tag me-1"></i>
+                                {{ form.tipo.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.tipo }}
+                            {% if form.tipo.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.tipo.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+            
+                    <!-- Seção: Combustível -->
+                    <div class="form-section-title mt-3">
+                        <i class="fas fa-gas-pump"></i>
+                        Combustível
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <label for="{{ form.combustivel_principal.id_for_label }}" class="form-label">
+                                <i class="fas fa-gas-pump me-1"></i>
+                                {{ form.combustivel_principal.label }}
+                                <span class="text-danger">*</span>
+                            </label>
+                            {{ form.combustivel_principal }}
+                            {% if form.combustivel_principal.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.combustivel_principal.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <label for="{{ form.combustivel_alternativo.id_for_label }}" class="form-label">
+                                <i class="fas fa-gas-pump me-1"></i>
+                                {{ form.combustivel_alternativo.label }}
+                            </label>
+                            {{ form.combustivel_alternativo }}
+                            <div class="form-text">Opcional</div>
+                            {% if form.combustivel_alternativo.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ form.combustivel_alternativo.errors.0 }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+            
+            <div class="form-section">
+                <h3 class="form-section-title">Rendimento</h3>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.rendimento_principal.id_for_label }}" class="form-label">
+                            {{ form.rendimento_principal.label }}
+                            <span class="text-danger">*</span>
+                        </label>
+                        {{ form.rendimento_principal }}
+                        {% if form.rendimento_principal.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.rendimento_principal.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.rendimento_alternativo.id_for_label }}" class="form-label">
+                            {{ form.rendimento_alternativo.label }}
+                        </label>
+                        {{ form.rendimento_alternativo }}
+                        {% if form.rendimento_alternativo.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.rendimento_alternativo.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.reducao_rendimento_principal.id_for_label }}" class="form-label">
+                            {{ form.reducao_rendimento_principal.label }}
+                            <span class="text-danger">*</span>
+                        </label>
+                        {{ form.reducao_rendimento_principal }}
+                        <small class="form-text text-muted">
+                            {{ form.reducao_rendimento_principal.help_text }}
+                        </small>
+                        {% if form.reducao_rendimento_principal.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.reducao_rendimento_principal.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.reducao_rendimento_alternativo.id_for_label }}" class="form-label">
+                            {{ form.reducao_rendimento_alternativo.label }}
+                        </label>
+                        {{ form.reducao_rendimento_alternativo }}
+                        <small class="form-text text-muted">
+                            {{ form.reducao_rendimento_alternativo.help_text }}
+                        </small>
+                        {% if form.reducao_rendimento_alternativo.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.reducao_rendimento_alternativo.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h3 class="form-section-title">Especificações</h3>
+                
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.carga_maxima.id_for_label }}" class="form-label">
+                            {{ form.carga_maxima.label }}
+                            <span class="text-danger">*</span>
+                        </label>
+                        {{ form.carga_maxima }}
+                        {% if form.carga_maxima.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.carga_maxima.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <label for="{{ form.velocidade_media.id_for_label }}" class="form-label">
+                            {{ form.velocidade_media.label }}
+                            <span class="text-danger">*</span>
+                        </label>
+                        {{ form.velocidade_media }}
+                        {% if form.velocidade_media.errors %}
+                            <div class="invalid-feedback d-block">
+                                {{ form.velocidade_media.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+                    <!-- Botões de Ação -->
+                    <div class="form-actions">
+                        <a href="{% url 'veiculos:listar_especificacoes' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-times me-2"></i>
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-new-pedido">
+                            <i class="fas fa-save me-2"></i>
+                            {{ acao }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

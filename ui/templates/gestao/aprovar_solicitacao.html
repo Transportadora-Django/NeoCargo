@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-criar.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="criar-pedido-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="criar-pedido-title">
+                    <i class="fas fa-gavel me-2"></i>
+                    Analisar Solicitação
+                </h1>
+                <p class="criar-pedido-subtitle mb-0">
+                    Aprove ou rejeite a solicitação de mudança de perfil
+                </p>
+            </div>
+            <a href="{% url 'gestao:listar_solicitacoes' %}" class="btn btn-back">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar à Lista
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <div class="row">
+        <!-- Detalhes da Solicitação -->
+        <div class="col-lg-8">
+            <div class="form-card">
+                <h2 class="form-section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Detalhes da Solicitação
+                </h2>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-user me-1"></i>
+                                Usuário
+                            </div>
+                            <div class="pedido-info-value">
+                                {{ solicitacao.usuario.get_full_name|default:solicitacao.usuario.username }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-envelope me-1"></i>
+                                Email
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.usuario.email }}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-arrow-right me-1"></i>
+                                Mudança Solicitada
+                            </div>
+                            <div class="pedido-info-value">
+                                <span class="opcao-badge opcao-custo-beneficio">{{ solicitacao.get_role_atual_display }}</span>
+                                <i class="fas fa-arrow-right mx-2"></i>
+                                {% if solicitacao.role_solicitada == 'motorista' %}
+                                    <span class="opcao-badge opcao-rapido">{{ solicitacao.get_role_solicitada_display }}</span>
+                                {% else %}
+                                    <span class="opcao-badge opcao-economico">{{ solicitacao.get_role_solicitada_display }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-calendar me-1"></i>
+                                Data da Solicitação
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.created_at|date:"d/m/Y H:i" }}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-comment me-1"></i>
+                            Justificativa
+                        </div>
+                        <div class="pedido-info-value">{{ solicitacao.justificativa }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dados Pessoais -->
+            {% if solicitacao.telefone or solicitacao.cpf or solicitacao.endereco or solicitacao.data_nascimento %}
+            <div class="form-card mt-4">
+                <h2 class="form-section-title mb-4">
+                    <i class="fas fa-id-card"></i>
+                    Dados Pessoais Fornecidos
+                </h2>
+                
+                <div class="row mb-4">
+                    {% if solicitacao.telefone %}
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-phone me-1"></i>
+                                Telefone
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.telefone }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if solicitacao.cpf %}
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-id-card me-1"></i>
+                                CPF
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.cpf }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {% if solicitacao.data_nascimento %}
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-birthday-cake me-1"></i>
+                                Data de Nascimento
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.data_nascimento|date:"d/m/Y" }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if solicitacao.endereco %}
+                <div class="mb-3">
+                    <div class="pedido-info-item">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-map-marker-alt me-1"></i>
+                            Endereço
+                        </div>
+                        <div class="pedido-info-value">{{ solicitacao.endereco }}</div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <!-- Dados do Veículo -->
+            {% if solicitacao.role_solicitada == 'motorista' and solicitacao.tipo_veiculo %}
+            <div class="form-card">
+                <h2 class="form-section-title">
+                    <i class="fas fa-car"></i>
+                    Dados do Veículo
+                </h2>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-truck me-1"></i>
+                                Tipo de Veículo
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.get_tipo_veiculo_display }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-car me-1"></i>
+                                Modelo
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.modelo_veiculo }}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-id-badge me-1"></i>
+                                Placa
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.placa_veiculo }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-calendar me-1"></i>
+                                Ano
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.ano_veiculo }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-4">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-palette me-1"></i>
+                                Cor
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.cor_veiculo }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Formulário de Aprovação -->
+        <div class="col-lg-4">
+            <div class="form-card">
+                <h2 class="form-section-title">
+                    <i class="fas fa-gavel"></i>
+                    Decisão
+                </h2>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.status.id_for_label }}" class="form-label">
+                            <i class="fas fa-check-circle me-1"></i>
+                            {{ form.status.label }}
+                        </label>
+                        {{ form.status }}
+                        {% if form.status.errors %}
+                            <div class="invalid-feedback d-block">{{ form.status.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="{{ form.observacoes_admin.id_for_label }}" class="form-label">
+                            <i class="fas fa-sticky-note me-1"></i>
+                            {{ form.observacoes_admin.label }}
+                        </label>
+                        {{ form.observacoes_admin }}
+                        {% if form.observacoes_admin.errors %}
+                            <div class="invalid-feedback d-block">{{ form.observacoes_admin.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-submit">
+                            <i class="fas fa-gavel me-2"></i>
+                            Processar Solicitação
+                        </button>
+                        <a href="{% url 'gestao:listar_solicitacoes' %}" class="btn btn-cancel">
+                            <i class="fas fa-times me-2"></i>
+                            Cancelar
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Informações do Usuário -->
+            <div class="form-card">
+                <h2 class="form-section-title">
+                    <i class="fas fa-user-circle"></i>
+                    Informações do Usuário
+                </h2>
+                
+                <div class="pedido-info-item mb-3">
+                    <div class="pedido-info-label">
+                        <i class="fas fa-calendar-plus me-1"></i>
+                        Cadastrado em
+                    </div>
+                    <div class="pedido-info-value">{{ solicitacao.usuario.date_joined|date:"d/m/Y" }}</div>
+                </div>
+                
+                <div class="pedido-info-item mb-3">
+                    <div class="pedido-info-label">
+                        <i class="fas fa-sign-in-alt me-1"></i>
+                        Último acesso
+                    </div>
+                    <div class="pedido-info-value">
+                        {% if solicitacao.usuario.last_login %}
+                            {{ solicitacao.usuario.last_login|date:"d/m/Y H:i" }}
+                        {% else %}
+                            Nunca logou
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="pedido-info-item mb-3">
+                    <div class="pedido-info-label">
+                        <i class="fas fa-toggle-on me-1"></i>
+                        Status da Conta
+                    </div>
+                    <div class="pedido-info-value">
+                        {% if solicitacao.usuario.is_active %}
+                            <span class="status-badge status-aprovado">
+                                <i class="fas fa-check"></i>
+                                Ativa
+                            </span>
+                        {% else %}
+                            <span class="status-badge status-cancelado">
+                                <i class="fas fa-ban"></i>
+                                Inativa
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="d-grid">
+                    <a href="mailto:{{ solicitacao.usuario.email }}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-envelope me-2"></i>
+                        Contatar Usuário
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

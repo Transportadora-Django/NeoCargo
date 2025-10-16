@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirmar Remoção de Especificação - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<style>
+    .confirmation-container {
+        max-width: 600px;
+        margin: 60px auto;
+        background: white;
+        border-radius: 12px;
+        padding: 40px;
+        box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    
+    .warning-icon {
+        font-size: 4rem;
+        color: #e74c3c;
+        margin-bottom: 24px;
+    }
+    
+    .confirmation-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 16px;
+    }
+    
+    .confirmation-message {
+        font-size: 1.1rem;
+        color: #7f8c8d;
+        margin-bottom: 32px;
+    }
+    
+    .vehicle-info-box {
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 32px;
+        text-align: left;
+    }
+    
+    .vehicle-info-box h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 12px;
+    }
+    
+    .vehicle-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px solid #dee2e6;
+    }
+    
+    .vehicle-detail:last-child {
+        border-bottom: none;
+    }
+    
+    .detail-label {
+        color: #7f8c8d;
+        font-weight: 500;
+    }
+    
+    .detail-value {
+        color: #2c3e50;
+        font-weight: 600;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 16px;
+        justify-content: center;
+    }
+    
+    .btn-danger-confirm {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 12px 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-danger-confirm:hover {
+        background: #c0392b;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.4);
+        color: white;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="confirmation-container">
+        <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        
+        <h2 class="confirmation-title">Confirmar Remoção</h2>
+        <p class="confirmation-message">
+            Tem certeza que deseja remover esta especificação do sistema?
+            <br>
+            <strong>Esta ação não pode ser desfeita.</strong>
+        </p>
+        
+        <div class="vehicle-info-box">
+            <h4>
+                <i class="fas fa-cogs me-2"></i>
+                {{ especificacao.get_tipo_display }}
+            </h4>
+            
+            <div class="vehicle-detail">
+                <span class="detail-label">Combustível Principal:</span>
+                <span class="detail-value">{{ especificacao.get_combustivel_principal_display }}</span>
+            </div>
+            
+            {% if especificacao.combustivel_alternativo %}
+            <div class="vehicle-detail">
+                <span class="detail-label">Combustível Alternativo:</span>
+                <span class="detail-value">{{ especificacao.get_combustivel_alternativo_display }}</span>
+            </div>
+            {% endif %}
+            
+            <div class="vehicle-detail">
+                <span class="detail-label">Rendimento Principal:</span>
+                <span class="detail-value">{{ especificacao.rendimento_principal }} km/l</span>
+            </div>
+            
+            <div class="vehicle-detail">
+                <span class="detail-label">Carga Máxima:</span>
+                <span class="detail-value">{{ especificacao.carga_maxima }} kg</span>
+            </div>
+            
+            <div class="vehicle-detail">
+                <span class="detail-label">Velocidade Média:</span>
+                <span class="detail-value">{{ especificacao.velocidade_media }} km/h</span>
+            </div>
+        </div>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="action-buttons">
+                <a href="{% url 'veiculos:listar_especificacoes' %}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times me-2"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-danger-confirm">
+                    <i class="fas fa-trash me-2"></i>
+                    Sim, Remover Especificação
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
