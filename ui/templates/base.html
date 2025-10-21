@@ -135,6 +135,25 @@
                                             Veículos
                                         </a>
                                     </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'rotas:listar_cidades' %}">
+                                            <i class="fas fa-city me-2"></i>
+                                            Cidades
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'rotas:listar_rotas' %}">
+                                            <i class="fas fa-route me-2"></i>
+                                            Rotas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'rotas:configurar_precos' %}">
+                                            <i class="fas fa-dollar-sign me-2"></i>
+                                            Configurar Preços
+                                        </a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="nav-item">
@@ -168,10 +187,7 @@
                     <li class="nav-item">
                         <a 
                             class="nav-link" 
-                            href="#" 
-                            data-development="true"
-                            data-feature="Rotas"
-                            role="button"
+                            href="{% url 'rotas:mapa' %}"
                         >
                             <i class="fas fa-route me-1" aria-hidden="true"></i>
                             Rotas

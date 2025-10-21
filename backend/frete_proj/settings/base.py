@@ -42,6 +42,7 @@ LOCAL_APPS = [
     "apps.gestao",
     "apps.veiculos",
     "apps.dashboard",
+    "apps.rotas",
     "core",
     # Add local apps here
 ]

@@ -70,8 +70,11 @@ def dashboard_dono(request):
 
     # Estatísticas de veículos
     from apps.veiculos.models import Veiculo
+    from apps.rotas.models import Cidade, Rota
 
     total_veiculos = Veiculo.objects.count()
+    total_cidades = Cidade.objects.filter(ativa=True).count()
+    total_rotas = Rota.objects.filter(ativa=True).count()
 
     context = {
         "titulo": "Dashboard do Dono",
@@ -80,6 +83,8 @@ def dashboard_dono(request):
         "total_motoristas": total_motoristas,
         "total_solicitacoes_pendentes": total_solicitacoes_pendentes,
         "total_veiculos": total_veiculos,
+        "total_cidades": total_cidades,
+        "total_rotas": total_rotas,
         "usuarios_recentes": usuarios_recentes,
         "solicitacoes_recentes": solicitacoes_recentes,
         "config": config,

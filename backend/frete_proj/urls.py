@@ -58,6 +58,7 @@ urlpatterns = [
     path("gestao/", include("apps.gestao.urls")),
     path("veiculos/", include("apps.veiculos.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
+    path("rotas/", include("apps.rotas.urls")),
     # Include core URLs (including documentation)
     path("", include("core.urls")),
     # Temporary dashboard URLs (mantendo para compatibilidade)
