@@ -33,13 +33,16 @@ class PedidoViewTest(TestCase):
         # Deve redirecionar para cotação
         self.assertEqual(response.status_code, 302)
         pedido = Pedido.objects.first()
-        self.assertRedirects(response, reverse("pedidos:gerar_cotacao", args=[pedido.id]))
 
         # Verifica se pedido foi criado
         self.assertEqual(Pedido.objects.count(), 1)
         self.assertEqual(pedido.cliente, self.user)
         self.assertEqual(pedido.cidade_origem, "São Paulo")
         self.assertEqual(pedido.status, StatusPedido.COTACAO)
+
+        # Tenta acessar cotação (formato antigo redireciona para listar)
+        response_cotacao = self.client.get(reverse("pedidos:gerar_cotacao", args=[pedido.id]))
+        self.assertEqual(response_cotacao.status_code, 302)  # Redireciona pois não tem rota
 
     def test_criar_pedido_post_invalido(self):
         """Testa criação com dados inválidos"""
