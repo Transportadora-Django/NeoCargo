@@ -192,10 +192,25 @@
                                     <i class="fas fa-crown"></i>
                                     Administrador
                                 </span>
+                            {% elif user.profile.role == 'owner' %}
+                                <span class="opcao-badge opcao-economico">
+                                    <i class="fas fa-crown"></i>
+                                    {{ user.profile.get_role_display }}
+                                </span>
+                            {% elif user.profile.role == 'motorista' %}
+                                <span class="opcao-badge opcao-rapido">
+                                    <i class="fas fa-truck"></i>
+                                    {{ user.profile.get_role_display }}
+                                </span>
+                            {% elif user.profile.role == 'gerente' %}
+                                <span class="opcao-badge opcao-economico">
+                                    <i class="fas fa-user-tie"></i>
+                                    {{ user.profile.get_role_display }}
+                                </span>
                             {% else %}
                                 <span class="opcao-badge opcao-custo-beneficio">
                                     <i class="fas fa-user"></i>
-                                    Cliente
+                                    {{ user.profile.get_role_display }}
                                 </span>
                             {% endif %}
                         </div>

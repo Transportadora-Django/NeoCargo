@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Confirmar Remoção de Veículo - NeoCargo{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <div class="pedido-id text-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        Confirmar Remoção de Veículo
+                    </div>
+                </div>
+                
+                <div class="pedido-body">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Atenção!</strong> Esta ação não pode ser desfeita.
+                    </div>
+                    
+                    <p class="mb-4">
+                        Tem certeza que deseja remover o seguinte veículo do sistema?
+                    </p>
+                    
+                    <div class="card bg-light mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <i class="fas fa-truck me-2"></i>
+                                {{ veiculo.marca }} {{ veiculo.modelo }}
+                            </h5>
+                            
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item mb-2">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-id-card me-1"></i>
+                                            Placa
+                                        </div>
+                                        <div class="pedido-info-value">{{ veiculo.placa }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item mb-2">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-cog me-1"></i>
+                                            Tipo
+                                        </div>
+                                        <div class="pedido-info-value">{{ veiculo.especificacao.get_tipo_display }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item mb-2">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            Ano
+                                        </div>
+                                        <div class="pedido-info-value">{{ veiculo.ano }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item mb-2">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-palette me-1"></i>
+                                            Cor
+                                        </div>
+                                        <div class="pedido-info-value">{{ veiculo.cor }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item mb-2">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-circle me-1"></i>
+                                            Status
+                                        </div>
+                                        <div class="pedido-info-value">
+                                            {% if veiculo.ativo %}
+                                                <span class="badge bg-success">Ativo</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Inativo</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'veiculos:listar_veiculos' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-2"></i>
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash me-2"></i>
+                                Sim, Remover Veículo
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

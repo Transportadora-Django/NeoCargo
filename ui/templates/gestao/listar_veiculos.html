@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Veículos - NeoCargo{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="mb-2">
+                <i class="fas fa-truck me-2"></i>
+                Veículos Cadastrados
+            </h1>
+            <p class="text-muted mb-0">
+                Total de {{ total_veiculos }} veículo{{ total_veiculos|pluralize }} cadastrado{{ total_veiculos|pluralize }}
+            </p>
+        </div>
+        <a href="{% url 'gestao:adicionar_veiculo' %}" class="btn btn-new-pedido">
+            <i class="fas fa-plus me-2"></i>
+            Adicionar Veículo
+        </a>
+    </div>
+    
+    {% if veiculos %}
+        {% for veiculo in veiculos %}
+        <div class="pedido-card mb-3">
+            <div class="pedido-header">
+                <div>
+                    <div class="pedido-id">
+                        <i class="fas fa-truck me-2"></i>
+                        {{ veiculo.marca }} {{ veiculo.modelo }}
+                    </div>
+                    <div class="pedido-info">
+                        <span class="pedido-info-item">
+                            <i class="fas fa-id-card me-1"></i>
+                            Placa: <strong>{{ veiculo.placa }}</strong>
+                        </span>
+                        <span class="pedido-info-item">
+                            <i class="fas fa-cog me-1"></i>
+                            Tipo: <strong>{{ veiculo.especificacao.get_tipo_display }}</strong>
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{% url 'gestao:editar_veiculo' veiculo.id %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-edit"></i>
+                        Editar
+                    </a>
+                    <a href="{% url 'gestao:remover_veiculo' veiculo.id %}" class="btn btn-action btn-action-danger">
+                        <i class="fas fa-trash"></i>
+                        Remover
+                    </a>
+                </div>
+            </div>
+            
+            <div class="pedido-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-user me-1"></i>
+                                Motorista
+                            </div>
+                            <div class="pedido-info-value">
+                                {{ veiculo.motorista.user.get_full_name|default:veiculo.motorista.user.username }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-calendar me-1"></i>
+                                Ano
+                            </div>
+                            <div class="pedido-info-value">{{ veiculo.ano }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-palette me-1"></i>
+                                Cor
+                            </div>
+                            <div class="pedido-info-value">{{ veiculo.cor }}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-gas-pump me-1"></i>
+                                Combustível
+                            </div>
+                            <div class="pedido-info-value">
+                                {{ veiculo.especificacao.get_combustivel_principal_display }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-circle me-1"></i>
+                                Status
+                            </div>
+                            <div class="pedido-info-value">
+                                {% if veiculo.ativo %}
+                                    <span class="badge bg-success">Ativo</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">Inativo</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-12">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Especificações Técnicas
+                            </div>
+                            <div class="pedido-info-value">
+                                <small class="text-muted">
+                                    Rendimento: {{ veiculo.especificacao.rendimento_principal }} km/l | 
+                                    Carga Máx: {{ veiculo.especificacao.carga_maxima }} kg | 
+                                    Velocidade Média: {{ veiculo.especificacao.velocidade_media }} km/h
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-truck"></i>
+            </div>
+            <h3 class="empty-title">Nenhum veículo cadastrado</h3>
+            <p class="empty-description">
+                Comece adicionando o primeiro veículo ao sistema.
+            </p>
+            <a href="{% url 'gestao:adicionar_veiculo' %}" class="btn btn-new-pedido mt-3">
+                <i class="fas fa-plus me-2"></i>
+                Adicionar Primeiro Veículo
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

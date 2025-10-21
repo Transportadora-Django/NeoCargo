@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-users me-2"></i>
+                    Gestão de Usuários
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Gerencie todos os usuários do sistema
+                </p>
+            </div>
+            <a href="{% url 'gestao:dashboard_dono' %}" class="btn btn-new-pedido">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filtros -->
+    <div class="pedido-card mb-4">
+        <div class="pedido-header">
+            <div>
+                <div class="pedido-id">
+                    <i class="fas fa-filter me-1"></i>
+                    Filtros
+                </div>
+            </div>
+        </div>
+        
+        <div class="pedido-body">
+            <form method="GET" class="row g-3">
+                <div class="col-md-4">
+                    <label for="search" class="form-label">Buscar</label>
+                    <input type="text" class="form-control" id="search" name="search" 
+                           value="{{ search }}" placeholder="Nome, email ou username...">
+                </div>
+                
+                <div class="col-md-4">
+                    <label for="role" class="form-label">Tipo de Usuário</label>
+                    <select class="form-select" id="role" name="role">
+                        <option value="">Todos os tipos</option>
+                        {% for value, label in roles %}
+                        <option value="{{ value }}" {% if role_filter == value %}selected{% endif %}>
+                            {{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-action btn-action-primary me-2">
+                        <i class="fas fa-search"></i>
+                        Filtrar
+                    </button>
+                    <a href="{% url 'gestao:listar_usuarios' %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-times"></i>
+                        Limpar
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Lista de Usuários -->
+    {% for usuario in page_obj %}
+    <div class="pedido-card">
+        <div class="pedido-header">
+            <div>
+                <div class="pedido-id">
+                    <i class="fas fa-user me-1"></i>
+                    {{ usuario.get_full_name|default:usuario.username }}
+                </div>
+                <div class="pedido-date">
+                    Cadastrado em {{ usuario.date_joined|date:"d/m/Y H:i" }}
+                </div>
+            </div>
+            
+            {% if usuario.profile %}
+                {% if usuario.profile.role == 'cliente' %}
+                    <span class="opcao-badge opcao-custo-beneficio">
+                        <i class="fas fa-user"></i>
+                        {{ usuario.profile.get_role_display }}
+                    </span>
+                {% elif usuario.profile.role == 'motorista' %}
+                    <span class="opcao-badge opcao-rapido">
+                        <i class="fas fa-truck"></i>
+                        {{ usuario.profile.get_role_display }}
+                    </span>
+                {% elif usuario.profile.role == 'owner' %}
+                    <span class="opcao-badge opcao-economico">
+                        <i class="fas fa-crown"></i>
+                        {{ usuario.profile.get_role_display }}
+                    </span>
+                {% endif %}
+            {% else %}
+                <span class="opcao-badge opcao-aguardando">
+                    <i class="fas fa-question"></i>
+                    Sem Perfil
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="pedido-body">
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-envelope me-1"></i>
+                    Email
+                </div>
+                <div class="pedido-info-value">{{ usuario.email|default:"Não informado" }}</div>
+            </div>
+            
+            {% if usuario.profile %}
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-phone me-1"></i>
+                    Telefone
+                </div>
+                <div class="pedido-info-value">Não disponível</div>
+            </div>
+            {% endif %}
+            
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-calendar me-1"></i>
+                    Último Login
+                </div>
+                <div class="pedido-info-value">
+                    {% if usuario.last_login %}
+                        {{ usuario.last_login|date:"d/m/Y H:i" }}
+                    {% else %}
+                        Nunca logou
+                    {% endif %}
+                </div>
+            </div>
+            
+            <div class="pedido-info-item">
+                <div class="pedido-info-label">
+                    <i class="fas fa-toggle-on me-1"></i>
+                    Status
+                </div>
+                <div class="pedido-info-value">
+                    {% if usuario.is_active %}
+                        <span class="status-badge status-aprovado">
+                            <i class="fas fa-check"></i>
+                            Ativo
+                        </span>
+                    {% else %}
+                        <span class="status-badge status-cancelado">
+                            <i class="fas fa-ban"></i>
+                            Inativo
+                        </span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="pedido-actions">
+            <a href="mailto:{{ usuario.email }}" class="btn btn-action btn-action-info">
+                <i class="fas fa-envelope"></i>
+                Enviar Email
+            </a>
+            
+            {% if usuario.profile and usuario.profile.role == 'motorista' %}
+            <button class="btn btn-action btn-action-primary" onclick="alert('Funcionalidade em desenvolvimento')">
+                <i class="fas fa-car"></i>
+                Ver Veículos
+            </button>
+            {% endif %}
+            
+            <a href="{% url 'admin:auth_user_change' usuario.id %}" class="btn btn-action btn-action-danger">
+                <i class="fas fa-edit"></i>
+                Editar no Admin
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="empty-state">
+        <div class="empty-icon">
+            <i class="fas fa-users"></i>
+        </div>
+        <h3 class="empty-title">Nenhum usuário encontrado</h3>
+        <p class="empty-description">
+            {% if search or role_filter %}
+                Tente ajustar os filtros para encontrar usuários.
+            {% else %}
+                Não há usuários cadastrados no sistema ainda.
+            {% endif %}
+        </p>
+    </div>
+    {% endfor %}
+
+    <!-- Paginação -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Navegação de páginas">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page=1{% if search %}&search={{ search }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if search %}&search={{ search }}{% endif %}{% if role_filter %}&role={{ role_filter }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+
+<script>
+function verVeiculos(userId) {
+    alert('Funcionalidade de visualizar veículos será implementada em breve!');
+}
+</script>
+{% endblock %}

@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Especificações de Veículos - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-cogs me-2"></i>
+                    Especificações de Veículos
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Total de {{ total_especificacoes }} especificaç{{ total_especificacoes|pluralize:"ão,ões" }} cadastrada{{ total_especificacoes|pluralize }}
+                </p>
+            </div>
+            <a href="{% url 'veiculos:adicionar_especificacao' %}" class="btn btn-new-pedido">
+                <i class="fas fa-plus me-2"></i>
+                Adicionar Especificação
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    
+    {% if especificacoes %}
+        {% for especificacao in especificacoes %}
+        <div class="pedido-card mb-3">
+            <div class="pedido-header">
+                <div>
+                    <div class="pedido-id">
+                        <i class="fas fa-cogs me-2"></i>
+                        {{ especificacao.get_tipo_display }}
+                    </div>
+                    <div class="pedido-date">
+                        Combustível: {{ especificacao.get_combustivel_principal_display }} • Carga: {{ especificacao.carga_maxima }} kg
+                    </div>
+                </div>
+                
+                <span class="opcao-badge opcao-rapido">
+                    <i class="fas fa-tachometer-alt"></i>
+                    {{ especificacao.velocidade_media }} km/h
+                </span>
+            </div>
+            
+            <div class="pedido-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-gas-pump me-1"></i>
+                                Rendimento Principal
+                            </div>
+                            <div class="pedido-info-value">{{ especificacao.rendimento_principal }} km/l</div>
+                        </div>
+                    </div>
+                    
+                    {% if especificacao.combustivel_alternativo %}
+                    <div class="col-md-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-gas-pump me-1"></i>
+                                Combustível Alternativo
+                            </div>
+                            <div class="pedido-info-value">{{ especificacao.get_combustivel_alternativo_display }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if especificacao.rendimento_alternativo %}
+                    <div class="col-md-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-gas-pump me-1"></i>
+                                Rendimento Alternativo
+                            </div>
+                            <div class="pedido-info-value">{{ especificacao.rendimento_alternativo }} km/l</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="col-md-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-weight-hanging me-1"></i>
+                                Carga Máxima
+                            </div>
+                            <div class="pedido-info-value">{{ especificacao.carga_maxima }} kg</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="pedido-actions mt-3">
+                    <a href="{% url 'veiculos:editar_especificacao' especificacao.id %}" class="btn btn-action btn-action-info">
+                        <i class="fas fa-edit"></i>
+                        Editar
+                    </a>
+                    <a href="{% url 'veiculos:remover_especificacao' especificacao.id %}" class="btn btn-action btn-action-danger">
+                        <i class="fas fa-trash"></i>
+                        Remover
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-truck"></i>
+            </div>
+            <h3 class="empty-title">Nenhuma especificação cadastrada</h3>
+            <p class="empty-description">Comece adicionando a primeira especificação de veículo ao sistema.</p>
+            <a href="{% url 'veiculos:adicionar_especificacao' %}" class="btn btn-new-pedido mt-3">
+                <i class="fas fa-plus me-2"></i>
+                Adicionar Primeira Especificação
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -15,16 +15,26 @@
             <div>
                 <h1 class="pedidos-title">
                     <i class="fas fa-box me-2"></i>
-                    Meus Pedidos
+                    {% if user.profile.is_owner %}
+                        Todos os Pedidos
+                    {% else %}
+                        Meus Pedidos
+                    {% endif %}
                 </h1>
                 <p class="pedidos-subtitle mb-0">
-                    Acompanhe e gerencie seus pedidos de transporte
+                    {% if user.profile.is_owner %}
+                        Gerencie todos os pedidos do sistema
+                    {% else %}
+                        Acompanhe e gerencie seus pedidos de transporte
+                    {% endif %}
                 </p>
             </div>
+            {% if not user.profile.is_owner %}
             <a href="{% url 'pedidos:criar' %}" class="btn btn-new-pedido">
                 <i class="fas fa-plus me-2"></i>
                 Novo Pedido
             </a>
+            {% endif %}
         </div>
     </div>
 </div>
@@ -39,6 +49,9 @@
                 <div>
                     <div class="pedido-id">
                         <i class="fas fa-hashtag"></i>{{ pedido.numero_pedido_cliente }}
+                        {% if user.profile.is_owner %}
+                            - <i class="fas fa-user me-1"></i>{{ pedido.cliente.get_full_name|default:pedido.cliente.username }}
+                        {% endif %}
                     </div>
                     <div class="pedido-date">
                         <i class="far fa-calendar me-1"></i>
