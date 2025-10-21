@@ -46,7 +46,7 @@
                 <div class="col-md-4">
                     <label for="search" class="form-label">Buscar</label>
                     <input type="text" class="form-control" id="search" name="search" 
-                           value="{{ search }}" placeholder="Nome, email ou username...">
+                           value="{{ search|default:'' }}" placeholder="Buscar por nome, email ou username...">
                 </div>
                 
                 <div class="col-md-4">
@@ -175,7 +175,7 @@
             </a>
             
             {% if usuario.profile and usuario.profile.role == 'motorista' %}
-            <button class="btn btn-action btn-action-primary" onclick="alert('Funcionalidade em desenvolvimento')">
+            <button class="btn btn-action btn-action-primary" data-development="true" data-feature="Ver Veículos">
                 <i class="fas fa-car"></i>
                 Ver Veículos
             </button>
@@ -242,10 +242,4 @@
     </nav>
     {% endif %}
 </div>
-
-<script>
-function verVeiculos(userId) {
-    alert('Funcionalidade de visualizar veículos será implementada em breve!');
-}
-</script>
 {% endblock %}

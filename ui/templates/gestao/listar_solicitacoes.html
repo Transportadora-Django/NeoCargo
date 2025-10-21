@@ -4,7 +4,8 @@
 {% block title %}{{ titulo }} - NeoCargo{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}?v=2.0">
+<link rel="stylesheet" href="{% static 'css/modals.css' %}?v=7.0">
 {% endblock %}
 
 {% block content %}
@@ -180,7 +181,7 @@
                 </a>
             {% endif %}
             
-            <button class="btn btn-action btn-action-info" onclick="verDetalhes({{ solicitacao.id }})">
+            <button type="button" class="btn btn-action btn-action-info" data-bs-toggle="modal" data-bs-target="#modalSolicitacao{{ solicitacao.id }}">
                 <i class="fas fa-eye"></i>
                 Ver Detalhes
             </button>
@@ -191,6 +192,343 @@
             </a>
         </div>
     </div>
+
+    <!-- Modal de Detalhes -->
+    <div class="modal fade" id="modalSolicitacao{{ solicitacao.id }}" tabindex="-1" aria-labelledby="modalLabel{{ solicitacao.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel{{ solicitacao.id }}">
+                        <i class="fas fa-exchange-alt me-2"></i>
+                        Detalhes da Solicitação #{{ solicitacao.id }}
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Status -->
+                    <div class="mb-4 text-center">
+                        {% if solicitacao.status == 'pendente' %}
+                            <span class="status-badge status-cotacao fs-5">
+                                <i class="fas fa-clock"></i>
+                                Pendente
+                            </span>
+                        {% elif solicitacao.status == 'aprovada' %}
+                            <span class="status-badge status-aprovado fs-5">
+                                <i class="fas fa-check"></i>
+                                Aprovada
+                            </span>
+                        {% else %}
+                            <span class="status-badge status-cancelado fs-5">
+                                <i class="fas fa-times"></i>
+                                Rejeitada
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Informações do Usuário -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-user"></i>
+                                <span>Informações do Usuário</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-user me-1"></i>
+                                            Nome
+                                        </div>
+                                        <div class="pedido-info-value">
+                                            {{ solicitacao.usuario.get_full_name|default:solicitacao.usuario.username }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-envelope me-1"></i>
+                                            Email
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.usuario.email }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-calendar-plus me-1"></i>
+                                            Cadastrado em
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.usuario.date_joined|date:"d/m/Y" }}</div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-sign-in-alt me-1"></i>
+                                            Último acesso
+                                        </div>
+                                        <div class="pedido-info-value">
+                                            {% if solicitacao.usuario.last_login %}
+                                                {{ solicitacao.usuario.last_login|date:"d/m/Y H:i" }}
+                                            {% else %}
+                                                Nunca logou
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Informações da Solicitação -->
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-info-circle"></i>
+                                <span>Informações da Solicitação</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-arrow-right me-1"></i>
+                                            Mudança Solicitada
+                                        </div>
+                                        <div class="pedido-info-value">
+                                            <span class="badge bg-secondary">{{ solicitacao.get_role_atual_display }}</span>
+                                            <i class="fas fa-arrow-right mx-2"></i>
+                                            <span class="badge bg-primary">{{ solicitacao.get_role_solicitada_display }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            Data da Solicitação
+                                        </div>
+                                        <div class="pedido-info-value">
+                                            {{ solicitacao.created_at|date:"d/m/Y H:i" }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="pedido-info-item">
+                                <div class="pedido-info-label">
+                                    <i class="fas fa-comment me-1"></i>
+                                    Justificativa
+                                </div>
+                                <div class="pedido-info-value">
+                                    {{ solicitacao.justificativa }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dados Pessoais -->
+                    {% if solicitacao.telefone or solicitacao.cpf or solicitacao.data_nascimento or solicitacao.endereco %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-id-card"></i>
+                                <span>Dados Pessoais Fornecidos</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                {% if solicitacao.telefone %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-phone me-1"></i>
+                                            Telefone
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.telefone }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if solicitacao.cpf %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-id-card me-1"></i>
+                                            CPF
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.cpf }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if solicitacao.data_nascimento %}
+                                <div class="col-md-6 mb-3">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-birthday-cake me-1"></i>
+                                            Data de Nascimento
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.data_nascimento|date:"d/m/Y" }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            
+                            {% if solicitacao.endereco %}
+                            <div class="pedido-info-item">
+                                <div class="pedido-info-label">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    Endereço
+                                </div>
+                                <div class="pedido-info-value">{{ solicitacao.endereco }}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Dados do Veículo -->
+                    {% if solicitacao.role_solicitada == 'motorista' and solicitacao.tipo_veiculo %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas fa-car"></i>
+                                <span>Dados do Veículo</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-truck me-1"></i>
+                                            Tipo de Veículo
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.get_tipo_veiculo_display }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-car me-1"></i>
+                                            Modelo
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.modelo_veiculo }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-id-badge me-1"></i>
+                                            Placa
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.placa_veiculo }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-calendar me-1"></i>
+                                            Ano
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.ano_veiculo }}</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="col-md-4 mb-3">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-palette me-1"></i>
+                                            Cor
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.cor_veiculo }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Informações de Aprovação/Rejeição -->
+                    {% if solicitacao.status != 'pendente' %}
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <div>
+                                <i class="fas {% if solicitacao.status == 'aprovada' %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                                <span>Informações da {{ solicitacao.get_status_display }}</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if solicitacao.data_aprovacao %}
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-calendar-check me-1"></i>
+                                            Data da Decisão
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.data_aprovacao|date:"d/m/Y H:i" }}</div>
+                                    </div>
+                                </div>
+                                
+                                {% if solicitacao.aprovado_por %}
+                                <div class="col-md-6">
+                                    <div class="pedido-info-item">
+                                        <div class="pedido-info-label">
+                                            <i class="fas fa-user-check me-1"></i>
+                                            Processado por
+                                        </div>
+                                        <div class="pedido-info-value">{{ solicitacao.aprovado_por.get_full_name|default:solicitacao.aprovado_por.username }}</div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            {% endif %}
+                            
+                            {% if solicitacao.observacoes_admin %}
+                            <div class="pedido-info-item">
+                                <div class="pedido-info-label">
+                                    <i class="fas fa-sticky-note me-1"></i>
+                                    Observações do Administrador
+                                </div>
+                                <div class="pedido-info-value">
+                                    <div class="alert alert-light mb-0">
+                                        {{ solicitacao.observacoes_admin }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    {% if solicitacao.status == 'pendente' %}
+                    <a href="{% url 'gestao:aprovar_solicitacao' solicitacao.id %}" class="btn btn-primary">
+                        <i class="fas fa-gavel me-2"></i>
+                        Analisar Solicitação
+                    </a>
+                    {% endif %}
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     {% empty %}
     <div class="empty-state">
         <div class="empty-icon">
@@ -246,30 +584,4 @@
     </nav>
     {% endif %}
 </div>
-
-<!-- Modal para detalhes -->
-<div class="modal fade" id="detalhesModal" tabindex="-1">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Detalhes da Solicitação</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body" id="detalhes-content">
-                <!-- Conteúdo será carregado via JavaScript -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-function verDetalhes(solicitacaoId) {
-    // Por enquanto, apenas mostra um alerta
-    // Em uma implementação completa, faria uma requisição AJAX para buscar os detalhes
-    alert('Funcionalidade de ver detalhes será implementada em breve!\\nSolicitação ID: ' + solicitacaoId);
-}
-</script>
 {% endblock %}

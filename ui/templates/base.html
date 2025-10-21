@@ -27,6 +27,10 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}NeoCargo{% endblock %}</title>
     
+    <!-- Favicon -->
+    {% load static %}
+    <link rel="icon" type="image/svg+xml" href="{% static 'assets/logo-sem-nome.svg' %}">
+    
     <!-- ============================================================ -->
     <!-- EXTERNAL DEPENDENCIES                                       -->
     <!-- ============================================================ -->
@@ -165,7 +169,8 @@
                         <a 
                             class="nav-link" 
                             href="#" 
-                            onclick="alert('Em desenvolvimento')"
+                            data-development="true"
+                            data-feature="Rotas"
                             role="button"
                         >
                             <i class="fas fa-route me-1" aria-hidden="true"></i>
@@ -177,7 +182,8 @@
                         <a 
                             class="nav-link" 
                             href="#" 
-                            onclick="alert('Em desenvolvimento')"
+                            data-development="true"
+                            data-feature="Sobre"
                             role="button"
                         >
                             <i class="fas fa-info-circle me-1" aria-hidden="true"></i>
@@ -322,6 +328,7 @@
     
     <!-- Custom JavaScript -->
     <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/development-features.js' %}"></script>
     
     <!-- Page-specific JS injection point -->
     {% block extra_js %}{% endblock %}
