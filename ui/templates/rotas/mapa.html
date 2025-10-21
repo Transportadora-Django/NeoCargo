@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<link rel="stylesheet" href="{% static 'css/pages/rotas.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-11">
+            <!-- Header -->
+            <div class="rotas-header text-center">
+                <h1><i class="fas fa-map-marked-alt me-2"></i>{{ titulo }}</h1>
+                <p class="mb-0">Visualize todas as cidades atendidas e rotas disponíveis em tempo real</p>
+            </div>
+
+            <!-- Alert para Owners/Gerentes -->
+            {% if user.is_authenticated and user.profile.role == 'owner' %}
+            <div class="management-alert">
+                <div class="management-alert-content">
+                    <div class="management-alert-icon">
+                        <i class="fas fa-user-shield"></i>
+                    </div>
+                    <div class="management-alert-text">
+                        <h4>Área de Gestão Disponível</h4>
+                        <p>Você tem permissão para gerenciar cidades, rotas e configurar preços</p>
+                    </div>
+                </div>
+                <a href="{% url 'rotas:dashboard_rotas' %}" class="btn">
+                    <i class="fas fa-cog me-2"></i>
+                    Gerenciar Rotas
+                </a>
+            </div>
+            {% endif %}
+
+            <!-- Estatísticas e Botões de Ação -->
+            <div class="stats-cards-row mb-4">
+                <div>
+                    <div class="stats-card">
+                        <h3>{{ total_cidades }}</h3>
+                        <p><i class="fas fa-city"></i>Cidades Atendidas</p>
+                        <a href="{% url 'rotas:cidades_publico' %}" class="btn-card-action">
+                            <i class="fas fa-list"></i>Ver Cidades
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div class="stats-card">
+                        <h3>{{ total_rotas }}</h3>
+                        <p><i class="fas fa-route"></i>Rotas Disponíveis</p>
+                        <a href="{% url 'rotas:listar_rotas_publico' %}" class="btn-card-action btn-success">
+                            <i class="fas fa-road"></i>Ver Rotas
+                        </a>
+                    </div>
+                </div>
+                {% if user.is_authenticated and user.profile.role == 'owner' %}
+                <div>
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="fas fa-cog"></i>
+                        </div>
+                        <p>Gestão</p>
+                        <a href="{% url 'rotas:listar_cidades' %}" class="btn-card-action">
+                            <i class="fas fa-city"></i>Gerenciar Cidades
+                        </a>
+                    </div>
+                </div>
+                <div>
+                    <div class="stats-card">
+                        <div class="icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <p>Configurações</p>
+                        <a href="{% url 'rotas:configurar_precos' %}" class="btn-card-action btn-warning">
+                            <i class="fas fa-edit"></i>Configurar Preços
+                        </a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Mapa -->
+            <div class="map-container">
+                <div class="map-container-header">
+                    <h2><i class="fas fa-globe-americas me-2"></i>Mapa Interativo</h2>
+                </div>
+
+                <div id="map"></div>
+
+                <div class="map-legend">
+                    <p class="mb-0">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>Legenda:</strong> 
+                        <span class="badge bg-primary">
+                            <i class="fas fa-circle me-1"></i>Cidades
+                        </span>
+                        <span class="badge bg-success">
+                            <i class="fas fa-minus me-1"></i>Rotas
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Expor dados para o script externo
+    window.NEOCARGO_CIDADES = {{ cidades_json|safe }};
+    window.NEOCARGO_ROTAS = {{ rotas_json|safe }};
+</script>
+<script src="{% static 'js/pages/rotas-mapa.js' %}"></script>
+{% endblock %}

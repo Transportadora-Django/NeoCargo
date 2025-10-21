@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1><i class="fas fa-route me-2"></i>{{ titulo }}</h1>
+    
+    <!-- Estatísticas -->
+    <div class="row g-4 my-4">
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>{{ total_cidades }}</h3>
+                    <p>Total de Cidades</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>{{ cidades_ativas }}</h3>
+                    <p>Cidades Ativas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>{{ total_rotas }}</h3>
+                    <p>Total de Rotas</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>{{ rotas_ativas }}</h3>
+                    <p>Rotas Ativas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5><i class="fas fa-city me-2"></i>Gerenciar Cidades</h5>
+                    <p>Adicione, edite ou desative cidades atendidas</p>
+                    <a href="{% url 'rotas:listar_cidades' %}" class="btn btn-primary">Gerenciar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5><i class="fas fa-route me-2"></i>Gerenciar Rotas</h5>
+                    <p>Configure rotas entre cidades com distâncias e pedágios</p>
+                    <a href="{% url 'rotas:listar_rotas' %}" class="btn btn-primary">Gerenciar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5><i class="fas fa-dollar-sign me-2"></i>Configurar Preços</h5>
+                    <p>Atualize preços de combustível e margem de lucro</p>
+                    <a href="{% url 'rotas:configurar_precos' %}" class="btn btn-primary">Configurar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Configuração Atual -->
+    <div class="card mt-4">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-cog me-2"></i>Configuração Atual de Preços</h5>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-3">
+                    <strong>Álcool:</strong> R$ {{ config.preco_alcool }}/L
+                </div>
+                <div class="col-md-3">
+                    <strong>Gasolina:</strong> R$ {{ config.preco_gasolina }}/L
+                </div>
+                <div class="col-md-3">
+                    <strong>Diesel:</strong> R$ {{ config.preco_diesel }}/L
+                </div>
+                <div class="col-md-3">
+                    <strong>Margem:</strong> {{ config.margem_lucro }}%
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

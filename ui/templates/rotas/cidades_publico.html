@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ titulo }} - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/rotas.css' %}" />
+<style>
+    .estado-section {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        border-left: 4px solid #06b6d4;
+        transition: all 0.3s ease;
+    }
+
+    .estado-section:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(6, 182, 212, 0.15);
+    }
+
+    .estado-header {
+        background: linear-gradient(135deg, #1d3557 0%, #1e293b 100%);
+        color: white;
+        padding: 1.25rem 1.75rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .estado-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .cidade-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+        color: white;
+        padding: 0.65rem 1.25rem;
+        border-radius: 50px;
+        margin: 0.35rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        box-shadow: 0 2px 8px rgba(6, 182, 212, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .cidade-badge:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.4);
+    }
+
+    .cidade-badge i {
+        margin-right: 0.5rem;
+    }
+
+    .nav-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+    }
+
+    .nav-buttons .btn {
+        padding: 0.75rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-buttons .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-11">
+            <!-- Header -->
+            <div class="rotas-header text-center">
+                <h1><i class="fas fa-city me-2"></i>{{ titulo }}</h1>
+                <p class="mb-0">Confira todas as {{ total_cidades }} cidades onde operamos</p>
+            </div>
+
+            <!-- Botões de Navegação -->
+            <div class="nav-buttons">
+                <a href="{% url 'rotas:mapa' %}" class="btn btn-primary">
+                    <i class="fas fa-map me-2"></i>
+                    Ver Mapa Interativo
+                </a>
+                <a href="{% url 'rotas:listar_rotas_publico' %}" class="btn btn-outline-primary">
+                    <i class="fas fa-route me-2"></i>
+                    Ver Rotas
+                </a>
+            </div>
+
+            <!-- Cidades por estado -->
+            {% for estado, cidades in cidades_por_estado.items %}
+            <div class="estado-section">
+                <div class="estado-header">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <h3>{{ estado }}</h3>
+                </div>
+                <div>
+                    {% for cidade in cidades %}
+                    <span class="cidade-badge">
+                        <i class="fas fa-city"></i>
+                        {{ cidade.nome }}
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            {% if not cidades_por_estado %}
+            <div class="alert alert-info text-center">
+                <i class="fas fa-info-circle me-2"></i>
+                Nenhuma cidade cadastrada no momento.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
