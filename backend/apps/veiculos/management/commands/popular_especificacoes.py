@@ -60,9 +60,7 @@ class Command(BaseCommand):
         ]
 
         for espec_data in especificacoes:
-            espec, created = EspecificacaoVeiculo.objects.update_or_create(
-                tipo=espec_data["tipo"], defaults=espec_data
-            )
+            espec, created = EspecificacaoVeiculo.objects.update_or_create(tipo=espec_data["tipo"], defaults=espec_data)
 
             if created:
                 self.stdout.write(self.style.SUCCESS(f"✓ Criada especificação: {espec.get_tipo_display()}"))

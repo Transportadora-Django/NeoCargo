@@ -11,14 +11,14 @@ class PedidoForm(forms.ModelForm):
         choices=[],
         widget=forms.Select(attrs={"class": "form-select", "id": "id_cidade_origem"}),
         label="Cidade de Origem",
-        required=True
+        required=True,
     )
 
     cidade_destino = forms.ChoiceField(
         choices=[],
         widget=forms.Select(attrs={"class": "form-select", "id": "id_cidade_destino"}),
         label="Cidade de Destino",
-        required=True
+        required=True,
     )
 
     # Campo para escolher a opção após ver as cotações
@@ -89,15 +89,9 @@ class PedidoForm(forms.ModelForm):
                 destino_nome, destino_estado_nome = destino.rsplit(" - ", 1)
 
                 # Buscar as cidades pelo nome e estado
-                cidade_origem = Cidade.objects.filter(
-                    nome=origem_nome.strip(),
-                    ativa=True
-                ).first()
+                cidade_origem = Cidade.objects.filter(nome=origem_nome.strip(), ativa=True).first()
 
-                cidade_destino = Cidade.objects.filter(
-                    nome=destino_nome.strip(),
-                    ativa=True
-                ).first()
+                cidade_destino = Cidade.objects.filter(nome=destino_nome.strip(), ativa=True).first()
 
                 if not cidade_origem or not cidade_destino:
                     raise forms.ValidationError("Cidade não encontrada. Por favor, selecione uma cidade válida.")

@@ -21,8 +21,7 @@ class Command(BaseCommand):
         except EspecificacaoVeiculo.DoesNotExist:
             self.stdout.write(
                 self.style.ERROR(
-                    "❌ Especificações não encontradas. "
-                    "Execute 'python manage.py popular_especificacoes' primeiro."
+                    "❌ Especificações não encontradas. " "Execute 'python manage.py popular_especificacoes' primeiro."
                 )
             )
             return
@@ -132,9 +131,7 @@ class Command(BaseCommand):
 
             if created:
                 created_count += 1
-                self.stdout.write(
-                    self.style.SUCCESS(f"✓ Criado: {veiculo.marca} {veiculo.modelo} - {veiculo.placa}")
-                )
+                self.stdout.write(self.style.SUCCESS(f"✓ Criado: {veiculo.marca} {veiculo.modelo} - {veiculo.placa}"))
             else:
                 updated_count += 1
                 self.stdout.write(

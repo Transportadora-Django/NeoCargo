@@ -52,12 +52,7 @@ def mapa_rotas(request):
 
     rotas_json = []
     for rota in rotas:
-        if (
-            rota.origem.latitude
-            and rota.origem.longitude
-            and rota.destino.latitude
-            and rota.destino.longitude
-        ):
+        if rota.origem.latitude and rota.origem.longitude and rota.destino.latitude and rota.destino.longitude:
             rotas_json.append(
                 {
                     "origem": {
@@ -112,9 +107,7 @@ def listar_cidades_publico(request):
 def listar_rotas_publico(request):
     """Lista pública de rotas disponíveis."""
     rotas = (
-        Rota.objects.filter(ativa=True)
-        .select_related("origem", "destino")
-        .order_by("origem__estado", "origem__nome")
+        Rota.objects.filter(ativa=True).select_related("origem", "destino").order_by("origem__estado", "origem__nome")
     )
 
     context = {
@@ -256,9 +249,7 @@ def listar_rotas(request):
     rotas = Rota.objects.all().select_related("origem", "destino").order_by("origem__nome", "destino__nome")
 
     if search:
-        rotas = rotas.filter(
-            Q(origem__nome__icontains=search) | Q(destino__nome__icontains=search)
-        )
+        rotas = rotas.filter(Q(origem__nome__icontains=search) | Q(destino__nome__icontains=search))
 
     if status_filter == "ativa":
         rotas = rotas.filter(ativa=True)
@@ -292,8 +283,7 @@ def criar_rota(request):
         if form.is_valid():
             rota = form.save()
             messages.success(
-                request,
-                f"Rota {rota.origem.nome_completo} → {rota.destino.nome_completo} criada com sucesso!"
+                request, f"Rota {rota.origem.nome_completo} → {rota.destino.nome_completo} criada com sucesso!"
             )
             return redirect("rotas:listar_rotas")
     else:
@@ -317,8 +307,7 @@ def editar_rota(request, rota_id):
         if form.is_valid():
             rota = form.save()
             messages.success(
-                request,
-                f"Rota {rota.origem.nome_completo} → {rota.destino.nome_completo} atualizada com sucesso!"
+                request, f"Rota {rota.origem.nome_completo} → {rota.destino.nome_completo} atualizada com sucesso!"
             )
             return redirect("rotas:listar_rotas")
     else:

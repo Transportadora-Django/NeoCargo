@@ -75,9 +75,7 @@ class RotaModelTest(TestCase):
 
     def test_str_representation(self):
         """Testa representação em string."""
-        rota = Rota.objects.create(
-            origem=self.cidade_sp, destino=self.cidade_rj, distancia_km=Decimal("430")
-        )
+        rota = Rota.objects.create(origem=self.cidade_sp, destino=self.cidade_rj, distancia_km=Decimal("430"))
 
         expected = "São Paulo/SP → Rio de Janeiro/RJ (430 km)"
         self.assertEqual(str(rota), expected)
@@ -95,9 +93,7 @@ class RotaModelTest(TestCase):
 
     def test_custo_estimado_combustivel(self):
         """Testa cálculo de custo estimado de combustível."""
-        rota = Rota.objects.create(
-            origem=self.cidade_sp, destino=self.cidade_rj, distancia_km=Decimal("430")
-        )
+        rota = Rota.objects.create(origem=self.cidade_sp, destino=self.cidade_rj, distancia_km=Decimal("430"))
 
         # 430 km * R$ 0.80/km = R$ 344.00
         self.assertEqual(rota.custo_estimado_combustivel, Decimal("344.00"))
