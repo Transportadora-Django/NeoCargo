@@ -3,6 +3,8 @@
  * Gerencia a exibição do mapa interativo com Leaflet.js
  */
 
+/* global L */
+
 ;(function () {
   'use strict'
 
@@ -67,9 +69,10 @@
    */
   function addCityMarkers(map, cidades) {
     cidades.forEach(cidade => {
-      const marker = L.circleMarker([cidade.lat, cidade.lng], STYLES.cidade).addTo(
-        map
-      )
+      const marker = L.circleMarker(
+        [cidade.lat, cidade.lng],
+        STYLES.cidade
+      ).addTo(map)
 
       // Popup com informações da cidade
       const popupContent = createCityPopup(cidade)
@@ -181,6 +184,7 @@
     try {
       initMap(cidadesData, rotasData)
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error('Erro ao inicializar mapa:', error)
       mapElement.innerHTML = `
         <div class="map-loading">
