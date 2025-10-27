@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.urls import reverse
 from decimal import Decimal
 from apps.pedidos.models import Pedido, StatusPedido
+from apps.rotas.models import Cidade, Rota, Estado
 
 
 class PedidoViewTest(TestCase):
@@ -10,6 +11,15 @@ class PedidoViewTest(TestCase):
         self.client = Client()
         self.user = User.objects.create_user(username="testuser", email="test@example.com", password="testpass123")
         self.client.login(username="testuser", password="testpass123")
+
+        # Criar cidades de teste
+        self.sp = Cidade.objects.create(nome="São Paulo", estado=Estado.SP, ativa=True)
+        self.rj = Cidade.objects.create(nome="Rio de Janeiro", estado=Estado.RJ, ativa=True)
+
+        # Criar rota entre as cidades
+        self.rota = Rota.objects.create(
+            origem=self.sp, destino=self.rj, distancia_km=429.5, pedagio_valor=15.50, ativa=True
+        )
 
     def test_criar_pedido_get(self):
         """Testa acesso à página de criar pedido"""
@@ -21,8 +31,8 @@ class PedidoViewTest(TestCase):
     def test_criar_pedido_post_valido(self):
         """Testa criação de pedido com dados válidos"""
         data = {
-            "cidade_origem": "São Paulo",
-            "cidade_destino": "Rio de Janeiro",
+            "cidade_origem": "São Paulo - São Paulo",
+            "cidade_destino": "Rio de Janeiro - Rio de Janeiro",
             "peso_carga": "100.50",
             "prazo_desejado": 7,
             "observacoes": "Carga frágil",
@@ -37,7 +47,7 @@ class PedidoViewTest(TestCase):
         # Verifica se pedido foi criado
         self.assertEqual(Pedido.objects.count(), 1)
         self.assertEqual(pedido.cliente, self.user)
-        self.assertEqual(pedido.cidade_origem, "São Paulo")
+        self.assertEqual(pedido.cidade_origem, "São Paulo - São Paulo")
         self.assertEqual(pedido.status, StatusPedido.COTACAO)
 
         # Tenta acessar cotação (formato antigo redireciona para listar)
