@@ -39,6 +39,18 @@ def pedido_criar(request):
 @login_required
 def gerar_cotacao(request, pedido_id):
     """Exibir opções de cotação para o pedido"""
+    # Verificar se é owner
+    try:
+        if request.user.profile.role == Role.OWNER:
+            messages.error(
+                request,
+                "Owners não podem escolher opções de pedidos. "
+                "Use a área de gestão para gerenciar os pedidos dos clientes.",
+            )
+            return redirect("pedidos:listar")
+    except Profile.DoesNotExist:
+        pass
+
     pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user)
 
     # Verifica se o pedido está em status de cotação
@@ -51,8 +63,7 @@ def gerar_cotacao(request, pedido_id):
         # Formato antigo - não tem rota cadastrada, usar valores padrão
         messages.warning(
             request,
-            "Sistema de rotas não disponível para este pedido. "
-            "Entre em contato com o suporte para cotação manual."
+            "Sistema de rotas não disponível para este pedido. " "Entre em contato com o suporte para cotação manual.",
         )
         pedido.status = StatusPedido.PENDENTE
         pedido.save()
@@ -82,17 +93,14 @@ def gerar_cotacao(request, pedido_id):
     tempo_maximo_horas = Decimal(str(pedido.prazo_desejado * 24))
 
     resultados = calculadora.calcular_para_rota(
-        rota=rota,
-        peso_carga_kg=pedido.peso_carga,
-        tempo_maximo_horas=tempo_maximo_horas
+        rota=rota, peso_carga_kg=pedido.peso_carga, tempo_maximo_horas=tempo_maximo_horas
     )
 
     # Verificar se há veículos disponíveis
     if not resultados["menor_custo"]:
         messages.error(
             request,
-            "Nenhum veículo disponível pode atender este pedido. "
-            "Verifique o peso da carga ou o prazo desejado."
+            "Nenhum veículo disponível pode atender este pedido. " "Verifique o peso da carga ou o prazo desejado.",
         )
         pedido.status = StatusPedido.RECUSADO
         pedido.save()
@@ -121,6 +129,7 @@ def gerar_cotacao(request, pedido_id):
     def calcular_prazo_total(horas, dias_logistica):
         """Calcula o prazo total: tempo de viagem + dias de logística"""
         import math
+
         dias_viagem = math.ceil(float(horas) / 24)  # Arredondar para cima
         dias_total = dias_viagem + dias_logistica
         if dias_total == 1:
@@ -134,8 +143,8 @@ def gerar_cotacao(request, pedido_id):
     DIAS_LOGISTICA_CUSTO_BENEFICIO = 1
 
     # Taxas de agilização de logística (percentual sobre o custo base)
-    TAXA_AGILIZACAO_ECONOMICO = Decimal("0")      # 0% - sem taxa
-    TAXA_AGILIZACAO_RAPIDO = Decimal("0.30")      # 30% - entrega expressa
+    TAXA_AGILIZACAO_ECONOMICO = Decimal("0")  # 0% - sem taxa
+    TAXA_AGILIZACAO_RAPIDO = Decimal("0.30")  # 30% - entrega expressa
     TAXA_AGILIZACAO_CUSTO_BENEFICIO = Decimal("0.15")  # 15% - agilização moderada
 
     # Calcular preços com taxas de agilização
@@ -186,6 +195,17 @@ def gerar_cotacao(request, pedido_id):
 @login_required
 def confirmar_pedido(request, pedido_id):
     """Confirmar pedido com a opção escolhida"""
+    # Verificar se é owner
+    try:
+        if request.user.profile.role == Role.OWNER:
+            messages.error(
+                request,
+                "Owners não podem confirmar pedidos de clientes. " "Use a área de gestão para gerenciar os pedidos.",
+            )
+            return redirect("pedidos:listar")
+    except Profile.DoesNotExist:
+        pass
+
     pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user)
 
     if request.method == "POST":
@@ -225,7 +245,7 @@ def confirmar_pedido(request, pedido_id):
         messages.success(
             request,
             f"Pedido confirmado com sucesso! Valor: R$ {pedido.preco_final:.2f}. "
-            "Nossa equipe entrará em contato em breve."
+            "Nossa equipe entrará em contato em breve.",
         )
         return redirect("pedidos:listar")
 
@@ -274,29 +294,23 @@ def api_destinos_disponiveis(request):
     """API para retornar destinos disponíveis baseado na origem selecionada"""
     from django.http import JsonResponse
 
-    origem = request.GET.get('origem', '')
+    origem = request.GET.get("origem", "")
 
     if not origem or " - " not in origem:
-        return JsonResponse({'destinos': []})
+        return JsonResponse({"destinos": []})
 
     try:
         # Parsear origem (formato: "Cidade - Estado")
         origem_nome, origem_estado_nome = origem.rsplit(" - ", 1)
 
         # Buscar cidade de origem
-        cidade_origem = Cidade.objects.filter(
-            nome=origem_nome.strip(),
-            ativa=True
-        ).first()
+        cidade_origem = Cidade.objects.filter(nome=origem_nome.strip(), ativa=True).first()
 
         if not cidade_origem:
-            return JsonResponse({'destinos': []})
+            return JsonResponse({"destinos": []})
 
         # Buscar todas as rotas ativas que partem desta origem
-        rotas = Rota.objects.filter(
-            origem=cidade_origem,
-            ativa=True
-        ).select_related('destino')
+        rotas = Rota.objects.filter(origem=cidade_origem, ativa=True).select_related("destino")
 
         # Criar lista de destinos disponíveis
         destinos = []
@@ -304,7 +318,7 @@ def api_destinos_disponiveis(request):
             destino_label = f"{rota.destino.nome} - {rota.destino.get_estado_display()}"
             destinos.append(destino_label)
 
-        return JsonResponse({'destinos': destinos})
+        return JsonResponse({"destinos": destinos})
 
     except Exception as e:
-        return JsonResponse({'destinos': [], 'error': str(e)})
+        return JsonResponse({"destinos": [], "error": str(e)})
