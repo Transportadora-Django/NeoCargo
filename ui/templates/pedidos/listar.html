@@ -137,7 +137,12 @@
                         Opção Escolhida
                     </div>
                     <div>
-                        {% if pedido.opcao == 'economico' %}
+                        {% if pedido.status == 'cotacao' %}
+                            <span class="opcao-badge opcao-aguardando">
+                                <i class="fas fa-hourglass-half"></i>
+                                Aguardando Escolha
+                            </span>
+                        {% elif pedido.opcao == 'economico' %}
                             <span class="opcao-badge opcao-economico">
                                 <i class="fas fa-dollar-sign"></i>
                                 Mais Econômico
@@ -165,10 +170,22 @@
             <!-- Actions -->
             <div class="pedido-actions">
                 {% if pedido.status == 'cotacao' %}
-                    <a href="{% url 'pedidos:gerar_cotacao' pedido.id %}" class="btn btn-action btn-action-primary">
-                        <i class="fas fa-hand-pointer"></i>
-                        Escolher Opção
-                    </a>
+                    {% if user.profile.is_owner %}
+                        <button 
+                            type="button" 
+                            class="btn btn-action btn-action-secondary"
+                            disabled
+                            title="Owners não podem escolher opções de pedidos de clientes"
+                        >
+                            <i class="fas fa-lock"></i>
+                            Escolher Opção
+                        </button>
+                    {% else %}
+                        <a href="{% url 'pedidos:gerar_cotacao' pedido.id %}" class="btn btn-action btn-action-primary">
+                            <i class="fas fa-hand-pointer"></i>
+                            Escolher Opção
+                        </a>
+                    {% endif %}
                 {% endif %}
                 
                 {% if pedido.pode_ser_cancelado %}

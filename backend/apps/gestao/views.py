@@ -55,23 +55,39 @@ def dashboard_dono(request):
     # Total de solicitações pendentes
     total_solicitacoes_pendentes = SolicitacaoMudancaPerfil.objects.filter(status=StatusSolicitacao.PENDENTE).count()
 
-    # Usuários recentes (apenas 2)
-    usuarios_recentes = User.objects.select_related("profile").order_by("-date_joined")[:2]
+    # Usuários recentes (apenas 5)
+    usuarios_recentes = User.objects.select_related("profile").order_by("-date_joined")[:5]
 
-    # Solicitações recentes (apenas 1 para o card)
+    # Solicitações recentes (apenas 3 para o card)
     solicitacoes_recentes = (
         SolicitacaoMudancaPerfil.objects.filter(status=StatusSolicitacao.PENDENTE)
         .select_related("usuario")
-        .order_by("-created_at")[:1]
+        .order_by("-created_at")[:3]
     )
 
     # Configuração do sistema
     config = ConfiguracaoSistema.get_config()
 
-    # Estatísticas de veículos
+    # Estatísticas de veículos e rotas
     from apps.veiculos.models import Veiculo
+    from apps.rotas.models import Cidade, Rota
+    from apps.pedidos.models import Pedido, StatusPedido
 
     total_veiculos = Veiculo.objects.count()
+    total_cidades = Cidade.objects.filter(ativa=True).count()
+    total_rotas = Rota.objects.filter(ativa=True).count()
+
+    # Estatísticas de pedidos
+    total_pedidos = Pedido.objects.count()
+    pedidos_cotacao = Pedido.objects.filter(status=StatusPedido.COTACAO).count()
+    pedidos_pendentes = Pedido.objects.filter(status=StatusPedido.PENDENTE).count()
+    pedidos_aprovados = Pedido.objects.filter(status=StatusPedido.APROVADO).count()
+    pedidos_em_transporte = Pedido.objects.filter(status=StatusPedido.EM_TRANSPORTE).count()
+    pedidos_concluidos = Pedido.objects.filter(status=StatusPedido.CONCLUIDO).count()
+    pedidos_cancelados = Pedido.objects.filter(status=StatusPedido.CANCELADO).count()
+
+    # Pedidos recentes
+    pedidos_recentes = Pedido.objects.select_related("cliente").order_by("-created_at")[:5]
 
     context = {
         "titulo": "Dashboard do Dono",
@@ -80,8 +96,18 @@ def dashboard_dono(request):
         "total_motoristas": total_motoristas,
         "total_solicitacoes_pendentes": total_solicitacoes_pendentes,
         "total_veiculos": total_veiculos,
+        "total_cidades": total_cidades,
+        "total_rotas": total_rotas,
+        "total_pedidos": total_pedidos,
+        "pedidos_cotacao": pedidos_cotacao,
+        "pedidos_pendentes": pedidos_pendentes,
+        "pedidos_aprovados": pedidos_aprovados,
+        "pedidos_em_transporte": pedidos_em_transporte,
+        "pedidos_concluidos": pedidos_concluidos,
+        "pedidos_cancelados": pedidos_cancelados,
         "usuarios_recentes": usuarios_recentes,
         "solicitacoes_recentes": solicitacoes_recentes,
+        "pedidos_recentes": pedidos_recentes,
         "config": config,
     }
 

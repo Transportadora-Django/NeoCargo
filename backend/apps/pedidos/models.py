@@ -55,6 +55,37 @@ class Pedido(models.Model):
         help_text="Opção de cotação selecionada pelo cliente",
     )
 
+    # Cotações calculadas automaticamente
+    cotacao_economico_valor = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Valor - Mais Econômico"
+    )
+    cotacao_economico_tempo = models.DecimalField(
+        max_digits=6, decimal_places=2, blank=True, null=True, verbose_name="Tempo (h) - Mais Econômico"
+    )
+    cotacao_economico_veiculo = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Veículo - Mais Econômico"
+    )
+
+    cotacao_rapido_valor = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Valor - Mais Rápido"
+    )
+    cotacao_rapido_tempo = models.DecimalField(
+        max_digits=6, decimal_places=2, blank=True, null=True, verbose_name="Tempo (h) - Mais Rápido"
+    )
+    cotacao_rapido_veiculo = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Veículo - Mais Rápido"
+    )
+
+    cotacao_custo_beneficio_valor = models.DecimalField(
+        max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Valor - Melhor Custo-Benefício"
+    )
+    cotacao_custo_beneficio_tempo = models.DecimalField(
+        max_digits=6, decimal_places=2, blank=True, null=True, verbose_name="Tempo (h) - Melhor Custo-Benefício"
+    )
+    cotacao_custo_beneficio_veiculo = models.CharField(
+        max_length=100, blank=True, null=True, verbose_name="Veículo - Melhor Custo-Benefício"
+    )
+
     # Campos que serão preenchidos pelo gerente posteriormente
     preco_final = models.DecimalField(
         max_digits=10,

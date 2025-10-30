@@ -25,7 +25,7 @@ class DashboardDonoViewTest(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Dashboard do Dono")
-        self.assertContains(response, "Controle de Solicitações")
+        self.assertContains(response, "Controle do Sistema")
 
     def test_dashboard_access_denied_for_client(self):
         """Testa acesso negado para cliente"""
