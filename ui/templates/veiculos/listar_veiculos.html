@@ -83,6 +83,22 @@
                     <div class="col-md-3">
                         <div class="pedido-info-item">
                             <div class="pedido-info-label">
+                                <i class="fas fa-map-marker-alt me-1"></i>
+                                Cidade Atual
+                            </div>
+                            <div class="pedido-info-value">
+                                {% if veiculo.sede_atual %}
+                                    {{ veiculo.sede_atual.nome_completo }}
+                                {% else %}
+                                    <span class="text-muted">Não definida</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-2">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
                                 <i class="fas fa-gas-pump me-1"></i>
                                 Combustível
                             </div>

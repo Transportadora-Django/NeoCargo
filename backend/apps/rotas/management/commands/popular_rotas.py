@@ -8,10 +8,18 @@ from apps.rotas.models import Cidade, Rota, Estado
 
 
 class Command(BaseCommand):
-    help = "Popula rotas de exemplo entre as principais cidades"
+    help = "Popula rotas de exemplo entre as principais cidades (bidirecionais)"
+
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--unidirecional",
+            action="store_true",
+            help="Cria apenas rotas unidirecionais (sem criar o caminho de volta)",
+        )
 
     def handle(self, *args, **options):
-        self.stdout.write("Populando rotas de exemplo...")
+        bidirecionais = not options.get("unidirecional", False)
+        self.stdout.write(f"Populando rotas {'bidirecionais' if bidirecionais else 'unidirecionais'}...")
 
         # Rotas principais (distância em km, tempo estimado em horas, pedágio em R$)
         rotas_data = [
@@ -62,7 +70,8 @@ class Command(BaseCommand):
                 cidade_origem = Cidade.objects.get(nome=origem_nome, estado=origem_estado)
                 cidade_destino = Cidade.objects.get(nome=destino_nome, estado=destino_estado)
 
-                rota, created = Rota.objects.update_or_create(
+                # Cria rota de ida
+                rota_ida, created_ida = Rota.objects.update_or_create(
                     origem=cidade_origem,
                     destino=cidade_destino,
                     defaults={
@@ -73,20 +82,52 @@ class Command(BaseCommand):
                     },
                 )
 
-                if created:
+                if created_ida:
                     created_count += 1
                     self.stdout.write(
                         self.style.SUCCESS(
-                            f"✓ Criada: {rota.origem.nome_completo} → {rota.destino.nome_completo} ({distancia} km)"
+                            f"✓ Criada (ida): {rota_ida.origem.nome_completo} → "
+                            f"{rota_ida.destino.nome_completo} ({distancia} km)"
                         )
                     )
                 else:
                     updated_count += 1
                     self.stdout.write(
                         self.style.WARNING(
-                            f"→ Atualizada: {rota.origem.nome_completo} → {rota.destino.nome_completo} ({distancia} km)"
+                            f"→ Atualizada (ida): {rota_ida.origem.nome_completo} → "
+                            f"{rota_ida.destino.nome_completo} ({distancia} km)"
                         )
                     )
+
+                # Cria rota de volta (bidirecional)
+                if bidirecionais:
+                    rota_volta, created_volta = Rota.objects.update_or_create(
+                        origem=cidade_destino,
+                        destino=cidade_origem,
+                        defaults={
+                            "distancia_km": Decimal(str(distancia)),
+                            "tempo_estimado_horas": Decimal(str(tempo)),
+                            "pedagio_valor": Decimal(str(pedagio)),
+                            "ativa": True,
+                        },
+                    )
+
+                    if created_volta:
+                        created_count += 1
+                        self.stdout.write(
+                            self.style.SUCCESS(
+                                f"✓ Criada (volta): {rota_volta.origem.nome_completo} → "
+                                f"{rota_volta.destino.nome_completo} ({distancia} km)"
+                            )
+                        )
+                    else:
+                        updated_count += 1
+                        self.stdout.write(
+                            self.style.WARNING(
+                                f"→ Atualizada (volta): {rota_volta.origem.nome_completo} → "
+                                f"{rota_volta.destino.nome_completo} ({distancia} km)"
+                            )
+                        )
 
             except Cidade.DoesNotExist:
                 error_count += 1

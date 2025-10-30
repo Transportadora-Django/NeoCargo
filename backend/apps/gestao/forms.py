@@ -8,7 +8,16 @@ class SolicitacaoMudancaPerfilForm(forms.ModelForm):
 
     class Meta:
         model = SolicitacaoMudancaPerfil
-        fields = ["role_solicitada", "justificativa", "telefone", "cpf", "endereco", "data_nascimento"]
+        fields = [
+            "role_solicitada",
+            "justificativa",
+            "telefone",
+            "cpf",
+            "endereco",
+            "data_nascimento",
+            "cnh_categoria",
+            "sede_atual",
+        ]
         widgets = {
             "role_solicitada": forms.Select(attrs={"class": "form-select", "id": "id_role_solicitada"}),
             "justificativa": forms.Textarea(
@@ -20,6 +29,8 @@ class SolicitacaoMudancaPerfilForm(forms.ModelForm):
                 attrs={"class": "form-control", "rows": 3, "placeholder": "Rua, número, bairro, cidade, CEP..."}
             ),
             "data_nascimento": forms.DateInput(attrs={"class": "form-control", "type": "date"}),
+            "cnh_categoria": forms.Select(attrs={"class": "form-select"}),
+            "sede_atual": forms.Select(attrs={"class": "form-select"}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -52,7 +63,7 @@ class SolicitacaoMudancaPerfilForm(forms.ModelForm):
         cleaned_data = super().clean()
         role_solicitada = cleaned_data.get("role_solicitada")
 
-        # Validações - todos os campos são obrigatórios
+        # Validações - campos básicos são obrigatórios
         if role_solicitada:
             required_fields = ["telefone", "cpf", "endereco", "data_nascimento"]
 
@@ -60,6 +71,13 @@ class SolicitacaoMudancaPerfilForm(forms.ModelForm):
                 if not cleaned_data.get(field):
                     field_label = self.fields[field].label or field.replace("_", " ").title()
                     self.add_error(field, f"{field_label} é obrigatório.")
+
+            # Se for motorista, CNH e sede são obrigatórios
+            if role_solicitada == Role.MOTORISTA:
+                if not cleaned_data.get("cnh_categoria"):
+                    self.add_error("cnh_categoria", "Categoria CNH é obrigatória para motoristas.")
+                if not cleaned_data.get("sede_atual"):
+                    self.add_error("sede_atual", "Sede atual é obrigatória para motoristas.")
 
         return cleaned_data
 
