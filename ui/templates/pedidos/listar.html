@@ -4,7 +4,7 @@
 {% block title %}Meus Pedidos - NeoCargo{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}?v=20251030191500">
 {% endblock %}
 
 {% block content %}
@@ -95,75 +95,148 @@
 
             <!-- Body do Card -->
             <div class="pedido-body">
-                <!-- Rota -->
-                <div class="pedido-info-item">
-                    <div class="pedido-info-label">
-                        <i class="fas fa-route me-1"></i>
-                        Rota
-                    </div>
-                    <div class="route-display">
-                        <span class="route-city">{{ pedido.cidade_origem }}</span>
-                        <i class="fas fa-arrow-right route-arrow"></i>
-                        <span class="route-city">{{ pedido.cidade_destino }}</span>
-                    </div>
-                </div>
-
-                <!-- Peso -->
-                <div class="pedido-info-item">
-                    <div class="pedido-info-label">
-                        <i class="fas fa-weight-hanging me-1"></i>
-                        Peso da Carga
-                    </div>
-                    <div class="pedido-info-value">
-                        {{ pedido.peso_carga }} kg
+                <!-- Rota em destaque -->
+                <div class="rota-destaque mb-4">
+                    <div class="rota-cidades">
+                        <div class="cidade-origem">
+                            <i class="fas fa-map-marker-alt me-2"></i>
+                            <strong>{{ pedido.cidade_origem }}</strong>
+                        </div>
+                        <div class="rota-seta">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                        <div class="cidade-destino">
+                            <strong>{{ pedido.cidade_destino }}</strong>
+                            <i class="fas fa-map-marker-alt ms-2"></i>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Prazo Desejado -->
-                <div class="pedido-info-item">
-                    <div class="pedido-info-label">
-                        <i class="fas fa-calendar-alt me-1"></i>
-                        Prazo Desejado
+                <!-- Grid de Informações -->
+                <div class="row g-3">
+                    <!-- Peso -->
+                    <div class="col-md-3 col-6">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-weight-hanging me-1"></i>
+                                Peso da Carga
+                            </div>
+                            <div class="pedido-info-value">
+                                {{ pedido.peso_carga }} kg
+                            </div>
+                        </div>
                     </div>
-                    <div class="pedido-info-value">
-                        {{ pedido.prazo_desejado }} dias
-                    </div>
-                </div>
 
-                <!-- Opção Escolhida -->
-                <div class="pedido-info-item">
-                    <div class="pedido-info-label">
-                        <i class="fas fa-star me-1"></i>
-                        Opção Escolhida
+                    <!-- Prazo Desejado -->
+                    <div class="col-md-3 col-6">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-calendar-alt me-1"></i>
+                                Prazo Desejado
+                            </div>
+                            <div class="pedido-info-value">
+                                {{ pedido.prazo_desejado }} dias
+                            </div>
+                        </div>
                     </div>
-                    <div>
-                        {% if pedido.status == 'cotacao' %}
-                            <span class="opcao-badge opcao-aguardando">
-                                <i class="fas fa-hourglass-half"></i>
-                                Aguardando Escolha
-                            </span>
-                        {% elif pedido.opcao == 'economico' %}
-                            <span class="opcao-badge opcao-economico">
-                                <i class="fas fa-dollar-sign"></i>
-                                Mais Econômico
-                            </span>
-                        {% elif pedido.opcao == 'rapido' %}
-                            <span class="opcao-badge opcao-rapido">
-                                <i class="fas fa-bolt"></i>
-                                Mais Rápido
-                            </span>
-                        {% elif pedido.opcao == 'custo_beneficio' %}
-                            <span class="opcao-badge opcao-custo-beneficio">
-                                <i class="fas fa-balance-scale"></i>
-                                Custo-Benefício
-                            </span>
-                        {% else %}
-                            <span class="opcao-badge opcao-aguardando">
-                                <i class="fas fa-hourglass-half"></i>
-                                Aguardando
-                            </span>
-                        {% endif %}
+
+                    <!-- Opção Escolhida -->
+                    <div class="col-md-6 col-12">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-star me-1"></i>
+                                Opção Escolhida
+                            </div>
+                            <div>
+                                {% if pedido.status == 'cotacao' %}
+                                    <span class="opcao-badge opcao-aguardando">
+                                        <i class="fas fa-hourglass-half"></i>
+                                        Aguardando Escolha
+                                    </span>
+                                {% elif pedido.opcao == 'economico' %}
+                                    <span class="opcao-badge opcao-economico">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        Mais Econômico
+                                    </span>
+                                {% elif pedido.opcao == 'rapido' %}
+                                    <span class="opcao-badge opcao-rapido">
+                                        <i class="fas fa-bolt"></i>
+                                        Mais Rápido
+                                    </span>
+                                {% elif pedido.opcao == 'custo_beneficio' %}
+                                    <span class="opcao-badge opcao-custo-beneficio">
+                                        <i class="fas fa-balance-scale"></i>
+                                        Custo-Benefício
+                                    </span>
+                                {% else %}
+                                    <span class="opcao-badge opcao-aguardando">
+                                        <i class="fas fa-hourglass-half"></i>
+                                        Aguardando
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
                     </div>
+
+                    <!-- Veículo Sugerido (quando cliente escolhe opção) -->
+                    {% if pedido.veiculo_final and not pedido.atribuicao %}
+                    <div class="col-md-6 col-12">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-truck me-1"></i>
+                                Veículo Sugerido
+                            </div>
+                            <div class="pedido-info-value">
+                                {{ pedido.veiculo_final }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-id-card me-1"></i>
+                                Motorista
+                            </div>
+                            <div class="pedido-info-value text-muted">
+                                <i class="fas fa-hourglass-half me-1"></i>
+                                Aguardando aprovação
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Motorista e Veículo Atribuídos (quando aprovado) -->
+                    {% if pedido.atribuicao %}
+                    <div class="col-md-6 col-12">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-id-card me-1"></i>
+                                Motorista Atribuído
+                            </div>
+                            <div class="pedido-info-value">
+                                {{ pedido.atribuicao.motorista.profile.user.get_full_name|default:pedido.atribuicao.motorista.profile.user.username }}
+                                <span class="opcao-badge opcao-economico ms-2">
+                                    <i class="fas fa-id-card"></i>
+                                    CNH {{ pedido.atribuicao.motorista.cnh_categoria }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-12">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-truck me-1"></i>
+                                Veículo Atribuído
+                            </div>
+                            <div class="pedido-info-value">
+                                {{ pedido.atribuicao.veiculo.marca }} {{ pedido.atribuicao.veiculo.modelo }}
+                                <span class="opcao-badge opcao-custo-beneficio ms-2">
+                                    {{ pedido.atribuicao.veiculo.placa }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
 
@@ -173,27 +246,36 @@
                     {% if user.profile.is_owner %}
                         <button 
                             type="button" 
-                            class="btn btn-action btn-action-secondary"
+                            class="btn-action btn-action-secondary"
                             disabled
                             title="Owners não podem escolher opções de pedidos de clientes"
+                            style="background: #64748b; color: #fff; border: none; padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.5rem; opacity: 0.5;"
                         >
                             <i class="fas fa-lock"></i>
                             Escolher Opção
                         </button>
                     {% else %}
-                        <a href="{% url 'pedidos:gerar_cotacao' pedido.id %}" class="btn btn-action btn-action-primary">
+                        <a href="{% url 'pedidos:gerar_cotacao' pedido.id %}" class="btn-action btn-action-primary" style="background: #06b6d4; color: #fff; border: none; padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
                             <i class="fas fa-hand-pointer"></i>
                             Escolher Opção
                         </a>
                     {% endif %}
                 {% endif %}
                 
+                {% if pedido.status == 'pendente' and user.profile.role in 'owner,gerente' %}
+                    <a href="{% url 'gestao:pedidos_para_aprovacao' %}" class="btn-action btn-action-warning" style="background: #f59e0b; color: #fff; border: none; padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;">
+                        <i class="fas fa-clipboard-check"></i>
+                        Analisar Pedido
+                    </a>
+                {% endif %}
+                
                 {% if pedido.pode_ser_cancelado %}
                     <button 
                         type="button" 
-                        class="btn btn-action btn-action-danger"
+                        class="btn-action btn-action-danger"
                         data-bs-toggle="modal"
                         data-bs-target="#modalCancelar{{ pedido.id }}"
+                        style="background: #dc2626; color: #fff; border: none; padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.5rem;"
                     >
                         <i class="fas fa-times"></i>
                         Cancelar
@@ -202,9 +284,10 @@
                 
                 <button 
                     type="button" 
-                    class="btn btn-action btn-action-info"
+                    class="btn-action btn-action-info"
                     data-bs-toggle="modal"
                     data-bs-target="#modalDetalhes{{ pedido.id }}"
+                    style="background: #0284c7; color: #fff; border: none; padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.5rem;"
                 >
                     <i class="fas fa-eye"></i>
                     Ver Detalhes
@@ -223,7 +306,7 @@
                             <i class="fas fa-file-alt me-2"></i>
                             Detalhes do Pedido #{{ pedido.numero_pedido_cliente }}
                         </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" style="background: #ef4444 !important; opacity: 1 !important; filter: brightness(1) !important;"></button>
                     </div>
                     <div class="modal-body">
                         <div class="row">
@@ -302,7 +385,7 @@
                             <i class="fas fa-exclamation-triangle me-2"></i>
                             Cancelar Pedido #{{ pedido.numero_pedido_cliente }}
                         </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" style="background: #ef4444 !important; opacity: 1 !important; filter: brightness(1) !important;"></button>
                     </div>
                     <div class="modal-body">
                         <p>Tem certeza que deseja cancelar este pedido?</p>
