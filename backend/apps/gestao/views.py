@@ -10,6 +10,9 @@ from django.views.decorators.http import require_http_methods
 from apps.contas.models import Profile, Role
 from .models import ConfiguracaoSistema, SolicitacaoMudancaPerfil, StatusSolicitacao
 from .forms import SolicitacaoMudancaPerfilForm, AprovarSolicitacaoForm
+from apps.pedidos.models import Pedido, StatusPedido
+from apps.motoristas.services import AtribuicaoService
+from django.core.exceptions import ValidationError
 
 
 def user_has_role(user, required_role):
@@ -30,6 +33,34 @@ def require_role(role):
                 return redirect("contas:login")
 
             if not user_has_role(request.user, role):
+                messages.error(request, "Você não tem permissão para acessar esta página.")
+                return redirect("home")
+
+            return view_func(request, *args, **kwargs)
+
+        return wrapper
+
+    return decorator
+
+
+def user_has_any_role(user, roles):
+    """Verifica se o usuário possui qualquer um dos papéis informados"""
+    try:
+        return user.profile.role in roles
+    except Profile.DoesNotExist:
+        return False
+
+
+def require_any_role(roles):
+    """Decorator para permitir múltiplos papéis"""
+
+    def decorator(view_func):
+        def wrapper(request, *args, **kwargs):
+            if not request.user.is_authenticated:
+                messages.error(request, "Você precisa estar logado.")
+                return redirect("contas:login")
+
+            if not user_has_any_role(request.user, roles):
                 messages.error(request, "Você não tem permissão para acessar esta página.")
                 return redirect("home")
 
@@ -86,8 +117,12 @@ def dashboard_dono(request):
     pedidos_concluidos = Pedido.objects.filter(status=StatusPedido.CONCLUIDO).count()
     pedidos_cancelados = Pedido.objects.filter(status=StatusPedido.CANCELADO).count()
 
-    # Pedidos recentes
-    pedidos_recentes = Pedido.objects.select_related("cliente").order_by("-created_at")[:5]
+    # Pedidos recentes (com atribuições carregadas para exibição de motorista/veículo)
+    pedidos_recentes = (
+        Pedido.objects.select_related("cliente")
+        .select_related("atribuicao__motorista__profile__user", "atribuicao__veiculo")
+        .order_by("-created_at")[:5]
+    )
 
     context = {
         "titulo": "Dashboard do Dono",
@@ -235,6 +270,85 @@ def listar_solicitacoes(request):
 
 
 @login_required
+@require_any_role([Role.OWNER, Role.GERENTE])
+def pedidos_para_aprovacao(request):
+    """Lista pedidos com status PENDENTE para que dono/gerente analisem e aprovem/rejeitem"""
+    pedidos = (
+        Pedido.objects.filter(status=StatusPedido.PENDENTE)
+        .select_related("cliente")
+        .select_related("atribuicao__motorista__profile__user", "atribuicao__veiculo")
+        .order_by("-created_at")
+    )
+
+    paginator = Paginator(pedidos, 15)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        "titulo": "Pedidos para Aprovação",
+        "page_obj": page_obj,
+    }
+
+    return render(request, "gestao/pedidos_para_aprovacao.html", context)
+
+
+@login_required
+@require_any_role([Role.OWNER, Role.GERENTE])
+def aprovar_pedido(request, pedido_id):
+    """Aprova um pedido (owner/gerente) e tenta atribuir motorista/veículo automaticamente"""
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+
+    if request.method != "POST":
+        messages.error(request, "Requisição inválida.")
+        return redirect("gestao:pedidos_para_aprovacao")
+
+    # Primeiro tenta atribuir antes de aprovar
+    pedido.status = StatusPedido.APROVADO
+    pedido.save()
+
+    try:
+        atribuicao = AtribuicaoService.atribuir_pedido(pedido)
+    except ValidationError as e:
+        # Não foi possível atribuir - reverter aprovação
+        pedido.status = StatusPedido.PENDENTE
+        pedido.save()
+        messages.error(request, f"Não foi possível aprovar o pedido: {e}")
+        return redirect("gestao:pedidos_para_aprovacao")
+
+    motorista_nome = atribuicao.motorista.profile.user.get_full_name() if atribuicao.motorista else None
+    placa = atribuicao.veiculo.placa if atribuicao.veiculo else "-"
+    messages.success(
+        request,
+        f"Pedido aprovado e atribuído: Motorista {motorista_nome}, Veículo {placa}",
+    )
+    return redirect("gestao:pedidos_para_aprovacao")
+
+
+@login_required
+@require_any_role([Role.OWNER, Role.GERENTE])
+def cancelar_pedido_gestao(request, pedido_id):
+    """Cancela um pedido pelo dono/gerente. Se já houver atribuição, cancela a atribuição também."""
+    pedido = get_object_or_404(Pedido, id=pedido_id)
+
+    if request.method != "POST":
+        messages.error(request, "Requisição inválida.")
+        return redirect("gestao:pedidos_para_aprovacao")
+
+    # Se existir atribuição, cancelar via service
+    if hasattr(pedido, "atribuicao"):
+        try:
+            AtribuicaoService.cancelar_atribuicao(pedido.atribuicao, motivo="Cancelado pelo gestor")
+        except ValidationError as e:
+            messages.error(request, f"Não foi possível cancelar a atribuição: {e}")
+            return redirect("gestao:pedidos_para_aprovacao")
+
+    pedido.status = StatusPedido.CANCELADO
+    pedido.save()
+    messages.success(request, "Pedido cancelado com sucesso.")
+    return redirect("gestao:pedidos_para_aprovacao")
+
+
+@login_required
 def aprovar_solicitacao(request, solicitacao_id):
     """Aprova ou rejeita uma solicitação"""
     if not user_has_role(request.user, Role.OWNER):
@@ -287,6 +401,21 @@ def _aplicar_mudanca_perfil(solicitacao):
         perfil.role = solicitacao.role_solicitada
 
     perfil.save()
+
+    # Se a mudança for para motorista E tiver os dados obrigatórios, cria o registro de Motorista
+    if solicitacao.role_solicitada == Role.MOTORISTA and solicitacao.cnh_categoria and solicitacao.sede_atual:
+        from apps.motoristas.models import Motorista
+
+        # Cria ou atualiza o registro de Motorista
+        Motorista.objects.update_or_create(
+            profile=perfil,
+            defaults={
+                "sede_atual": solicitacao.sede_atual,
+                "cnh_categoria": solicitacao.cnh_categoria,
+                "disponivel": True,
+                "entregas_concluidas": 0,
+            },
+        )
 
     # Nota: Veículos serão gerenciados separadamente pelo gerente/dono
     # não são mais vinculados ao cadastro do motorista

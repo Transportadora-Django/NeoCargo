@@ -63,6 +63,15 @@ class EspecificacaoVeiculo(models.Model):
         return f"{self.get_tipo_display()}"
 
 
+class CategoriaCNH(models.TextChoices):
+    """Categorias de CNH para veículos"""
+
+    B = "B", "Categoria B"
+    C = "C", "Categoria C"
+    D = "D", "Categoria D"
+    E = "E", "Categoria E"
+
+
 class Veiculo(models.Model):
     """Veículo da empresa (instância real)"""
 
@@ -78,6 +87,26 @@ class Veiculo(models.Model):
         verbose_name="Ano de Fabricação", validators=[MinValueValidator(1990), MaxValueValidator(2030)]
     )
     cor = models.CharField(max_length=50, verbose_name="Cor")
+
+    # Novos campos para NC-38
+    sede_atual = models.ForeignKey(
+        "rotas.Cidade",
+        on_delete=models.PROTECT,
+        related_name="veiculos",
+        null=True,
+        blank=True,
+        verbose_name="Sede Atual",
+        help_text="Cidade onde o veículo está disponível atualmente",
+    )
+    categoria_minima_cnh = models.CharField(
+        max_length=1,
+        choices=CategoriaCNH.choices,
+        null=True,
+        blank=True,
+        verbose_name="Categoria Mínima CNH",
+        help_text="Categoria mínima de CNH necessária para dirigir este veículo",
+    )
+
     ativo = models.BooleanField(
         default=True,
         verbose_name="Veículo Ativo",

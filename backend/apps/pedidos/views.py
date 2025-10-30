@@ -225,18 +225,33 @@ def confirmar_pedido(request, pedido_id):
         # Salva a opção escolhida e define preço/prazo final baseado na opção
         pedido.opcao = opcao_map[opcao]
 
+        # Função para calcular prazo com logística (mesma lógica do gerar_cotacao)
+        def calcular_prazo_com_logistica(horas, dias_logistica):
+            import math
+
+            dias_viagem = math.ceil(float(horas) / 24)
+            dias_total = dias_viagem + dias_logistica
+            return "1 dia" if dias_total == 1 else f"{dias_total} dias"
+
+        # Dias de logística por tipo de opção
+        DIAS_LOGISTICA_ECONOMICO = 2
+        DIAS_LOGISTICA_RAPIDO = 0
+        DIAS_LOGISTICA_CUSTO_BENEFICIO = 1
+
         # Definir preço e prazo final baseado na opção escolhida
         if opcao == "economico":
             pedido.preco_final = pedido.cotacao_economico_valor
-            pedido.prazo_final = f"{pedido.cotacao_economico_tempo:.1f} horas"
+            pedido.prazo_final = calcular_prazo_com_logistica(pedido.cotacao_economico_tempo, DIAS_LOGISTICA_ECONOMICO)
             pedido.veiculo_final = pedido.cotacao_economico_veiculo
         elif opcao == "rapido":
             pedido.preco_final = pedido.cotacao_rapido_valor
-            pedido.prazo_final = f"{pedido.cotacao_rapido_tempo:.1f} horas"
+            pedido.prazo_final = calcular_prazo_com_logistica(pedido.cotacao_rapido_tempo, DIAS_LOGISTICA_RAPIDO)
             pedido.veiculo_final = pedido.cotacao_rapido_veiculo
         else:  # custo_beneficio
             pedido.preco_final = pedido.cotacao_custo_beneficio_valor
-            pedido.prazo_final = f"{pedido.cotacao_custo_beneficio_tempo:.1f} horas"
+            pedido.prazo_final = calcular_prazo_com_logistica(
+                pedido.cotacao_custo_beneficio_tempo, DIAS_LOGISTICA_CUSTO_BENEFICIO
+            )
             pedido.veiculo_final = pedido.cotacao_custo_beneficio_veiculo
 
         pedido.status = StatusPedido.PENDENTE
@@ -272,14 +287,27 @@ def pedido_listar(request):
     try:
         profile = request.user.profile
         # Owner vê todos os pedidos
-        if profile.role == Role.OWNER:
-            pedidos_list = Pedido.objects.all().select_related("cliente")
+        if profile.role == Role.OWNER or profile.role == Role.GERENTE:
+            pedidos_list = (
+                Pedido.objects.all()
+                .select_related("cliente")
+                .select_related("atribuicao__motorista__profile__user", "atribuicao__veiculo")
+                .order_by("-created_at")
+            )
         else:
             # Outros usuários veem apenas seus pedidos
-            pedidos_list = Pedido.objects.filter(cliente=request.user)
+            pedidos_list = (
+                Pedido.objects.filter(cliente=request.user)
+                .select_related("atribuicao__motorista__profile__user", "atribuicao__veiculo")
+                .order_by("-created_at")
+            )
     except Profile.DoesNotExist:
         # Se não tem perfil, vê apenas seus pedidos
-        pedidos_list = Pedido.objects.filter(cliente=request.user)
+        pedidos_list = (
+            Pedido.objects.filter(cliente=request.user)
+            .select_related("atribuicao__motorista__profile__user", "atribuicao__veiculo")
+            .order_by("-created_at")
+        )
 
     # Paginação
     paginator = Paginator(pedidos_list, 10)  # 10 pedidos por página

@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', function () {
   const roleSelect = document.getElementById('id_role_solicitada')
   const dadosPessoais = document.getElementById('dados-pessoais')
+  const dadosMotorista = document.getElementById('dados-motorista')
 
   // Aplicar máscaras usando jQuery Mask Plugin
   if (typeof $ !== 'undefined' && $.fn.mask) {
@@ -24,6 +25,13 @@ document.addEventListener('DOMContentLoaded', function () {
       dadosPessoais.style.display = 'block'
     } else {
       dadosPessoais.style.display = 'none'
+    }
+
+    // Mostra campos de motorista apenas se role for 'motorista'
+    if (selectedRole === 'motorista') {
+      dadosMotorista.style.display = 'block'
+    } else {
+      dadosMotorista.style.display = 'none'
     }
   }
 

@@ -166,13 +166,56 @@
             </div>
             {% endif %}
 
-            <!-- Dados do Veículo -->
+            <!-- Dados de Motorista (CNH e Sede) -->
+            {% if solicitacao.role_solicitada == 'motorista' %}
+            <div class="form-card mt-4">
+                <h2 class="form-section-title mb-4">
+                    <i class="fas fa-id-badge"></i>
+                    Informações de Motorista
+                </h2>
+                
+                <div class="row mb-4">
+                    {% if solicitacao.cnh_categoria %}
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-id-card-alt me-1"></i>
+                                Categoria CNH
+                            </div>
+                            <div class="pedido-info-value">
+                                <span class="opcao-badge opcao-economico">{{ solicitacao.get_cnh_categoria_display }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if solicitacao.sede_atual %}
+                    <div class="col-md-6 mb-3">
+                        <div class="pedido-info-item">
+                            <div class="pedido-info-label">
+                                <i class="fas fa-map-marked-alt me-1"></i>
+                                Sede Atual
+                            </div>
+                            <div class="pedido-info-value">{{ solicitacao.sede_atual.nome_completo }}</div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Dados do Veículo (DEPRECATED - apenas referência) -->
             {% if solicitacao.role_solicitada == 'motorista' and solicitacao.tipo_veiculo %}
             <div class="form-card mt-4">
                 <h2 class="form-section-title">
                     <i class="fas fa-car"></i>
-                    Dados do Veículo
+                    Dados do Veículo (Referência)
                 </h2>
+                <div class="alert alert-warning mb-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Nota:</strong> Estes dados de veículo são apenas para referência. 
+                    Os veículos da empresa são gerenciados separadamente e atribuídos automaticamente aos motoristas.
+                </div>
                 
                 <div class="row mb-3">
                     <div class="col-md-6">

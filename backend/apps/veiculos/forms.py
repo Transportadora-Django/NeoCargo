@@ -59,7 +59,7 @@ class VeiculoForm(forms.ModelForm):
 
     class Meta:
         model = Veiculo
-        fields = ["especificacao", "marca", "modelo", "placa", "ano", "cor", "ativo"]
+        fields = ["especificacao", "marca", "modelo", "placa", "ano", "cor", "sede_atual", "ativo"]
         widgets = {
             "especificacao": forms.Select(attrs={"class": "form-select"}),
             "marca": forms.TextInput(attrs={"class": "form-control", "placeholder": "Ex: Ford, Scania, Honda"}),
@@ -67,6 +67,7 @@ class VeiculoForm(forms.ModelForm):
             "placa": forms.TextInput(attrs={"class": "form-control", "placeholder": "ABC-1234"}),
             "ano": forms.NumberInput(attrs={"class": "form-control", "placeholder": "2024"}),
             "cor": forms.TextInput(attrs={"class": "form-control", "placeholder": "Ex: Branco, Preto, Vermelho"}),
+            "sede_atual": forms.Select(attrs={"class": "form-select"}),
             "ativo": forms.CheckboxInput(attrs={"class": "form-check-input"}),
         }
         labels = {
@@ -76,5 +77,6 @@ class VeiculoForm(forms.ModelForm):
             "placa": "Placa",
             "ano": "Ano de Fabricação",
             "cor": "Cor",
+            "sede_atual": "Sede Atual (Cidade)",
             "ativo": "Veículo Ativo",
         }

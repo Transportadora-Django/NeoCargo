@@ -44,6 +44,15 @@ class StatusSolicitacao(models.TextChoices):
     REJEITADA = "rejeitada", "Rejeitada"
 
 
+class CategoriaCNH(models.TextChoices):
+    """Categorias de CNH"""
+
+    B = "B", "Categoria B"
+    C = "C", "Categoria C"
+    D = "D", "Categoria D"
+    E = "E", "Categoria E"
+
+
 class SolicitacaoMudancaPerfil(models.Model):
     """Solicitações de mudança de perfil de usuário"""
 
@@ -58,7 +67,25 @@ class SolicitacaoMudancaPerfil(models.Model):
     endereco = models.TextField(blank=True, null=True, verbose_name="Endereço")
     data_nascimento = models.DateField(blank=True, null=True, verbose_name="Data de Nascimento")
 
-    # Dados do veículo (para motoristas)
+    # Novos campos para NC-38 (motoristas)
+    cnh_categoria = models.CharField(
+        max_length=1,
+        choices=CategoriaCNH.choices,
+        blank=True,
+        null=True,
+        verbose_name="Categoria CNH",
+        help_text="Categoria da Carteira Nacional de Habilitação",
+    )
+    sede_atual = models.ForeignKey(
+        "rotas.Cidade",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        verbose_name="Sede Atual",
+        help_text="Cidade onde o motorista estará disponível",
+    )
+
+    # Dados do veículo (DEPRECATED - veículos são da empresa)
     tipo_veiculo = models.CharField(
         max_length=20, choices=TipoVeiculo.choices, blank=True, null=True, verbose_name="Tipo de Veículo"
     )

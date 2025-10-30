@@ -41,6 +41,7 @@ LOCAL_APPS = [
     "apps.pedidos",
     "apps.gestao",
     "apps.veiculos",
+    "apps.motoristas",
     "apps.dashboard",
     "apps.rotas",
     "core",
