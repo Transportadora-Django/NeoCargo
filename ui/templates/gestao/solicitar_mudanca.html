@@ -130,6 +130,44 @@
             </div>
         </div>
 
+        <!-- Dados de Motorista (apenas para role=motorista) -->
+        <div class="form-card mb-4" id="dados-motorista" style="display: none;">
+            <h2 class="form-section-title mb-4">
+                <i class="fas fa-id-badge"></i>
+                Informações de Motorista
+            </h2>
+            <p class="text-muted mb-4">
+                <i class="fas fa-info-circle me-1"></i>
+                Dados obrigatórios para atuar como motorista
+            </p>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.cnh_categoria.id_for_label }}" class="form-label">
+                        <i class="fas fa-id-card-alt me-1"></i>
+                        {{ form.cnh_categoria.label }} <span class="text-danger" id="cnh-required">*</span>
+                    </label>
+                    {{ form.cnh_categoria }}
+                    {% if form.cnh_categoria.errors %}
+                        <div class="invalid-feedback d-block">{{ form.cnh_categoria.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-text text-muted">Categoria da sua Carteira Nacional de Habilitação</small>
+                </div>
+                
+                <div class="col-md-6 mb-3">
+                    <label for="{{ form.sede_atual.id_for_label }}" class="form-label">
+                        <i class="fas fa-map-marked-alt me-1"></i>
+                        {{ form.sede_atual.label }} <span class="text-danger" id="sede-required">*</span>
+                    </label>
+                    {{ form.sede_atual }}
+                    {% if form.sede_atual.errors %}
+                        <div class="invalid-feedback d-block">{{ form.sede_atual.errors.0 }}</div>
+                    {% endif %}
+                    <small class="form-text text-muted">Cidade onde você estará disponível para entregas</small>
+                </div>
+            </div>
+        </div>
+
         <!-- Botões de Ação -->
         <div class="form-card">
             <div class="d-flex gap-3 justify-content-end">

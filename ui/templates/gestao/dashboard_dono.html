@@ -43,6 +43,34 @@
         </a>
     </div>
     {% endif %}
+    
+    {% if pedidos_pendentes > 0 %}
+    <div class="pedido-card mb-4" style="background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 100%); border: 2px solid #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div style="background: #f59e0b; color: #fff; width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-clipboard-check" style="font-size: 1.75rem;"></i>
+                </div>
+                <div>
+                    <h5 class="pedido-id mb-1" style="color: #d97706;">
+                        <i class="fas fa-hourglass-half me-2"></i>{{ pedidos_pendentes }} Pedido{% if pedidos_pendentes > 1 %}s{% endif %} Aguardando Aprovação
+                    </h5>
+                    <p class="pedido-info-label mb-0" style="color: #92400e;">
+                        {% if pedidos_pendentes == 1 %}
+                            Há um pedido aguardando sua análise e atribuição de motorista e veículo.
+                        {% else %}
+                            Há {{ pedidos_pendentes }} pedidos aguardando sua análise e atribuição de motorista e veículo.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <a href="{% url 'gestao:pedidos_para_aprovacao' %}" class="btn btn-new-pedido" style="background: #f59e0b; box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);">
+                <i class="fas fa-clipboard-check me-2"></i>
+                Analisar Pedidos
+            </a>
+        </div>
+    </div>
+    {% endif %}
 
     <h2 class="pedidos-title mb-4" style="color: var(--neocargo-navy);">
         <i class="fas fa-chart-line me-2"></i>Visão Geral
@@ -89,8 +117,8 @@
         </div>
         <div class="col-lg-3 col-md-6">
             <div class="pedido-card">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="pedido-icon" style="background: rgb(251 146 60 / 10%); color: #fb923c; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <div class="d-flex align-items-start gap-3">
+                    <div class="pedido-icon" style="background: rgb(251 146 60 / 10%); color: #fb923c; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 4px;">
                         <i class="fas fa-clock" style="font-size: 1.5rem;"></i>
                     </div>
                     <div>
@@ -136,7 +164,7 @@
             <div class="pedido-card">
                 <div class="d-flex align-items-center gap-3">
                     <div class="pedido-icon" style="background: rgb(251 146 60 / 10%); color: #fb923c; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                        <i class="fas fa-clock" style="font-size: 1.5rem;"></i>
+                        <i class="fas fa-clipboard-list" style="font-size: 1.5rem;"></i>
                     </div>
                     <div>
                         <div class="pedido-info-label">Pendentes</div>
@@ -266,6 +294,11 @@
                         <div style="flex: 1; min-width: 0;">
                             <div class="pedido-id" style="font-size: 0.95rem;">#{{ pedido.numero_pedido_cliente }}</div>
                             <small class="pedido-info-label" style="display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ pedido.cliente.get_full_name|default:pedido.cliente.username }}</small>
+                            {% if pedido.atribuicao %}
+                                <small class="pedido-info-label text-muted" style="display:block;">Motorista: {{ pedido.atribuicao.motorista.profile.user.get_full_name|default:pedido.atribuicao.motorista.profile.user.username }} - Veículo: {{ pedido.atribuicao.veiculo.placa }}</small>
+                            {% elif pedido.veiculo_final %}
+                                <small class="pedido-info-label text-muted" style="display:block;">Veículo sugerido: {{ pedido.veiculo_final }}</small>
+                            {% endif %}
                         </div>
                         <div class="text-end" style="flex-shrink: 0; margin-left: 1rem;">
                             {% if pedido.status == 'cotacao' %}

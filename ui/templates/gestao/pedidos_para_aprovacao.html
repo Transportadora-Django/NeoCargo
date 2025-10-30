@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pedidos para Aprovação - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}?v=20251030200000">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-clipboard-check me-2"></i>
+                    Pedidos Pendentes
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Analise e aprove os pedidos para iniciar a atribuição de motoristas e veículos
+                </p>
+            </div>
+            <a href="{% url 'gestao:dashboard_dono' %}" class="btn btn-new-pedido" style="text-decoration: none;">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    {% if page_obj %}
+        <!-- Lista de Pedidos -->
+        {% for pedido in page_obj %}
+        <div class="pedido-card">
+            <!-- Header do Card -->
+            <div class="pedido-header">
+                <div>
+                    <div class="pedido-id">
+                        <i class="fas fa-hashtag"></i>{{ pedido.numero_pedido_cliente }}
+                        - <i class="fas fa-user me-1"></i>{{ pedido.cliente.get_full_name|default:pedido.cliente.username }}
+                    </div>
+                    <div class="pedido-date">
+                        <i class="far fa-calendar me-1"></i>
+                        {{ pedido.created_at|date:"d/m/Y" }} às {{ pedido.created_at|date:"H:i" }}
+                    </div>
+                </div>
+                <div>
+                    <span class="status-badge status-pendente">
+                        <i class="fas fa-hourglass-half"></i>
+                        Aguardando Aprovação
+                    </span>
+                </div>
+            </div>
+
+            <!-- Body do Card -->
+            <div class="pedido-body">
+                <!-- Rota -->
+                <div class="pedido-info-item mb-3">
+                    <div class="pedido-info-label">
+                        <i class="fas fa-route me-1"></i>
+                        Rota
+                    </div>
+                    <div class="pedido-info-value">
+                        <strong>{{ pedido.cidade_origem }}</strong>
+                        <i class="fas fa-arrow-right mx-2 text-primary"></i>
+                        <strong>{{ pedido.cidade_destino }}</strong>
+                    </div>
+                </div>
+
+                <!-- Informações da Carga e Opção -->
+                <div class="row">
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-weight-hanging me-1"></i>
+                            Peso da Carga
+                        </div>
+                        <div class="pedido-info-value">{{ pedido.peso_carga }} kg</div>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-clock me-1"></i>
+                            Prazo Desejado
+                        </div>
+                        <div class="pedido-info-value">{{ pedido.prazo_desejado }} dias</div>
+                    </div>
+                    <div class="col-md-2 col-6 mb-3">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-dollar-sign me-1"></i>
+                            Valor
+                        </div>
+                        <div class="pedido-info-value text-success fw-bold">
+                            R$ {{ pedido.preco_final|floatformat:2 }}
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6 mb-3">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-truck me-1"></i>
+                            Veículo Sugerido
+                        </div>
+                        <div class="pedido-info-value">
+                            {% if pedido.veiculo_final %}
+                                {{ pedido.veiculo_final }}
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-12 mb-3">
+                        <div class="pedido-info-label">
+                            <i class="fas fa-star me-1"></i>
+                            Opção Escolhida
+                        </div>
+                        <div class="pedido-info-value">
+                            {% if pedido.opcao == 'economico' %}
+                                <span class="opcao-badge opcao-economico">
+                                    <i class="fas fa-piggy-bank"></i>
+                                    Mais Econômico
+                                </span>
+                            {% elif pedido.opcao == 'rapido' %}
+                                <span class="opcao-badge opcao-rapido">
+                                    <i class="fas fa-shipping-fast"></i>
+                                    Mais Rápido
+                                </span>
+                            {% elif pedido.opcao == 'custo_beneficio' %}
+                                <span class="opcao-badge opcao-custo-beneficio">
+                                    <i class="fas fa-balance-scale"></i>
+                                    Custo-Benefício
+                                </span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if pedido.observacoes %}
+                <div class="mt-2 pt-3 border-top">
+                    <div class="pedido-info-label">
+                        <i class="fas fa-comment-alt me-1"></i>
+                        Observações do Cliente
+                    </div>
+                    <div class="pedido-info-value">
+                        {{ pedido.observacoes }}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Actions -->
+            <div class="pedido-actions">
+                <form method="post" action="{% url 'gestao:aprovar_pedido' pedido.id %}" style="display:inline-block;">
+                    {% csrf_token %}
+                    <button class="btn-action btn-action-success" type="submit" style="background: #16a34a; color: #fff; border: none; padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 700; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-check-circle"></i>
+                        Aprovar & Atribuir
+                    </button>
+                </form>
+                
+                <button 
+                    type="button" 
+                    class="btn-action btn-action-danger"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalCancelar{{ pedido.id }}"
+                    style="background: #dc2626; color: #fff; border: none; padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.5rem;"
+                >
+                    <i class="fas fa-times-circle"></i>
+                    Cancelar Pedido
+                </button>
+                
+                <button 
+                    type="button" 
+                    class="btn-action btn-action-info"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modalDetalhes{{ pedido.id }}"
+                    style="background: #0284c7; color: #fff; border: none; padding: 0.55rem 1.4rem; border-radius: 50px; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: inline-flex; align-items: center; gap: 0.5rem;"
+                >
+                    <i class="fas fa-eye"></i>
+                    Ver Detalhes
+                </button>
+            </div>
+        </div>
+
+        <!-- Modal Cancelar -->
+        <div class="modal fade" id="modalCancelar{{ pedido.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+                            Confirmar Cancelamento
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" style="background: #ef4444 !important; opacity: 1 !important; filter: brightness(1) !important;"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza que deseja cancelar o pedido <strong>#{{ pedido.numero_pedido_cliente }}</strong>?</p>
+                        <p class="text-muted mb-0">Esta ação não pode ser desfeita.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>
+                            Não, voltar
+                        </button>
+                        <form method="post" action="{% url 'gestao:cancelar_pedido_gestao' pedido.id %}" style="display:inline-block;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-check me-2"></i>
+                                Sim, cancelar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Detalhes -->
+        <div class="modal fade" id="modalDetalhes{{ pedido.id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="fas fa-file-alt me-2"></i>
+                            Detalhes do Pedido #{{ pedido.numero_pedido_cliente }}
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" style="background: #ef4444 !important; opacity: 1 !important; filter: brightness(1) !important;"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">Informações Gerais</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>Pedido:</strong> #{{ pedido.numero_pedido_cliente }}</li>
+                                    <li><strong>Cliente:</strong> {{ pedido.cliente.get_full_name|default:pedido.cliente.username }}</li>
+                                    <li><strong>Data:</strong> {{ pedido.created_at|date:"d/m/Y H:i" }}</li>
+                                    <li><strong>Status:</strong> {{ pedido.get_status_display }}</li>
+                                    {% if pedido.opcao %}
+                                        <li><strong>Opção:</strong> {{ pedido.get_opcao_display }}</li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="fw-bold">Trajeto e Carga</h6>
+                                <ul class="list-unstyled">
+                                    <li><strong>Origem:</strong> {{ pedido.cidade_origem }}</li>
+                                    <li><strong>Destino:</strong> {{ pedido.cidade_destino }}</li>
+                                    <li><strong>Peso:</strong> {{ pedido.peso_carga }} kg</li>
+                                    <li><strong>Prazo desejado:</strong> {{ pedido.prazo_desejado }} dias</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h6 class="fw-bold">Opção Escolhida</h6>
+                                <div class="p-3 bg-light rounded">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <strong>Preço:</strong><br>
+                                            <span class="text-success fs-5">R$ {{ pedido.preco_final|floatformat:2 }}</span>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Prazo:</strong><br>
+                                            {{ pedido.prazo_final }}
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Veículo:</strong><br>
+                                            {{ pedido.veiculo_final }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {% if pedido.observacoes %}
+                        <hr>
+                        <h6 class="fw-bold">Observações</h6>
+                        <p class="mb-0">{{ pedido.observacoes|linebreaks }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="fas fa-times me-2"></i>
+                            Fechar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+
+        <!-- Paginação -->
+        {% if page_obj.has_other_pages %}
+        <div class="d-flex justify-content-center mt-4">
+            <nav>
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                                <i class="fas fa-chevron-left"></i>
+                                Anterior
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                <i class="fas fa-chevron-left"></i>
+                                Anterior
+                            </span>
+                        </li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="page-item active">
+                                <span class="page-link">{{ num }}</span>
+                            </li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                                Próxima
+                                <i class="fas fa-chevron-right"></i>
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">
+                                Próxima
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+    {% else %}
+        <!-- Estado Vazio -->
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-clipboard-check"></i>
+            </div>
+            <h3 class="empty-title">Nenhum pedido pendente</h3>
+            <p class="empty-description">
+                Ótimo trabalho! Não há pedidos aguardando aprovação no momento.
+            </p>
+            <a href="{% url 'gestao:dashboard_dono' %}" class="btn btn-new-pedido mt-3">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar ao Dashboard
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
