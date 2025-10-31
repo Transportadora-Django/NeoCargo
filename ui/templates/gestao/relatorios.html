@@ -1,0 +1,879 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Relatórios Gerenciais - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+<style>
+    /* Estilos específicos para relatórios - seguindo padrão NeoCargo */
+    
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        gap: 1.25rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .stats-grid-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 992px) {
+        .stats-grid-3 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .stats-grid-3 {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .stat-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        transition: all var(--transition-normal);
+        border: 2px solid transparent;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-md);
+        border-color: var(--neocargo-cyan);
+    }
+
+    .stat-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 1.5rem;
+        color: #fff;
+    }
+
+    .stat-content {
+        flex: 1;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+        font-weight: 500;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--neocargo-navy);
+        line-height: 1;
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-sublabel {
+        font-size: 0.75rem;
+        color: #94a3b8;
+    }
+
+    /* Cores dos ícones */
+    .stat-icon.green { background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); }
+    .stat-icon.orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+    .stat-icon.blue { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+    .stat-icon.yellow { background: linear-gradient(135deg, #eab308 0%, #ca8a04 100%); }
+    .stat-icon.purple { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+    .stat-icon.red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+
+    /* Chart Cards */
+    .chart-card {
+        background: #fff;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        border: 2px solid #f1f5f9;
+    }
+
+    .chart-card canvas {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .chart-title {
+        color: var(--neocargo-navy);
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .chart-title i {
+        color: var(--neocargo-cyan);
+        font-size: 1.2rem;
+    }
+
+    /* Filtros */
+    .filters-section {
+        background: #fff;
+        border-radius: 15px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: var(--shadow-sm);
+        border: 2px solid #f1f5f9;
+    }
+
+    .filters-section h5 {
+        color: var(--neocargo-navy);
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .filter-group {
+        margin-bottom: 0;
+    }
+
+    .filter-group label {
+        color: #64748b;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .filter-group select {
+        width: 100%;
+        padding: 0.65rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        color: var(--neocargo-navy);
+        transition: all var(--transition-normal);
+    }
+
+    .filter-group select:focus {
+        outline: none;
+        border-color: var(--neocargo-cyan);
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+    }
+
+    /* Badges no cabeçalho */
+    .pedidos-subtitle .badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.35rem 0.75rem;
+        border-radius: 8px;
+        vertical-align: middle;
+    }
+
+    .pedidos-subtitle .badge i {
+        font-size: 0.7rem;
+    }
+
+    /* Tabela */
+    .table-responsive {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .table {
+        margin-bottom: 0;
+    }
+
+    .table thead th {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+        color: var(--neocargo-navy);
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 1rem;
+        border: none;
+    }
+
+    .table tbody tr {
+        transition: background-color 0.2s;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .table tbody td {
+        padding: 0.85rem 1rem;
+        color: #475569;
+        font-size: 0.9rem;
+        vertical-align: middle;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .table tfoot {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+    }
+
+    .table tfoot td {
+        padding: 1rem;
+        color: var(--neocargo-navy);
+        font-weight: 700;
+        border: none;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border: 2px solid #fbbf24;
+        border-radius: 15px;
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state-icon {
+        font-size: 3.5rem;
+        color: #f59e0b;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        color: #92400e;
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-state p {
+        color: #b45309;
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+
+    /* Elementos visíveis apenas na impressão */
+    .print-only {
+        display: none;
+    }
+
+    /* Print Styles */
+    @media print {
+        .pedidos-header,
+        .filters-section,
+        .btn,
+        nav,
+        footer {
+            display: none !important;
+        }
+
+        body {
+            background: #fff !important;
+            -webkit-print-color-adjust: exact !important;
+            print-color-adjust: exact !important;
+        }
+
+        .chart-card,
+        .stat-card {
+            break-inside: avoid;
+            page-break-inside: avoid;
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+            margin-bottom: 1rem !important;
+            padding: 1rem !important;
+        }
+
+        .stat-value {
+            color: #000 !important;
+        }
+
+        /* Garantir que os gráficos sejam exibidos corretamente */
+        .chart-card canvas {
+            width: 100% !important;
+            height: auto !important;
+            max-height: none !important;
+            page-break-inside: avoid;
+            display: block !important;
+        }
+
+        /* Forçar layout de 2 colunas para gráficos pequenos */
+        .col-md-6 {
+            width: 48% !important;
+            float: left !important;
+            margin-right: 2% !important;
+        }
+
+        .col-md-6:nth-child(2n) {
+            margin-right: 0 !important;
+        }
+
+        /* Gráficos largos em largura total */
+        .col-md-12 {
+            width: 100% !important;
+            clear: both !important;
+            float: none !important;
+        }
+
+        .chart-title {
+            font-size: 0.9rem !important;
+            margin-bottom: 0.5rem !important;
+        }
+
+        /* Adicionar título de impressão */
+        .print-title {
+            display: block !important;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #000;
+        }
+
+        .print-date {
+            display: block !important;
+            text-align: center;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .print-only {
+            display: block !important;
+        }
+
+        .chart-wide canvas {
+            max-height: 200px !important;
+            height: 200px !important;
+        }
+
+        /* Ajustar layout para impressão */
+        .row {
+            display: flex !important;
+            flex-wrap: wrap !important;
+        }
+
+        .col-md-6 {
+            width: 50% !important;
+            float: left !important;
+        }
+
+        .col-md-12 {
+            width: 100% !important;
+            clear: both !important;
+        }
+
+        /* Melhorar cores para impressão */
+        .chart-title {
+            color: #000 !important;
+            font-size: 1rem !important;
+        }
+
+        /* Garantir que badges fiquem visíveis */
+        .badge {
+            border: 1px solid #333 !important;
+            background: #fff !important;
+            color: #000 !important;
+        }
+
+        /* Evitar quebra de página nos cards */
+        .stats-grid {
+            break-inside: avoid;
+            page-break-inside: avoid;
+        }
+
+        /* Título do relatório */
+        h1.pedidos-title {
+            font-size: 1.5rem !important;
+            margin-bottom: 1rem !important;
+        }
+
+        /* Ocultar badges do cabeçalho na impressão */
+        .pedidos-subtitle .badge {
+            display: none !important;
+        }
+
+        /* Mostrar cabeçalho de impressão */
+        .print-header {
+            display: block !important;
+        }
+    }
+
+    /* Cabeçalho de impressão */
+    .print-header {
+        display: none;
+    }
+
+    @media print {
+        .print-header {
+            display: block !important;
+            text-align: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #333;
+        }
+
+        .print-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #000;
+        }
+
+        .print-header p {
+            color: #666;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Cabeçalho para impressão -->
+<div class="print-header">
+    <h1>NeoCargo - Relatórios Gerenciais</h1>
+    <p>
+        Período: 
+        {% for valor, label in periodos %}
+            {% if periodo_selecionado == valor %}{{ label }}{% endif %}
+        {% endfor %}
+        | Data: {{ "now"|date:"d/m/Y H:i" }}
+    </p>
+</div>
+
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-chart-line me-2"></i>Relatórios Gerenciais
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Análise completa de desempenho e indicadores do sistema
+                    <span class="badge bg-primary ms-2">
+                        {% for valor, label in periodos %}
+                            {% if periodo_selecionado == valor %}{{ label }}{% endif %}
+                        {% endfor %}
+                    </span>
+                    {% if relatorio.tem_dados_financeiros %}
+                    <span class="badge bg-success ms-2">
+                        <i class="fas fa-check-circle"></i> {{ relatorio.financeiro.total_pedidos }} pedido{{ relatorio.financeiro.total_pedidos|pluralize }}
+                    </span>
+                    {% else %}
+                    <span class="badge bg-warning ms-2">
+                        <i class="fas fa-exclamation-triangle"></i> Sem dados
+                    </span>
+                    {% endif %}
+                </p>
+            </div>
+            <div class="d-flex gap-2">
+                <button onclick="window.print()" class="btn btn-new-pedido">
+                    <i class="fas fa-print me-2"></i>Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Filtros -->
+    <div class="filters-section">
+        <h5>
+            <i class="fas fa-filter"></i>
+            Filtros de Período
+        </h5>
+        <form method="get" action="{% url 'gestao:relatorios' %}" id="filterForm">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="filter-group">
+                        <label for="periodo">Período</label>
+                        <select name="periodo" id="periodo" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                            {% for valor, label in periodos %}
+                            <option value="{{ valor }}" {% if periodo_selecionado == valor %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="filter-group">
+                        <label for="ano">Ano (para gráficos mensais)</label>
+                        <select name="ano" id="ano" class="form-select" onchange="document.getElementById('filterForm').submit()">
+                            {% for ano_opcao in anos_disponiveis %}
+                            <option value="{{ ano_opcao }}" {% if ano_selecionado == ano_opcao %}selected{% endif %}>{{ ano_opcao }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    {% if not relatorio.tem_dados_financeiros %}
+    <!-- Empty State - Sem dados no período -->
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Nenhum Dado Disponível</h3>
+        <p>Não há pedidos concluídos no período selecionado. Tente selecionar um período diferente ou aguarde novos pedidos.</p>
+    </div>
+    {% elif not relatorio.tem_dados_ano %}
+    <!-- Empty State - Sem dados do ano -->
+    <div class="empty-state">
+        <div class="empty-state-icon">
+            <i class="fas fa-calendar-times"></i>
+        </div>
+        <h3>Sem Dados Para o Ano de {{ ano_selecionado }}</h3>
+        <p>Não há registros de pedidos para o ano selecionado. Tente selecionar outro ano com dados disponíveis.</p>
+    </div>
+    {% else %}
+
+    <!-- Cards de Resumo Financeiro -->
+    <div class="stats-grid stats-grid-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon green">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Receita Total</div>
+                <div class="stat-value">R$ {{ relatorio.financeiro.total_receita|floatformat:2 }}</div>
+                <div class="stat-sublabel">{{ relatorio.financeiro.total_pedidos }} pedidos concluídos</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon orange">
+                <i class="fas fa-gas-pump"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Custo Combustível</div>
+                <div class="stat-value">R$ {{ relatorio.financeiro.custo_combustivel|floatformat:2 }}</div>
+                <div class="stat-sublabel">Estimativa baseada em fretes</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Lucro Estimado</div>
+                <div class="stat-value">R$ {{ relatorio.financeiro.lucro_estimado|floatformat:2 }}</div>
+                <div class="stat-sublabel">Margem: {{ relatorio.financeiro.margem_lucro }}%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards Adicionais -->
+    <div class="stats-grid stats-grid-3 mb-4">
+        <div class="stat-card">
+            <div class="stat-icon yellow">
+                <i class="fas fa-hand-holding-usd"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Ticket Médio</div>
+                <div class="stat-value">R$ {{ relatorio.financeiro.ticket_medio|floatformat:2 }}</div>
+                <div class="stat-sublabel">Por pedido concluído</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon purple">
+                <i class="fas fa-truck"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Frota</div>
+                <div class="stat-value">{{ relatorio.veiculos.total_veiculos }}</div>
+                <div class="stat-sublabel">{{ relatorio.veiculos.veiculos_ativos }} ativos ({{ relatorio.veiculos.taxa_utilizacao }}%)</div>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon blue">
+                <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-content">
+                <div class="stat-label">Motoristas</div>
+                <div class="stat-value">{{ relatorio.motoristas.total_motoristas }}</div>
+                <div class="stat-sublabel">{{ relatorio.motoristas.motoristas_ativos }} ativos</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Gráficos -->
+    <div class="row mt-4">
+        <!-- Gráfico de Pedidos por Status -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h3 class="chart-title">
+                    <i class="fas fa-pie-chart"></i>
+                    Pedidos por Status
+                </h3>
+                <canvas id="chartPedidosStatus"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfico de Problemas -->
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h3 class="chart-title">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Problemas Reportados
+                </h3>
+                <canvas id="chartProblemas"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfico de Pedidos por Mês -->
+        <div class="col-md-12">
+            <div class="chart-card chart-wide">
+                <h3 class="chart-title">
+                    <i class="fas fa-chart-area"></i>
+                    Pedidos por Mês - {{ ano_selecionado }}
+                </h3>
+                <canvas id="chartPedidosMes"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfico de Receita por Mês -->
+        <div class="col-md-12">
+            <div class="chart-card chart-wide">
+                <h3 class="chart-title">
+                    <i class="fas fa-chart-bar"></i>
+                    Receita por Mês - {{ ano_selecionado }}
+                </h3>
+                <canvas id="chartReceitaMes"></canvas>
+            </div>
+        </div>
+
+        <!-- Tabela de Detalhes dos Pedidos -->
+        <div class="col-md-12">
+            <div class="chart-card">
+                <h3 class="chart-title">
+                    <i class="fas fa-table"></i>
+                    Detalhamento de Pedidos por Status
+                </h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Status</th>
+                                <th class="text-center">Quantidade</th>
+                                <th class="text-center">Percentual</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for stat in relatorio.pedidos.por_status %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-secondary">{{ stat.status_display }}</span>
+                                </td>
+                                <td class="text-center">{{ stat.total }}</td>
+                                <td class="text-center">{{ stat.percentual }}%</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="3" class="text-center text-muted">Nenhum pedido no período</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr class="fw-bold">
+                                <td>TOTAL</td>
+                                <td class="text-center">{{ relatorio.pedidos.total_geral }}</td>
+                                <td class="text-center">100%</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+    {% if relatorio.tem_dados_financeiros and relatorio.tem_dados_ano %}
+    // Configuração de cores seguindo padrão NeoCargo
+    const colors = {
+        cyan: '#06b6d4',
+        navy: '#1e3a8a',
+        green: '#16a34a',
+        yellow: '#eab308',
+        red: '#ef4444',
+        purple: '#8b5cf6',
+        gray: '#6b7280'
+    };
+
+    // Gráfico de Pedidos por Status
+    const ctxStatus = document.getElementById('chartPedidosStatus').getContext('2d');
+    new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+            labels: [
+                {% for stat in relatorio.pedidos.por_status %}
+                '{{ stat.status_display }}'{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ],
+            datasets: [{
+                data: [
+                    {% for stat in relatorio.pedidos.por_status %}
+                    {{ stat.total }}{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ],
+                backgroundColor: [colors.cyan, colors.green, colors.yellow, colors.red, colors.purple, colors.gray],
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1.5,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+
+    // Gráfico de Problemas
+    const ctxProblemas = document.getElementById('chartProblemas').getContext('2d');
+    new Chart(ctxProblemas, {
+        type: 'bar',
+        data: {
+            labels: ['Pendentes', 'Em Análise', 'Resolvidos'],
+            datasets: [{
+                label: 'Quantidade',
+                data: [
+                    {{ relatorio.problemas.pendentes }},
+                    {{ relatorio.problemas.em_analise }},
+                    {{ relatorio.problemas.resolvidos }}
+                ],
+                backgroundColor: [colors.red, colors.yellow, colors.green],
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 1.5,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico de Pedidos por Mês
+    const ctxPedidosMes = document.getElementById('chartPedidosMes').getContext('2d');
+    new Chart(ctxPedidosMes, {
+        type: 'line',
+        data: {
+            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            datasets: [{
+                label: 'Pedidos',
+                data: {{ relatorio.pedidos_por_mes|safe }},
+                borderColor: colors.cyan,
+                backgroundColor: colors.cyan + '20',
+                fill: true,
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 3,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico de Receita por Mês
+    const ctxReceitaMes = document.getElementById('chartReceitaMes').getContext('2d');
+    new Chart(ctxReceitaMes, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+            datasets: [{
+                label: 'Receita (R$)',
+                data: {{ relatorio.receita_por_mes|safe }},
+                backgroundColor: colors.green,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            aspectRatio: 3,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'R$ ' + value.toLocaleString('pt-BR');
+                        }
+                    }
+                }
+            }
+        }
+    });
+    {% endif %}
+
+    // Desabilitar animações para melhor renderização na impressão
+    Chart.defaults.animation = false;
+
+    // Melhorar impressão dos gráficos
+    window.onbeforeprint = function() {
+        // Forçar re-renderização dos gráficos
+        Chart.instances.forEach(function(chart) {
+            chart.resize();
+            chart.update();
+        });
+    };
+
+    window.onafterprint = function() {
+        // Restaurar estado após impressão
+        Chart.instances.forEach(function(chart) {
+            chart.resize();
+        });
+    };
+</script>
+{% endblock %}
