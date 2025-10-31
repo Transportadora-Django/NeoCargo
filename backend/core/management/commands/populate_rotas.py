@@ -18,8 +18,15 @@ class Command(BaseCommand):
         try:
             with transaction.atomic():
                 # Verificar se já existem cidades
-                if Cidade.objects.exists():
-                    self.stdout.write(self.style.WARNING("⚠️  Cidades já existem. Pulando população..."))
+                cidade_count = Cidade.objects.count()
+                self.stdout.write(f"📊 Cidades existentes: {cidade_count}")
+                
+                if cidade_count > 0:
+                    self.stdout.write(
+                        self.style.WARNING(
+                            f"⚠️  {cidade_count} cidades já existem. Pulando população..."
+                        )
+                    )
                     return
 
                 # Criar cidades principais
@@ -73,19 +80,18 @@ class Command(BaseCommand):
 
                 self.stdout.write(self.style.SUCCESS(f"✅ {len(cidades)} cidades criadas com sucesso!"))
 
-                # Criar configuração de preço padrão
-                config, created = ConfiguracaoPreco.objects.get_or_create(
-                    defaults={
-                        "preco_por_km": 2.50,
-                        "preco_por_kg": 0.80,
-                        "taxa_base": 50.00,
-                    }
-                )
-                if created:
+                # Criar configuração de preço padrão (se não existir)
+                if not ConfiguracaoPreco.objects.exists():
+                    config = ConfiguracaoPreco.objects.create()
                     self.stdout.write(
                         self.style.SUCCESS(
-                            f"✅ Configuração de preço criada: R$ {config.preco_por_km}/km, "
-                            f"R$ {config.preco_por_kg}/kg, Taxa base: R$ {config.taxa_base}"
+                            f"✅ Configuração de preço criada com valores padrão"
+                        )
+                    )
+                else:
+                    self.stdout.write(
+                        self.style.WARNING(
+                            "⚠️  Configuração de preço já existe"
                         )
                     )
 
