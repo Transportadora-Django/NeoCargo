@@ -68,13 +68,15 @@ SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = True
 USE_TZ = True
 
-# Email configuration for production
+# Email configuration for production (Mailgun)
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.mailgun.org")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", 587))
 EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True").lower() == "true"
-EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
-EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")  # postmaster@seu-dominio.mailgun.org
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")  # Senha SMTP do Mailgun
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "NeoCargo <noreply@seu-dominio.mailgun.org>")
+SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 
 # Logging configuration otimizado para produção
 LOGGING = {
