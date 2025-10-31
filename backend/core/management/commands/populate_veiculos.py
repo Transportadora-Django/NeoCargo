@@ -20,12 +20,10 @@ class Command(BaseCommand):
                 # Verificar se já existem especificações
                 espec_count = EspecificacaoVeiculo.objects.count()
                 self.stdout.write(f"📊 Especificações existentes: {espec_count}")
-                
+
                 if espec_count > 0:
                     self.stdout.write(
-                        self.style.WARNING(
-                            f"⚠️  {espec_count} especificações já existem. Pulando população..."
-                        )
+                        self.style.WARNING(f"⚠️  {espec_count} especificações já existem. Pulando população...")
                     )
                     return
 

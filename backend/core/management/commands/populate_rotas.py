@@ -20,13 +20,9 @@ class Command(BaseCommand):
                 # Verificar se já existem cidades
                 cidade_count = Cidade.objects.count()
                 self.stdout.write(f"📊 Cidades existentes: {cidade_count}")
-                
+
                 if cidade_count > 0:
-                    self.stdout.write(
-                        self.style.WARNING(
-                            f"⚠️  {cidade_count} cidades já existem. Pulando população..."
-                        )
-                    )
+                    self.stdout.write(self.style.WARNING(f"⚠️  {cidade_count} cidades já existem. Pulando população..."))
                     return
 
                 # Criar cidades principais
@@ -82,18 +78,10 @@ class Command(BaseCommand):
 
                 # Criar configuração de preço padrão (se não existir)
                 if not ConfiguracaoPreco.objects.exists():
-                    config = ConfiguracaoPreco.objects.create()
-                    self.stdout.write(
-                        self.style.SUCCESS(
-                            f"✅ Configuração de preço criada com valores padrão"
-                        )
-                    )
+                    ConfiguracaoPreco.objects.create()
+                    self.stdout.write(self.style.SUCCESS("✅ Configuração de preço criada com valores padrão"))
                 else:
-                    self.stdout.write(
-                        self.style.WARNING(
-                            "⚠️  Configuração de preço já existe"
-                        )
-                    )
+                    self.stdout.write(self.style.WARNING("⚠️  Configuração de preço já existe"))
 
                 # Criar rotas principais
                 rotas_data = [
