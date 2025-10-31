@@ -123,9 +123,7 @@ class TestAlertaProblemasDashboard:
             status=StatusProblema.EM_ANALISE,
         )
 
-    def test_dashboard_dono_mostra_alerta_com_problemas_pendentes(
-        self, client, dono_user, problema_pendente
-    ):
+    def test_dashboard_dono_mostra_alerta_com_problemas_pendentes(self, client, dono_user, problema_pendente):
         """Testa se dashboard do dono mostra alerta quando há problemas pendentes"""
         client.force_login(dono_user)
         url = reverse("gestao:dashboard_dono")
@@ -135,9 +133,7 @@ class TestAlertaProblemasDashboard:
         assert "Problemas Reportados" in response.content.decode()
         assert "1 pendente" in response.content.decode() or "pendente" in response.content.decode()
 
-    def test_dashboard_dono_mostra_alerta_com_problemas_em_analise(
-        self, client, dono_user, problema_em_analise
-    ):
+    def test_dashboard_dono_mostra_alerta_com_problemas_em_analise(self, client, dono_user, problema_em_analise):
         """Testa se dashboard do dono mostra alerta quando há problemas em análise"""
         client.force_login(dono_user)
         url = reverse("gestao:dashboard_dono")
@@ -154,7 +150,6 @@ class TestAlertaProblemasDashboard:
         response = client.get(url)
 
         assert response.status_code == 200
-        content = response.content.decode()
         # Não deve aparecer o card de problemas se não houver problemas
         assert response.context["total_problemas_pendentes"] == 0
         assert response.context["total_problemas_em_analise"] == 0
