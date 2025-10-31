@@ -666,3 +666,52 @@ def resolver_problema(request, problema_id):
 
     messages.success(request, "Problema resolvido com sucesso!")
     return redirect("gestao:listar_problemas")
+
+
+@login_required
+def relatorios(request):
+    """View para exibir relatórios gerenciais - Dono e Gerente"""
+    # Verificar se usuário é Dono ou Gerente
+    try:
+        user_role = request.user.profile.role
+        if user_role not in [Role.OWNER, Role.GERENTE]:
+            messages.error(request, "Você não tem permissão para acessar os relatórios.")
+            return redirect("home")
+    except Profile.DoesNotExist:
+        messages.error(request, "Perfil não encontrado.")
+        return redirect("home")
+
+    from .relatorios import RelatorioGerencial
+
+    # Obter parâmetros da requisição
+    periodo = request.GET.get("periodo", "30dias")
+    ano = request.GET.get("ano")
+
+    if ano:
+        try:
+            ano = int(ano)
+        except ValueError:
+            ano = None
+
+    # Gerar relatório completo
+    dados_relatorio = RelatorioGerencial.get_relatorio_completo(periodo=periodo, ano=ano)
+
+    # Anos disponíveis para seleção (últimos 5 anos + ano atual)
+    ano_atual = timezone.now().year
+    anos_disponiveis = list(range(ano_atual - 4, ano_atual + 1))
+
+    context = {
+        "relatorio": dados_relatorio,
+        "periodo_selecionado": periodo,
+        "ano_selecionado": ano or ano_atual,
+        "anos_disponiveis": anos_disponiveis,
+        "periodos": [
+            ("7dias", "Últimos 7 dias"),
+            ("30dias", "Últimos 30 dias"),
+            ("90dias", "Últimos 90 dias"),
+            ("ano", "Último ano"),
+            ("todos", "Todos os períodos"),
+        ],
+    }
+
+    return render(request, "gestao/relatorios.html", context)

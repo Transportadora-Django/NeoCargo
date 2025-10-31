@@ -23,6 +23,8 @@ urlpatterns = [
     path("problemas/", views.listar_problemas, name="listar_problemas"),
     path("problemas/<int:problema_id>/analisar/", views.analisar_problema, name="analisar_problema"),
     path("problemas/<int:problema_id>/resolver/", views.resolver_problema, name="resolver_problema"),
+    # Relatórios
+    path("relatorios/", views.relatorios, name="relatorios"),
     # Configurações
     path("toggle-solicitacoes/", views.toggle_solicitacoes, name="toggle_solicitacoes"),
 ]
