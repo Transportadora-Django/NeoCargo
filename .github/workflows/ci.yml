@@ -204,3 +204,86 @@ jobs:
         file: ./backend/coverage.xml
         flags: backend
         name: backend-coverage
+
+  # Job 5: Selenium Tests (frontend end-to-end)
+  selenium-tests:
+    name: Selenium Tests (E2E)
+    runs-on: ubuntu-latest
+    needs: backend-tests
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: neocargo_test
+          POSTGRES_USER: neocargo_user
+          POSTGRES_PASSWORD: neocargo_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-selenium-${{ hashFiles('backend/requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-selenium-
+
+    - name: Install system dependencies for Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y chromium-browser chromium-chromedriver
+
+    - name: Install Python dependencies
+      run: |
+        cd backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Create test .env file
+      run: |
+        cd backend
+        cat > .env << EOF
+        DEBUG=True
+        SECRET_KEY=test-secret-key-for-ci-pipeline-django
+        DATABASE_URL=postgresql://neocargo_user:neocargo_password@localhost:5432/neocargo_test
+        ALLOWED_HOSTS=localhost,127.0.0.1
+        DJANGO_ENVIRONMENT=test
+        EOF
+
+    - name: Run collectstatic
+      run: |
+        cd backend
+        python manage.py collectstatic --noinput
+
+    - name: Run migrations
+      run: |
+        cd backend
+        python manage.py migrate
+
+    - name: Run Selenium Tests
+      run: |
+        cd backend
+        pytest tests/frontend/ -v --tb=short
+
+    - name: Upload Selenium screenshots on failure
+      if: failure()
+      uses: actions/upload-artifact@v3
+      with:
+        name: selenium-screenshots
+        path: backend/screenshots/
+        if-no-files-found: ignore
