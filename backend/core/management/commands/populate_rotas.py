@@ -19,11 +19,7 @@ class Command(BaseCommand):
             with transaction.atomic():
                 # Verificar se já existem cidades
                 if Cidade.objects.exists():
-                    self.stdout.write(
-                        self.style.WARNING(
-                            "⚠️  Cidades já existem. Pulando população..."
-                        )
-                    )
+                    self.stdout.write(self.style.WARNING("⚠️  Cidades já existem. Pulando população..."))
                     return
 
                 # Criar cidades principais
@@ -75,11 +71,7 @@ class Command(BaseCommand):
                     cidades[f"{cidade.nome}-{cidade.estado}"] = cidade
                     self.stdout.write(f"  ✓ Cidade criada: {cidade}")
 
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"✅ {len(cidades)} cidades criadas com sucesso!"
-                    )
-                )
+                self.stdout.write(self.style.SUCCESS(f"✅ {len(cidades)} cidades criadas com sucesso!"))
 
                 # Criar configuração de preço padrão
                 config, created = ConfiguracaoPreco.objects.get_or_create(
@@ -191,9 +183,7 @@ class Command(BaseCommand):
                             f"  ✓ Rota criada: {rota.origem.nome} → {rota.destino.nome} ({rota.distancia_km}km)"
                         )
 
-                self.stdout.write(
-                    self.style.SUCCESS(f"✅ {rotas_criadas} rotas criadas com sucesso!")
-                )
+                self.stdout.write(self.style.SUCCESS(f"✅ {rotas_criadas} rotas criadas com sucesso!"))
 
         except Exception as e:
             self.stdout.write(self.style.ERROR(f"❌ Erro ao popular rotas: {str(e)}"))

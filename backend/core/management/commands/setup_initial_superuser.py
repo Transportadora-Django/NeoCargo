@@ -20,9 +20,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # Verificar se já existe algum superuser
         if User.objects.filter(is_superuser=True).exists():
-            self.stdout.write(
-                self.style.WARNING("⚠️  Superuser já existe. Pulando criação...")
-            )
+            self.stdout.write(self.style.WARNING("⚠️  Superuser já existe. Pulando criação..."))
             return
 
         # Obter credenciais das variáveis de ambiente
@@ -41,9 +39,7 @@ class Command(BaseCommand):
 
         try:
             # Criar superuser
-            user = User.objects.create_superuser(
-                username=username, email=email, password=password
-            )
+            user = User.objects.create_superuser(username=username, email=email, password=password)
 
             # Garantir que o profile seja criado com role OWNER
             profile, created = Profile.objects.get_or_create(user=user)
@@ -60,6 +56,4 @@ class Command(BaseCommand):
             )
 
         except Exception as e:
-            self.stdout.write(
-                self.style.ERROR(f"❌ Erro ao criar superuser: {str(e)}")
-            )
+            self.stdout.write(self.style.ERROR(f"❌ Erro ao criar superuser: {str(e)}"))

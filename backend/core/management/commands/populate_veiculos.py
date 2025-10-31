@@ -19,11 +19,7 @@ class Command(BaseCommand):
             with transaction.atomic():
                 # Verificar se já existem especificações
                 if EspecificacaoVeiculo.objects.exists():
-                    self.stdout.write(
-                        self.style.WARNING(
-                            "⚠️  Especificações já existem. Pulando população..."
-                        )
-                    )
+                    self.stdout.write(self.style.WARNING("⚠️  Especificações já existem. Pulando população..."))
                     return
 
                 # Criar especificações de veículos
@@ -77,11 +73,7 @@ class Command(BaseCommand):
                         f"({espec.capacidade_kg}kg, {espec.rendimento_combustivel_principal}km/l)"
                     )
 
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"✅ {len(especificacoes)} especificações criadas com sucesso!"
-                    )
-                )
+                self.stdout.write(self.style.SUCCESS(f"✅ {len(especificacoes)} especificações criadas com sucesso!"))
 
                 # Criar veículos de exemplo
                 veiculos_data = [
@@ -126,23 +118,15 @@ class Command(BaseCommand):
                 for veiculo_data in veiculos_data:
                     espec_tipo = veiculo_data.pop("especificacao")
                     if espec_tipo in especificacoes:
-                        veiculo = Veiculo.objects.create(
-                            especificacao=especificacoes[espec_tipo], **veiculo_data
-                        )
+                        veiculo = Veiculo.objects.create(especificacao=especificacoes[espec_tipo], **veiculo_data)
                         veiculos_criados += 1
                         self.stdout.write(
                             f"  ✓ Veículo criado: {veiculo.placa} - "
                             f"{veiculo.marca} {veiculo.modelo} ({veiculo.especificacao.tipo})"
                         )
 
-                self.stdout.write(
-                    self.style.SUCCESS(
-                        f"✅ {veiculos_criados} veículos criados com sucesso!"
-                    )
-                )
+                self.stdout.write(self.style.SUCCESS(f"✅ {veiculos_criados} veículos criados com sucesso!"))
 
         except Exception as e:
-            self.stdout.write(
-                self.style.ERROR(f"❌ Erro ao popular veículos: {str(e)}")
-            )
+            self.stdout.write(self.style.ERROR(f"❌ Erro ao popular veículos: {str(e)}"))
             raise
