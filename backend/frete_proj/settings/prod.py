@@ -24,8 +24,13 @@ else:
 # Database - PostgreSQL for production
 DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL", "sqlite:///db.sqlite3"))}
 
-# Configuração de timeout para evitar problemas de conexão
-DATABASES["default"]["CONN_MAX_AGE"] = 600
+# Configurações de conexão mais resilientes para Render
+DATABASES["default"]["CONN_MAX_AGE"] = 0  # Não reutilizar conexões (mais seguro)
+DATABASES["default"]["CONN_HEALTH_CHECKS"] = True  # Django 4.1+ health checks
+DATABASES["default"]["OPTIONS"] = {
+    "connect_timeout": 10,
+    "options": "-c statement_timeout=30000",  # 30 segundos timeout
+}
 
 # WhiteNoise configuration for production - Mais resiliente
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

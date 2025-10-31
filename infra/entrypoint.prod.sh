@@ -49,11 +49,15 @@ PORT=${PORT:-8000}
 echo "🌐 Servidor Gunicorn iniciando em 0.0.0.0:$PORT"
 
 # Configurações otimizadas do Gunicorn para Render
+# Usar menos workers e desabilitar preload para evitar problemas de conexão
 exec gunicorn frete_proj.wsgi:application \
     --bind 0.0.0.0:$PORT \
-    --workers 3 \
+    --workers 2 \
+    --threads 4 \
     --timeout 120 \
-    --max-requests 1000 \
-    --max-requests-jitter 100 \
-    --preload \
-    --log-level info
+    --max-requests 500 \
+    --max-requests-jitter 50 \
+    --worker-class gthread \
+    --log-level info \
+    --access-logfile - \
+    --error-logfile -
