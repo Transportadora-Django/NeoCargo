@@ -4,6 +4,29 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
 <link rel="stylesheet" href="{% static 'css/pages/motorista-dashboard.css' %}">
+<style>
+    .btn-resolver-problema {
+        background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        color: white;
+        border: none;
+        padding: 0.5rem 1.25rem;
+        border-radius: 8px;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+        transition: all 0.2s ease;
+    }
+    
+    .btn-resolver-problema:hover {
+        background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+        color: white;
+    }
+    
+    .btn-resolver-problema:active {
+        transform: translateY(0);
+    }
+</style>
 {% endblock %}
 
 {% block title %}Gerenciar Problemas{% endblock %}
@@ -225,7 +248,7 @@
                             </form>
                             {% endif %}
                             
-                            <button type="button" class="btn btn-success btn-sm" 
+                            <button type="button" class="btn btn-resolver-problema btn-sm" 
                                     data-bs-toggle="modal" data-bs-target="#modalResolucao" 
                                     data-problema-id="{{ problema.id }}">
                                 <i class="fas fa-check me-1"></i>

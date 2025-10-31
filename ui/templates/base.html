@@ -168,6 +168,72 @@
                                     Pedidos
                                 </a>
                             </li>
+                        {% elif user.profile.is_gerente %}
+                            <!-- Menu para Gerente -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'gestao:dashboard_gerente' %}">
+                                    <i class="fas fa-user-tie me-1" aria-hidden="true"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownGestaoGerente" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fas fa-cog me-1" aria-hidden="true"></i>
+                                    Gestão
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdownGestaoGerente">
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'gestao:pedidos_para_aprovacao' %}">
+                                            <i class="fas fa-clipboard-check me-2"></i>
+                                            Aprovar Pedidos
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'gestao:listar_problemas' %}">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            Problemas
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'veiculos:listar_especificacoes' %}">
+                                            <i class="fas fa-cogs me-2"></i>
+                                            Especificações
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'veiculos:listar_veiculos' %}">
+                                            <i class="fas fa-truck me-2"></i>
+                                            Veículos
+                                        </a>
+                                    </li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'rotas:listar_cidades' %}">
+                                            <i class="fas fa-city me-2"></i>
+                                            Cidades
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'rotas:listar_rotas' %}">
+                                            <i class="fas fa-route me-2"></i>
+                                            Rotas
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'rotas:configurar_precos' %}">
+                                            <i class="fas fa-dollar-sign me-2"></i>
+                                            Configurar Preços
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'pedidos:listar' %}">
+                                    <i class="fas fa-box me-1" aria-hidden="true"></i>
+                                    Pedidos
+                                </a>
+                            </li>
                         {% elif user.profile.is_motorista %}
                             <!-- Menu para Motorista -->
                             <li class="nav-item">

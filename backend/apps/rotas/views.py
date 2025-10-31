@@ -16,7 +16,7 @@ def verificar_permissao_gestao(user):
     """Verifica se usuário tem permissão para gerenciar rotas (owner ou gerente)."""
     try:
         profile = user.profile
-        return profile.role in [Role.OWNER]
+        return profile.role in [Role.OWNER, Role.GERENTE]
     except Profile.DoesNotExist:
         return False
 
