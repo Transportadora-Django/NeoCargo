@@ -28,14 +28,14 @@ python manage.py migrate --settings=frete_proj.settings.prod
 
 # Criar superuser inicial (se não existir)
 echo "👤 Configurando superuser inicial..."
-python manage.py setup_initial_superuser --settings=frete_proj.settings.prod
+python manage.py setup_initial_superuser --settings=frete_proj.settings.prod || echo "⚠️  Aviso: Falha ao criar superuser (pode já existir)"
 
 # Popular dados iniciais
 echo "🌍 Populando rotas e cidades..."
-python manage.py populate_rotas --settings=frete_proj.settings.prod
+python manage.py populate_rotas --settings=frete_proj.settings.prod || echo "⚠️  Aviso: Falha ao popular rotas (podem já existir)"
 
 echo "🚚 Populando especificações e veículos..."
-python manage.py populate_veiculos --settings=frete_proj.settings.prod
+python manage.py populate_veiculos --settings=frete_proj.settings.prod || echo "⚠️  Aviso: Falha ao popular veículos (podem já existir)"
 
 # Coletar arquivos estáticos
 echo "📁 Coletando arquivos estáticos..."
@@ -49,11 +49,15 @@ PORT=${PORT:-8000}
 echo "🌐 Servidor Gunicorn iniciando em 0.0.0.0:$PORT"
 
 # Configurações otimizadas do Gunicorn para Render
+# Usar menos workers e desabilitar preload para evitar problemas de conexão
 exec gunicorn frete_proj.wsgi:application \
     --bind 0.0.0.0:$PORT \
-    --workers 3 \
+    --workers 2 \
+    --threads 4 \
     --timeout 120 \
-    --max-requests 1000 \
-    --max-requests-jitter 100 \
-    --preload \
-    --log-level info
+    --max-requests 500 \
+    --max-requests-jitter 50 \
+    --worker-class gthread \
+    --log-level info \
+    --access-logfile - \
+    --error-logfile -
