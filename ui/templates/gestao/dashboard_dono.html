@@ -72,6 +72,31 @@
     </div>
     {% endif %}
 
+    {% if total_problemas_pendentes > 0 or total_problemas_em_analise > 0 %}
+    <div class="pedido-card mb-4" style="background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%); border: 2px solid #ef4444; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-3">
+                <div style="background: #ef4444; color: #fff; width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 1.75rem;"></i>
+                </div>
+                <div>
+                    <h5 class="pedido-id mb-1" style="color: #dc2626;">
+                        <i class="fas fa-tools me-2"></i>Problemas Reportados
+                    </h5>
+                    <p class="pedido-info-label mb-0" style="color: #991b1b;">
+                        {{ total_problemas_pendentes }} pendente{% if total_problemas_pendentes != 1 %}s{% endif %} e 
+                        {{ total_problemas_em_analise }} em análise
+                    </p>
+                </div>
+            </div>
+            <a href="{% url 'gestao:listar_problemas' %}" class="btn btn-new-pedido" style="background: #ef4444; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);">
+                <i class="fas fa-search me-2"></i>
+                Ver Problemas
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
     <h2 class="pedidos-title mb-4" style="color: var(--neocargo-navy);">
         <i class="fas fa-chart-line me-2"></i>Visão Geral
     </h2>

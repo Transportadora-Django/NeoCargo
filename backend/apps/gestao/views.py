@@ -203,6 +203,12 @@ def dashboard_dono(request):
         .order_by("-created_at")[:5]
     )
 
+    # Estatísticas de problemas
+    from apps.motoristas.models import ProblemaEntrega, StatusProblema
+
+    total_problemas_pendentes = ProblemaEntrega.objects.filter(status=StatusProblema.PENDENTE).count()
+    total_problemas_em_analise = ProblemaEntrega.objects.filter(status=StatusProblema.EM_ANALISE).count()
+
     context = {
         "titulo": "Dashboard do Dono",
         "total_usuarios": total_usuarios,
@@ -222,6 +228,8 @@ def dashboard_dono(request):
         "usuarios_recentes": usuarios_recentes,
         "solicitacoes_recentes": solicitacoes_recentes,
         "pedidos_recentes": pedidos_recentes,
+        "total_problemas_pendentes": total_problemas_pendentes,
+        "total_problemas_em_analise": total_problemas_em_analise,
         "config": config,
     }
 
@@ -266,6 +274,35 @@ def listar_usuarios(request):
     }
 
     return render(request, "gestao/listar_usuarios.html", context)
+
+
+@login_required
+@require_role(Role.OWNER)
+def toggle_usuario_status(request, user_id):
+    """Ativa ou desativa um usuário"""
+    usuario = get_object_or_404(User, id=user_id)
+
+    # Não permitir desativar o próprio usuário
+    if usuario == request.user:
+        messages.error(request, "Você não pode desativar sua própria conta.")
+        return redirect("gestao:listar_usuarios")
+
+    # Não permitir desativar outros owners
+    try:
+        if usuario.profile.role == Role.OWNER:
+            messages.error(request, "Não é possível desativar outros donos.")
+            return redirect("gestao:listar_usuarios")
+    except Profile.DoesNotExist:
+        pass
+
+    # Alternar status
+    usuario.is_active = not usuario.is_active
+    usuario.save()
+
+    status_texto = "ativado" if usuario.is_active else "desativado"
+    messages.success(request, f"Usuário {usuario.get_full_name() or usuario.username} {status_texto} com sucesso.")
+
+    return redirect("gestao:listar_usuarios")
 
 
 @login_required

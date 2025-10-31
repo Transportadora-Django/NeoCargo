@@ -181,6 +181,25 @@
             </button>
             {% endif %}
             
+            <!-- Botão Ativar/Desativar -->
+            {% if usuario != request.user and usuario.profile.role != 'owner' %}
+            <form method="post" action="{% url 'gestao:toggle_usuario_status' usuario.id %}" style="display: inline;">
+                {% csrf_token %}
+                {% if usuario.is_active %}
+                <button type="submit" class="btn btn-action btn-action-warning" 
+                        onclick="return confirm('Tem certeza que deseja desativar este usuário?')">
+                    <i class="fas fa-ban"></i>
+                    Desativar
+                </button>
+                {% else %}
+                <button type="submit" class="btn btn-action btn-action-success">
+                    <i class="fas fa-check"></i>
+                    Ativar
+                </button>
+                {% endif %}
+            </form>
+            {% endif %}
+            
             <a href="{% url 'admin:auth_user_change' usuario.id %}" class="btn btn-action btn-action-danger">
                 <i class="fas fa-edit"></i>
                 Editar no Admin
