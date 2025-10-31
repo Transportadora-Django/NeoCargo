@@ -1,0 +1,357 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/motorista-dashboard.css' %}">
+{% endblock %}
+
+{% block title %}Histórico de Entregas{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title mb-2">
+                    <i class="fas fa-history me-2"></i>
+                    Histórico de Entregas
+                </h1>
+                <p class="pedidos-subtitle">Todas as suas entregas realizadas</p>
+            </div>
+            <a href="{% url 'motoristas:dashboard' %}" class="btn btn-new-pedido">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Estatísticas Resumidas -->
+    <h2 class="pedidos-title mb-4" style="color: var(--neocargo-navy);">
+        <i class="fas fa-chart-bar me-2"></i>Estatísticas
+    </h2>
+    <div class="row g-4 mb-5">
+        <div class="col-lg-3 col-md-6">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(34 197 94 / 10%); color: #22c55e; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Concluídas</div>
+                        <div class="pedido-id">{{ stats.concluidas }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(59 130 246 / 10%); color: #3b82f6; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-spinner" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Em Andamento</div>
+                        <div class="pedido-id">{{ stats.em_andamento }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(251 146 60 / 10%); color: #fb923c; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-clock" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Pendentes</div>
+                        <div class="pedido-id">{{ stats.pendentes }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(239 68 68 / 10%); color: #ef4444; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-times-circle" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Canceladas</div>
+                        <div class="pedido-id">{{ stats.canceladas }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Timeline de Entregas -->
+    <h2 class="pedidos-title mb-4 mt-5" style="color: var(--neocargo-navy);">
+        <i class="fas fa-list me-2"></i>Histórico Completo
+    </h2>
+    {% if entregas %}
+    <div class="row g-3">
+        {% for entrega in entregas %}
+        <div class="col-12">
+            <div class="pedido-card" style="position: relative; padding-left: 4rem;">
+                <!-- Status Icon -->
+                <div style="position: absolute; left: 1rem; top: 1.5rem; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+                            {% if entrega.status == 'concluido' %}background: rgb(34 197 94 / 10%);
+                            {% elif entrega.status == 'em_andamento' %}background: rgb(59 130 246 / 10%);
+                            {% elif entrega.status == 'pendente' %}background: rgb(251 146 60 / 10%);
+                            {% else %}background: rgb(239 68 68 / 10%);{% endif %}">
+                    {% if entrega.status == 'concluido' %}
+                    <i class="fas fa-check" style="color: #22c55e; font-size: 1.25rem;"></i>
+                    {% elif entrega.status == 'em_andamento' %}
+                    <i class="fas fa-spinner fa-pulse" style="color: #3b82f6; font-size: 1.25rem;"></i>
+                    {% elif entrega.status == 'pendente' %}
+                    <i class="fas fa-clock" style="color: #fb923c; font-size: 1.25rem;"></i>
+                    {% else %}
+                    <i class="fas fa-times" style="color: #ef4444; font-size: 1.25rem;"></i>
+                    {% endif %}
+                </div>
+
+                <!-- Content -->
+                <div>
+                    <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-2">
+                        <div class="flex-grow-1">
+                            <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                                <h5 class="pedido-id mb-0">
+                                    Pedido #{{ entrega.pedido.id }}
+                                </h5>
+                                
+                                {% if entrega.status == 'concluido' %}
+                                <span class="status-badge status-concluido">Concluída</span>
+                                {% elif entrega.status == 'em_andamento' %}
+                                <span class="status-badge status-em-transporte">Em Andamento</span>
+                                {% elif entrega.status == 'pendente' %}
+                                <span class="status-badge status-pendente">Pendente</span>
+                                {% else %}
+                                <span class="status-badge status-cancelado">Cancelada</span>
+                                {% endif %}
+                            </div>
+
+                            <!-- Rota -->
+                            <div class="mb-3">
+                                <span class="pedido-info-label">
+                                    <i class="fas fa-map-marker-alt me-2" style="color: #94a3b8;"></i>
+                                    <span style="font-weight: 600;">{{ entrega.pedido.cidade_origem }}</span>
+                                    <i class="fas fa-arrow-right mx-2" style="color: #cbd5e1;"></i>
+                                    <span style="font-weight: 600;">{{ entrega.pedido.cidade_destino }}</span>
+                                </span>
+                            </div>
+
+                            <!-- Detalhes -->
+                            <div class="row g-2">
+                                <div class="col-md-4">
+                                    <small class="pedido-info-label">
+                                        <i class="fas fa-truck me-1"></i>
+                                        Veículo: <strong>{{ entrega.veiculo.marca }} {{ entrega.veiculo.modelo }}</strong>
+                                    </small>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="pedido-info-label">
+                                        <i class="fas fa-id-card me-1"></i>
+                                        Placa: <strong>{{ entrega.veiculo.placa }}</strong>
+                                    </small>
+                                </div>
+                                <div class="col-md-4">
+                                    <small class="pedido-info-label">
+                                        <i class="fas fa-weight me-1"></i>
+                                        Peso: <strong>{{ entrega.pedido.peso_carga }} kg</strong>
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Data -->
+                        <div class="text-end" style="flex-shrink: 0; margin-left: 1rem;">
+                            <small class="d-block pedido-info-label">
+                                {% if entrega.status == 'concluido' %}
+                                Concluída em:
+                                {% else %}
+                                Atualizada em:
+                                {% endif %}
+                            </small>
+                            <span class="d-block pedido-date" style="font-weight: 600;">{{ entrega.atualizado_em|date:"d/m/Y" }}</span>
+                            <small class="pedido-date">{{ entrega.atualizado_em|date:"H:i" }}</small>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    {% if entrega.status == 'em_andamento' %}
+                    <div class="border-top pt-3 mt-3">
+                        <form action="{% url 'motoristas:concluir_entrega' entrega.id %}" method="post" class="d-inline-block me-2">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm" 
+                                    onclick="return confirm('Confirmar conclusão da entrega?')">
+                                <i class="fas fa-check me-1"></i>
+                                Concluir
+                            </button>
+                        </form>
+                        <button type="button" class="btn btn-danger btn-sm" 
+                                data-bs-toggle="modal" data-bs-target="#modalProblema" 
+                                data-atribuicao-id="{{ entrega.id }}">
+                            <i class="fas fa-exclamation-circle me-1"></i>
+                            Relatar Problema
+                        </button>
+                    </div>
+                    {% elif entrega.status == 'pendente' %}
+                    <div class="border-top pt-3 mt-3">
+                        <form action="{% url 'motoristas:iniciar_entrega' entrega.id %}" method="post" class="d-inline-block">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-new-pedido btn-sm"
+                                    onclick="return confirm('Deseja iniciar esta entrega agora?')">
+                                <i class="fas fa-play me-1"></i>
+                                Iniciar Entrega
+                            </button>
+                        </form>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Navegação de páginas" class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-left"></i></span>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-right"></i></span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-double-right"></i></span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-entrega">
+        <i class="fas fa-box-open"></i>
+        <h3>Nenhuma entrega encontrada</h3>
+        <p>Você ainda não possui entregas atribuídas.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal Relatar Problema -->
+<div class="modal fade" id="modalProblema" tabindex="-1" aria-labelledby="modalProblemaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProblemaLabel">
+                    <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                    Relatar Problema na Entrega
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <form id="formProblema" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="atribuicao_id" id="atribuicaoId">
+                    
+                    <div class="mb-3">
+                        <label for="tipoProblema" class="form-label">Tipo de Problema *</label>
+                        <select class="form-select" id="tipoProblema" name="tipo" required>
+                            <option value="">Selecione...</option>
+                            <option value="veiculo">Problema com Veículo</option>
+                            <option value="carga">Problema com Carga</option>
+                            <option value="rota">Problema na Rota</option>
+                            <option value="cliente">Problema com Cliente</option>
+                            <option value="acidente">Acidente</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descricaoProblema" class="form-label">Descrição *</label>
+                        <textarea class="form-control" id="descricaoProblema" name="descricao" rows="4" 
+                                  placeholder="Descreva o problema em detalhes..." required></textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Seja o mais detalhado possível para agilizar a resolução.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-paper-plane me-2"></i>
+                        Enviar Relatório
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gerenciar modal de problema
+const modalProblema = document.getElementById('modalProblema');
+if (modalProblema) {
+    modalProblema.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const atribuicaoId = button.getAttribute('data-atribuicao-id');
+        document.getElementById('atribuicaoId').value = atribuicaoId;
+        
+        // Definir action do form
+        const form = document.getElementById('formProblema');
+        form.action = `/motoristas/entregas/${atribuicaoId}/relatar-problema/`;
+    });
+    
+    // Limpar form ao fechar
+    modalProblema.addEventListener('hidden.bs.modal', function() {
+        document.getElementById('formProblema').reset();
+    });
+}
+</script>
+{% endblock %}

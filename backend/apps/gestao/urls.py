@@ -17,6 +17,10 @@ urlpatterns = [
     path("pedidos/pendentes/", views.pedidos_para_aprovacao, name="pedidos_para_aprovacao"),
     path("pedidos/<int:pedido_id>/aprovar/", views.aprovar_pedido, name="aprovar_pedido"),
     path("pedidos/<int:pedido_id>/cancelar/", views.cancelar_pedido_gestao, name="cancelar_pedido_gestao"),
+    # Problemas reportados
+    path("problemas/", views.listar_problemas, name="listar_problemas"),
+    path("problemas/<int:problema_id>/analisar/", views.analisar_problema, name="analisar_problema"),
+    path("problemas/<int:problema_id>/resolver/", views.resolver_problema, name="resolver_problema"),
     # Configurações
     path("toggle-solicitacoes/", views.toggle_solicitacoes, name="toggle_solicitacoes"),
 ]

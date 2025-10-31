@@ -37,7 +37,9 @@ def dashboard(request):
 
 
 def dashboard_motorista(request):
-    return HttpResponse("Dashboard Motorista - Em desenvolvimento")
+    from django.shortcuts import redirect
+
+    return redirect("motoristas:dashboard")
 
 
 def dashboard_gerente(request):
@@ -57,6 +59,7 @@ urlpatterns = [
     path("pedidos/", include("apps.pedidos.urls")),
     path("gestao/", include("apps.gestao.urls")),
     path("veiculos/", include("apps.veiculos.urls")),
+    path("motoristas/", include("apps.motoristas.urls")),
     path("dashboard/", include("apps.dashboard.urls")),
     path("rotas/", include("apps.rotas.urls")),
     # Include core URLs (including documentation)

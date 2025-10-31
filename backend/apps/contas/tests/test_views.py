@@ -5,6 +5,8 @@ from django.contrib.messages import get_messages
 from django.core import mail
 from django.test.utils import override_settings
 
+from apps.rotas.models import Cidade, Estado
+from apps.motoristas.models import Motorista, CategoriaCNH
 from ..forms import SignupForm, UserEditForm, ProfileEditForm, CustomPasswordChangeForm
 from ..models import Role, Profile, EmailChangeRequest
 from ..views import send_email_change_confirmation
@@ -195,9 +197,13 @@ class CustomLoginViewTest(TestCase):
         self.user.profile.role = Role.MOTORISTA
         self.user.profile.save()
 
+        # Cria cidade e motorista necessários para o dashboard
+        sede = Cidade.objects.create(nome="Test City", estado=Estado.SP, latitude=0, longitude=0)
+        Motorista.objects.create(profile=self.user.profile, cnh_categoria=CategoriaCNH.B, sede_atual=sede)
+
         response = self.client.post(self.login_url, {"username": "testuser@example.com", "password": "testpass123"})
 
-        self.assertRedirects(response, reverse("dashboard_motorista"))
+        self.assertRedirects(response, reverse("motoristas:dashboard"))
 
     def test_login_authenticated_user_redirect(self):
         """Testa se usuário já autenticado é redirecionado"""

@@ -200,7 +200,7 @@ class CustomLoginView(LoginView):
             if profile.role == Role.CLIENTE:
                 return reverse("dashboard:cliente")
             elif profile.role == Role.MOTORISTA:
-                return reverse("dashboard_motorista")
+                return reverse("motoristas:dashboard")
             elif profile.role == Role.GERENTE:
                 return reverse("dashboard_gerente")
             elif profile.role == Role.OWNER:

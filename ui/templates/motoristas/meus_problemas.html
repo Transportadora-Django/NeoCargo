@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/motorista-dashboard.css' %}">
+{% endblock %}
+
+{% block title %}Meus Problemas{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title mb-2">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    Meus Problemas
+                </h1>
+                <p class="pedidos-subtitle">Problemas reportados em suas entregas</p>
+            </div>
+            <a href="{% url 'motoristas:dashboard' %}" class="btn btn-new-pedido">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Filtros -->
+    <h2 class="pedidos-title mb-4" style="color: var(--neocargo-navy);">
+        <i class="fas fa-filter me-2"></i>Filtros
+    </h2>
+    <div class="pedido-card mb-5">
+        <form method="get" class="row g-3">
+            <div class="col-md-5">
+                <label for="status" class="form-label" style="font-weight: 600; color: #475569;">Status</label>
+                <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    <option value="pendente" {% if request.GET.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                    <option value="em_analise" {% if request.GET.status == 'em_analise' %}selected{% endif %}>Em Análise</option>
+                    <option value="resolvido" {% if request.GET.status == 'resolvido' %}selected{% endif %}>Resolvido</option>
+                </select>
+            </div>
+
+            <div class="col-md-5">
+                <label for="tipo" class="form-label" style="font-weight: 600; color: #475569;">Tipo</label>
+                <select name="tipo" id="tipo" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    <option value="veiculo" {% if request.GET.tipo == 'veiculo' %}selected{% endif %}>Problema com Veículo</option>
+                    <option value="carga" {% if request.GET.tipo == 'carga' %}selected{% endif %}>Problema com Carga</option>
+                    <option value="rota" {% if request.GET.tipo == 'rota' %}selected{% endif %}>Problema na Rota</option>
+                    <option value="cliente" {% if request.GET.tipo == 'cliente' %}selected{% endif %}>Problema com Cliente</option>
+                    <option value="acidente" {% if request.GET.tipo == 'acidente' %}selected{% endif %}>Acidente</option>
+                    <option value="outro" {% if request.GET.tipo == 'outro' %}selected{% endif %}>Outro</option>
+                </select>
+            </div>
+
+            {% if request.GET.status or request.GET.tipo %}
+            <div class="col-md-2 d-flex align-items-end">
+                <a href="{% url 'motoristas:meus_problemas' %}" class="btn btn-outline-secondary w-100">
+                    Limpar Filtros
+                </a>
+            </div>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Lista de Problemas -->
+    <h2 class="pedidos-title mb-4" style="color: var(--neocargo-navy);">
+        <i class="fas fa-list me-2"></i>Problemas Reportados
+    </h2>
+    {% if page_obj.object_list %}
+    <div class="row g-4 mb-4">
+        {% for problema in page_obj.object_list %}
+        <div class="col-12">
+            <div class="pedido-card">
+                <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-2 flex-wrap">
+                            <h5 class="pedido-id mb-0">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                {{ problema.get_tipo_display }}
+                            </h5>
+                            
+                            {% if problema.status == 'pendente' %}
+                            <span class="status-badge status-pendente">
+                                <i class="fas fa-clock me-1"></i>
+                                Pendente
+                            </span>
+                            {% elif problema.status == 'em_analise' %}
+                            <span class="status-badge" style="background: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%); color: #fff; border: none;">
+                                <i class="fas fa-eye me-1"></i>
+                                Em Análise
+                            </span>
+                            {% else %}
+                            <span class="status-badge status-concluido">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Resolvido
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <p class="pedido-info-label mb-3">
+                            <i class="fas fa-file-alt me-2"></i>
+                            <strong>Pedido #{{ problema.atribuicao.pedido.id }}</strong> - 
+                            {{ problema.atribuicao.pedido.cidade_origem }} → {{ problema.atribuicao.pedido.cidade_destino }}
+                        </p>
+
+                        <div style="background-color: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <h6 style="color: #475569; font-weight: 600; margin-bottom: 0.5rem;">Descrição:</h6>
+                            <p class="pedido-info-label mb-0">{{ problema.descricao }}</p>
+                        </div>
+
+                        {% if problema.status == 'resolvido' and problema.resolucao %}
+                        <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 8px; padding: 1rem; border-left: 4px solid #22c55e;">
+                            <h6 style="color: #166534; font-weight: 600; margin-bottom: 0.5rem;">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Resolução:
+                            </h6>
+                            <p class="pedido-info-label mb-2" style="color: #166534;">{{ problema.resolucao }}</p>
+                            <small class="pedido-date" style="color: #166534;">
+                                <i class="far fa-calendar me-1"></i>
+                                Resolvido em: {{ problema.resolvido_em|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="text-end" style="flex-shrink: 0; margin-left: 1rem;">
+                        <small class="d-block pedido-info-label">Reportado em:</small>
+                        <span class="d-block pedido-date" style="font-weight: 600;">{{ problema.criado_em|date:"d/m/Y" }}</span>
+                        <small class="pedido-date">{{ problema.criado_em|date:"H:i" }}</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Navegação de páginas">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.tipo %}&tipo={{ request.GET.tipo }}{% endif %}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.tipo %}&tipo={{ request.GET.tipo }}{% endif %}">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-left"></i></span>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.tipo %}&tipo={{ request.GET.tipo }}{% endif %}">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.tipo %}&tipo={{ request.GET.tipo }}{% endif %}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-right"></i></span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-double-right"></i></span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="pedido-card" style="background-color: #f9fafb; border: 2px dashed #d1d5db;">
+        <div class="text-center py-5">
+            <i class="fas fa-check-circle" style="font-size: 4rem; color: #9ca3af; margin-bottom: 1rem;"></i>
+            <h5 class="pedido-id mb-2" style="color: #4b5563;">Nenhum problema encontrado</h5>
+            <p class="pedido-info-label mb-0" style="color: #6b7280;">
+                {% if request.GET.status or request.GET.tipo %}
+                Tente remover alguns filtros para ver mais resultados.
+                {% else %}
+                Você não reportou nenhum problema ainda.
+                {% endif %}
+            </p>
+            {% if request.GET.status or request.GET.tipo %}
+        <a href="{% url 'motoristas:meus_problemas' %}" class="btn btn-primary mt-3">
+            Limpar Filtros
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

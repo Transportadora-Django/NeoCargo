@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/motorista-dashboard.css' %}">
+{% endblock %}
+
+{% block title %}Gerenciar Problemas{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title mb-2">
+                    <i class="fas fa-clipboard-list me-2"></i>
+                    Problemas Reportados
+                </h1>
+                <p class="pedidos-subtitle mb-0">Problemas reportados pelos motoristas nas entregas</p>
+            </div>
+            <a href="{% url 'gestao:dashboard_dono' %}" class="btn btn-new-pedido">
+                <i class="fas fa-arrow-left me-2"></i>
+                Voltar ao Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="container py-4">
+    <!-- Contadores de Status -->
+    <h2 class="pedidos-title mb-4" style="color: var(--neocargo-navy);">
+        <i class="fas fa-chart-bar me-2"></i>Estatísticas
+    </h2>
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(251 146 60 / 10%); color: #fb923c; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-clock" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Pendentes</div>
+                        <div class="pedido-id">{{ total_pendentes }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(59 130 246 / 10%); color: #3b82f6; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-eye" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Em Análise</div>
+                        <div class="pedido-id">{{ total_em_analise }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(34 197 94 / 10%); color: #22c55e; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Resolvidos</div>
+                        <div class="pedido-id">{{ total_resolvidos }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <h2 class="pedidos-title mb-4 mt-5" style="color: var(--neocargo-navy);">
+        <i class="fas fa-filter me-2"></i>Filtros
+    </h2>
+    <div class="pedido-card mb-5">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label for="status" class="form-label" style="font-weight: 600; color: #475569;">Status</label>
+                <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                    <option value="">Ativos (Pendente + Em Análise)</option>
+                    <option value="pendente" {% if request.GET.status == 'pendente' %}selected{% endif %}>Pendente</option>
+                    <option value="em_analise" {% if request.GET.status == 'em_analise' %}selected{% endif %}>Em Análise</option>
+                    <option value="resolvido" {% if request.GET.status == 'resolvido' %}selected{% endif %}>Resolvido</option>
+                    <option value="todos" {% if request.GET.status == 'todos' %}selected{% endif %}>Todos</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="tipo" class="form-label" style="font-weight: 600; color: #475569;">Tipo de Problema</label>
+                <select name="tipo" id="tipo" class="form-select" onchange="this.form.submit()">
+                    <option value="">Todos os Tipos</option>
+                    <option value="veiculo" {% if request.GET.tipo == 'veiculo' %}selected{% endif %}>Problema com Veículo</option>
+                    <option value="carga" {% if request.GET.tipo == 'carga' %}selected{% endif %}>Problema com Carga</option>
+                    <option value="rota" {% if request.GET.tipo == 'rota' %}selected{% endif %}>Problema na Rota</option>
+                    <option value="cliente" {% if request.GET.tipo == 'cliente' %}selected{% endif %}>Problema com Cliente</option>
+                    <option value="acidente" {% if request.GET.tipo == 'acidente' %}selected{% endif %}>Acidente</option>
+                    <option value="outro" {% if request.GET.tipo == 'outro' %}selected{% endif %}>Outro</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="q" class="form-label" style="font-weight: 600; color: #475569;">Buscar</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" name="q" id="q" value="{{ request.GET.q }}" class="form-control"
+                           placeholder="Buscar por descrição, motorista ou pedido...">
+                </div>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end gap-2">
+                <button type="submit" class="btn btn-primary w-100">Filtrar</button>
+            </div>
+        </form>
+
+        {% if request.GET.status or request.GET.tipo or request.GET.q %}
+        <div class="mt-3">
+            <a href="{% url 'gestao:listar_problemas' %}" class="btn btn-outline-secondary btn-sm">
+                Limpar Filtros
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Lista de Problemas -->
+    <h2 class="pedidos-title mb-4" style="color: var(--neocargo-navy);">
+        <i class="fas fa-list me-2"></i>Problemas Reportados
+    </h2>
+    {% if page_obj.object_list %}
+    <div class="row g-4 mb-4">
+        {% for problema in page_obj.object_list %}
+        <div class="col-12">
+            <div class="pedido-card">
+                <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
+                    <div class="flex-grow-1">
+                        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+                            <h5 class="pedido-id mb-0">
+                                <i class="fas fa-exclamation-circle me-2"></i>
+                                {{ problema.get_tipo_display }}
+                            </h5>
+                            
+                            {% if problema.status == 'pendente' %}
+                            <span class="status-badge status-pendente">
+                                <i class="fas fa-clock me-1"></i>
+                                Pendente
+                            </span>
+                            {% elif problema.status == 'em_analise' %}
+                            <span class="status-badge" style="background: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%); color: #fff; border: none;">
+                                <i class="fas fa-eye me-1"></i>
+                                Em Análise
+                            </span>
+                            {% else %}
+                            <span class="status-badge status-concluido">
+                                <i class="fas fa-check-circle me-1"></i>
+                                Resolvido
+                            </span>
+                            {% endif %}
+                        </div>
+
+                        <!-- Informações do Problema -->
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <small class="pedido-info-label">
+                                    <i class="fas fa-user me-1"></i>
+                                    Motorista: <strong>{{ problema.atribuicao.motorista.profile.user.get_full_name }}</strong>
+                                </small>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="pedido-info-label">
+                                    <i class="fas fa-file-alt me-1"></i>
+                                    Pedido: <strong>#{{ problema.atribuicao.pedido.id }}</strong>
+                                </small>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="pedido-info-label">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    Rota: <strong>{{ problema.atribuicao.pedido.cidade_origem }} → {{ problema.atribuicao.pedido.cidade_destino }}</strong>
+                                </small>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="pedido-info-label">
+                                    <i class="far fa-calendar me-1"></i>
+                                    Reportado: <strong>{{ problema.criado_em|date:"d/m/Y H:i" }}</strong>
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Descrição -->
+                        <div style="background-color: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem;">
+                            <h6 style="color: #475569; font-weight: 600; margin-bottom: 0.5rem;">Descrição do Problema:</h6>
+                            <p class="pedido-info-label mb-0">{{ problema.descricao }}</p>
+                        </div>
+
+                        <!-- Resolução (se resolvido) -->
+                        {% if problema.status == 'resolvido' and problema.resolucao %}
+                        <div style="background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%); border-radius: 8px; padding: 1rem; border-left: 4px solid #22c55e;">
+                            <h6 style="color: #166534; font-weight: 600; margin-bottom: 0.5rem;">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Resolução:
+                            </h6>
+                            <p class="pedido-info-label mb-2" style="color: #166534;">{{ problema.resolucao }}</p>
+                            <small class="pedido-date" style="color: #166534;">
+                                <i class="far fa-calendar me-1"></i>
+                                Resolvido em: {{ problema.resolvido_em|date:"d/m/Y H:i" }}
+                            </small>
+                        </div>
+                        {% endif %}
+
+                        <!-- Ações -->
+                        {% if problema.status != 'resolvido' %}
+                        <div class="border-top pt-3 mt-3">
+                            {% if problema.status == 'pendente' %}
+                            <form method="post" action="{% url 'gestao:analisar_problema' problema.id %}" class="d-inline-block me-2">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-new-pedido btn-sm">
+                                    <i class="fas fa-eye me-1"></i>
+                                    Iniciar Análise
+                                </button>
+                            </form>
+                            {% endif %}
+                            
+                            <button type="button" class="btn btn-success btn-sm" 
+                                    data-bs-toggle="modal" data-bs-target="#modalResolucao" 
+                                    data-problema-id="{{ problema.id }}">
+                                <i class="fas fa-check me-1"></i>
+                                Marcar como Resolvido
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if page_obj.has_other_pages %}
+    <nav aria-label="Navegação de páginas">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.tipo %}&tipo={{ request.GET.tipo }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                    <i class="fas fa-angle-double-left"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.tipo %}&tipo={{ request.GET.tipo }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                    <i class="fas fa-angle-left"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-double-left"></i></span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-left"></i></span>
+            </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.tipo %}&tipo={{ request.GET.tipo }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                    <i class="fas fa-angle-right"></i>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.status %}&status={{ request.GET.status }}{% endif %}{% if request.GET.tipo %}&tipo={{ request.GET.tipo }}{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                    <i class="fas fa-angle-double-right"></i>
+                </a>
+            </li>
+            {% else %}
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-right"></i></span>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link"><i class="fas fa-angle-double-right"></i></span>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-entrega">
+        <i class="fas fa-check-circle"></i>
+        <h3>Nenhum problema encontrado</h3>
+        <p>
+            {% if request.GET.status or request.GET.tipo or request.GET.q %}
+            Tente ajustar os filtros para ver mais resultados.
+            {% else %}
+            Não há problemas reportados no momento.
+            {% endif %}
+        </p>
+        {% if request.GET.status or request.GET.tipo or request.GET.q %}
+        <a href="{% url 'gestao:listar_problemas' %}" class="btn btn-primary mt-3">
+            Limpar Filtros
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal de Resolução -->
+<div class="modal fade" id="modalResolucao" tabindex="-1" aria-labelledby="modalResolucaoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalResolucaoLabel">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Resolver Problema
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <form id="formResolucao" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="resolucao" class="form-label fw-semibold">
+                            Descreva como o problema foi resolvido: *
+                        </label>
+                        <textarea id="resolucao" name="resolucao" rows="5" required class="form-control"
+                                  placeholder="Descreva detalhadamente a solução aplicada..."></textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Explique como o problema foi solucionado para referência futura.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-check me-2"></i>
+                        Marcar como Resolvido
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gerenciar modal de resolução
+const modalResolucao = document.getElementById('modalResolucao');
+if (modalResolucao) {
+    modalResolucao.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const problemaId = button.getAttribute('data-problema-id');
+        
+        // Definir action do form
+        const form = document.getElementById('formResolucao');
+        form.action = `/gestao/problemas/${problemaId}/resolver/`;
+    });
+    
+    // Limpar form ao fechar
+    modalResolucao.addEventListener('hidden.bs.modal', function() {
+        document.getElementById('formResolucao').reset();
+    });
+}
+</script>
+{% endblock %}
