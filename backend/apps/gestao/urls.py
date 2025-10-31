@@ -9,6 +9,7 @@ urlpatterns = [
     path("gerente/dashboard/", views.dashboard_gerente, name="dashboard_gerente"),
     # Gestão de usuários (apenas dono)
     path("usuarios/", views.listar_usuarios, name="listar_usuarios"),
+    path("usuarios/<int:user_id>/toggle-status/", views.toggle_usuario_status, name="toggle_usuario_status"),
     # Solicitações de mudança de perfil
     path("solicitar-mudanca/", views.solicitar_mudanca_perfil, name="solicitar_mudanca"),
     path("minhas-solicitacoes/", views.minhas_solicitacoes, name="minhas_solicitacoes"),
