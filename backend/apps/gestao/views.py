@@ -74,6 +74,83 @@ def require_any_role(roles):
 
 
 @login_required
+def dashboard_gerente(request):
+    """Dashboard principal do gerente com estatísticas e gestão"""
+    if not user_has_role(request.user, Role.GERENTE):
+        messages.error(request, "Acesso negado. Apenas gerentes podem acessar esta área.")
+        return redirect("home")
+
+    # Estatísticas gerais (sem gestão de usuários)
+    total_clientes = Profile.objects.filter(role=Role.CLIENTE).count()
+    total_motoristas = Profile.objects.filter(role=Role.MOTORISTA).count()
+
+    # Configuração do sistema
+    config = ConfiguracaoSistema.get_config()
+
+    # Estatísticas de veículos e rotas
+    from apps.veiculos.models import Veiculo
+    from apps.rotas.models import Cidade, Rota
+
+    total_veiculos = Veiculo.objects.count()
+    total_cidades = Cidade.objects.filter(ativa=True).count()
+    total_rotas = Rota.objects.filter(ativa=True).count()
+
+    # Estatísticas de pedidos
+    total_pedidos = Pedido.objects.count()
+    pedidos_cotacao = Pedido.objects.filter(status=StatusPedido.COTACAO).count()
+    pedidos_pendentes = Pedido.objects.filter(status=StatusPedido.PENDENTE).count()
+    pedidos_aprovados = Pedido.objects.filter(status=StatusPedido.APROVADO).count()
+    pedidos_em_transporte = Pedido.objects.filter(status=StatusPedido.EM_TRANSPORTE).count()
+    pedidos_concluidos = Pedido.objects.filter(status=StatusPedido.CONCLUIDO).count()
+    pedidos_cancelados = Pedido.objects.filter(status=StatusPedido.CANCELADO).count()
+
+    # Pedidos recentes
+    pedidos_recentes = (
+        Pedido.objects.select_related("cliente")
+        .select_related("atribuicao__motorista__profile__user", "atribuicao__veiculo")
+        .order_by("-created_at")[:5]
+    )
+
+    # Estatísticas de problemas
+    total_problemas_pendentes = ProblemaEntrega.objects.filter(status=StatusProblema.PENDENTE).count()
+    total_problemas_em_analise = ProblemaEntrega.objects.filter(status=StatusProblema.EM_ANALISE).count()
+
+    # Problemas recentes (últimos 5)
+    problemas_recentes = (
+        ProblemaEntrega.objects.select_related(
+            "atribuicao__pedido__cliente",
+            "atribuicao__motorista__profile__user",
+            "atribuicao__veiculo",
+        )
+        .exclude(status=StatusProblema.RESOLVIDO)
+        .order_by("-criado_em")[:5]
+    )
+
+    context = {
+        "titulo": "Dashboard do Gerente",
+        "total_clientes": total_clientes,
+        "total_motoristas": total_motoristas,
+        "total_veiculos": total_veiculos,
+        "total_cidades": total_cidades,
+        "total_rotas": total_rotas,
+        "total_pedidos": total_pedidos,
+        "pedidos_cotacao": pedidos_cotacao,
+        "pedidos_pendentes": pedidos_pendentes,
+        "pedidos_aprovados": pedidos_aprovados,
+        "pedidos_em_transporte": pedidos_em_transporte,
+        "pedidos_concluidos": pedidos_concluidos,
+        "pedidos_cancelados": pedidos_cancelados,
+        "pedidos_recentes": pedidos_recentes,
+        "total_problemas_pendentes": total_problemas_pendentes,
+        "total_problemas_em_analise": total_problemas_em_analise,
+        "problemas_recentes": problemas_recentes,
+        "config": config,
+    }
+
+    return render(request, "gestao/dashboard_gerente.html", context)
+
+
+@login_required
 def dashboard_dono(request):
     """Dashboard principal do dono com estatísticas e gestão"""
     if not user_has_role(request.user, Role.OWNER):
@@ -459,11 +536,12 @@ def listar_problemas(request):
     )
 
     # Aplicar filtros
-    if status_filter:
+    if status_filter and status_filter != "todos":
         problemas = problemas.filter(status=status_filter)
-    else:
+    elif not status_filter:
         # Por padrão, mostrar apenas problemas não resolvidos
         problemas = problemas.exclude(status=StatusProblema.RESOLVIDO)
+    # Se status_filter == "todos", mostra todos os problemas (não filtra)
 
     if tipo_filter:
         problemas = problemas.filter(tipo=tipo_filter)

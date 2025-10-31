@@ -4,9 +4,10 @@ from . import views
 app_name = "gestao"
 
 urlpatterns = [
-    # Dashboard do dono
+    # Dashboard do dono e gerente
     path("dashboard/", views.dashboard_dono, name="dashboard_dono"),
-    # Gestão de usuários
+    path("gerente/dashboard/", views.dashboard_gerente, name="dashboard_gerente"),
+    # Gestão de usuários (apenas dono)
     path("usuarios/", views.listar_usuarios, name="listar_usuarios"),
     # Solicitações de mudança de perfil
     path("solicitar-mudanca/", views.solicitar_mudanca_perfil, name="solicitar_mudanca"),
