@@ -85,6 +85,16 @@ test: ## Executa todos os testes
 	@$(DOCKER_COMPOSE) run --rm web pytest --cov=. --cov-report=xml --cov-report=term-missing
 	@echo "$(GREEN)✅ Testes concluídos!$(NC)"
 
+test-selenium: ## Executa testes de frontend com Selenium
+	@echo "$(GREEN)🌐 Executando testes de Selenium...$(NC)"
+	@$(DOCKER_COMPOSE) run --rm web pytest tests/frontend/ -v --tb=short
+	@echo "$(GREEN)✅ Testes de Selenium concluídos!$(NC)"
+
+test-unit: ## Executa apenas testes unitários (sem Selenium)
+	@echo "$(GREEN)🧪 Executando testes unitários...$(NC)"
+	@$(DOCKER_COMPOSE) run --rm web pytest --ignore=tests/frontend/ -v --tb=short
+	@echo "$(GREEN)✅ Testes unitários concluídos!$(NC)"
+
 test-cov: ## Testes com coverage
 	@echo "$(GREEN)🧪 Testes com coverage...$(NC)"
 	@$(DOCKER_COMPOSE) run --rm web pytest --cov=. --cov-report=term-missing

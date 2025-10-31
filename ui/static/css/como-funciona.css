@@ -1076,11 +1076,11 @@
   }
 
   /* Dashboard específico */
-  .dashboard-header h5 {
+  .mockup-dashboard-header h5 {
     font-size: 0.95rem;
   }
 
-  .dashboard-subtitle {
+  .mockup-dashboard-header .dashboard-subtitle {
     font-size: 0.73rem;
   }
 
@@ -1258,11 +1258,11 @@
   }
 
   /* Dashboard */
-  .dashboard-header h5 {
+  .mockup-dashboard-header h5 {
     font-size: 0.9rem;
   }
 
-  .dashboard-subtitle {
+  .mockup-dashboard-header .dashboard-subtitle {
     font-size: 0.7rem;
   }
 
@@ -1590,23 +1590,24 @@
   background: #f8fafc;
 }
 
-.dashboard-header {
+.mockup-dashboard-header {
   margin-bottom: 1rem;
   padding-bottom: 0.8rem;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.dashboard-header h5 {
+.mockup-dashboard-header h5 {
   font-size: 1rem;
   font-weight: 700;
   color: var(--neocargo-navy);
   margin-bottom: 0.3rem;
 }
 
-.dashboard-subtitle {
+.mockup-dashboard-header .dashboard-subtitle {
   font-size: 0.75rem;
   color: #64748b;
   margin: 0;
+  line-height: 1.4;
 }
 
 /* Navegação por Abas */

@@ -18,3 +18,8 @@ pytest-django==4.7.0
 pytest-cov==4.1.0
 safety==2.3.5
 bandit[toml]==1.7.5
+
+# Selenium for frontend testing
+selenium==4.15.2
+webdriver-manager==4.0.1
+pytest-selenium==4.1.0
