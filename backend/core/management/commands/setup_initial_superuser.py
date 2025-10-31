@@ -27,7 +27,7 @@ class Command(BaseCommand):
 
         # Obter credenciais das variáveis de ambiente
         username = os.getenv("DJANGO_SUPERUSER_USERNAME", "admin")
-        email = os.getenv("DJANGO_SUPERUSER_EMAIL", "admin@neocargo.com")
+        email = os.getenv("DJANGO_SUPERUSER_EMAIL", "neocargo.testes@gmail.com")
         password = os.getenv("DJANGO_SUPERUSER_PASSWORD")
 
         if not password:
