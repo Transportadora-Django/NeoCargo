@@ -2,6 +2,9 @@
 Fixtures para testes de frontend com Selenium.
 """
 
+import os
+import shutil
+
 import pytest
 from django.contrib.auth import get_user_model
 from selenium import webdriver
@@ -25,12 +28,43 @@ def browser():
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--window-size=1920,1080")
 
-    # Usar chromium do sistema
-    chrome_options.binary_location = "/usr/bin/chromium"
+    # Detectar binário do Chrome/Chromium automaticamente
+    chrome_binary_paths = [
+        "/usr/bin/chromium-browser",  # Ubuntu/Debian
+        "/usr/bin/chromium",  # Algumas distros
+        "/usr/bin/google-chrome",  # Google Chrome
+        shutil.which("chromium-browser"),  # PATH
+        shutil.which("chromium"),  # PATH
+        shutil.which("google-chrome"),  # PATH
+    ]
 
-    # Usar chromedriver do sistema
-    service = ChromeService(executable_path="/usr/bin/chromedriver")
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    chrome_binary = None
+    for path in chrome_binary_paths:
+        if path and os.path.exists(path):
+            chrome_binary = path
+            break
+
+    if chrome_binary:
+        chrome_options.binary_location = chrome_binary
+
+    # Detectar chromedriver automaticamente
+    chromedriver_paths = [
+        "/usr/bin/chromedriver",
+        shutil.which("chromedriver"),
+    ]
+
+    chromedriver = None
+    for path in chromedriver_paths:
+        if path and os.path.exists(path):
+            chromedriver = path
+            break
+
+    if chromedriver:
+        service = ChromeService(executable_path=chromedriver)
+        driver = webdriver.Chrome(service=service, options=chrome_options)
+    else:
+        # Deixar o Selenium encontrar o chromedriver automaticamente
+        driver = webdriver.Chrome(options=chrome_options)
 
     driver.implicitly_wait(10)
 
