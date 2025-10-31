@@ -26,6 +26,17 @@ fi
 echo "📦 Executando migrações..."
 python manage.py migrate --settings=frete_proj.settings.prod
 
+# Criar superuser inicial (se não existir)
+echo "👤 Configurando superuser inicial..."
+python manage.py setup_initial_superuser --settings=frete_proj.settings.prod
+
+# Popular dados iniciais
+echo "🌍 Populando rotas e cidades..."
+python manage.py populate_rotas --settings=frete_proj.settings.prod
+
+echo "🚚 Populando especificações e veículos..."
+python manage.py populate_veiculos --settings=frete_proj.settings.prod
+
 # Coletar arquivos estáticos
 echo "📁 Coletando arquivos estáticos..."
 python manage.py collectstatic --noinput --settings=frete_proj.settings.prod
