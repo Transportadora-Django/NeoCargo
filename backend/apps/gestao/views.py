@@ -6,12 +6,14 @@ from django.core.paginator import Paginator
 from django.db import transaction, models
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+from django.db.models import Q
 
 from apps.contas.models import Profile, Role
 from .models import ConfiguracaoSistema, SolicitacaoMudancaPerfil, StatusSolicitacao
 from .forms import SolicitacaoMudancaPerfilForm, AprovarSolicitacaoForm
 from apps.pedidos.models import Pedido, StatusPedido
 from apps.motoristas.services import AtribuicaoService
+from apps.motoristas.models import ProblemaEntrega, StatusProblema
 from django.core.exceptions import ValidationError
 
 
@@ -438,3 +440,114 @@ def toggle_solicitacoes(request):
     messages.success(request, f"Solicitações {status_text} com sucesso!")
 
     return redirect("gestao:dashboard_dono")
+
+
+@login_required
+@require_any_role([Role.OWNER, Role.GERENTE])
+def listar_problemas(request):
+    """Lista todos os problemas reportados por motoristas."""
+    # Filtros
+    status_filter = request.GET.get("status", "")
+    tipo_filter = request.GET.get("tipo", "")
+    busca = request.GET.get("q", "").strip()
+
+    # Query base
+    problemas = ProblemaEntrega.objects.select_related(
+        "atribuicao__pedido__cliente",
+        "atribuicao__motorista__profile__user",
+        "atribuicao__veiculo",
+    )
+
+    # Aplicar filtros
+    if status_filter:
+        problemas = problemas.filter(status=status_filter)
+    else:
+        # Por padrão, mostrar apenas problemas não resolvidos
+        problemas = problemas.exclude(status=StatusProblema.RESOLVIDO)
+
+    if tipo_filter:
+        problemas = problemas.filter(tipo=tipo_filter)
+
+    if busca:
+        problemas = problemas.filter(
+            Q(atribuicao__pedido__id__icontains=busca)
+            | Q(atribuicao__motorista__profile__user__username__icontains=busca)
+            | Q(atribuicao__motorista__profile__user__first_name__icontains=busca)
+            | Q(descricao__icontains=busca)
+        )
+
+    # Ordenar por mais recentes e não resolvidos primeiro
+    problemas = problemas.order_by("status", "-criado_em")
+
+    # Paginação
+    paginator = Paginator(problemas, 20)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    # Contar problemas por status
+    total_pendentes = ProblemaEntrega.objects.filter(status=StatusProblema.PENDENTE).count()
+    total_em_analise = ProblemaEntrega.objects.filter(status=StatusProblema.EM_ANALISE).count()
+    total_resolvidos = ProblemaEntrega.objects.filter(status=StatusProblema.RESOLVIDO).count()
+
+    context = {
+        "titulo": "Problemas Reportados",
+        "page_obj": page_obj,
+        "status_filter": status_filter,
+        "tipo_filter": tipo_filter,
+        "busca": busca,
+        "total_pendentes": total_pendentes,
+        "total_em_analise": total_em_analise,
+        "total_resolvidos": total_resolvidos,
+    }
+
+    return render(request, "gestao/listar_problemas.html", context)
+
+
+@login_required
+@require_any_role([Role.OWNER, Role.GERENTE])
+def analisar_problema(request, problema_id):
+    """Marca problema como em análise."""
+    problema = get_object_or_404(ProblemaEntrega, id=problema_id)
+
+    if request.method != "POST":
+        messages.error(request, "Método não permitido.")
+        return redirect("gestao:listar_problemas")
+
+    if problema.status == StatusProblema.RESOLVIDO:
+        messages.error(request, "Problema já foi resolvido.")
+        return redirect("gestao:listar_problemas")
+
+    problema.status = StatusProblema.EM_ANALISE
+    problema.save()
+
+    messages.success(request, "Problema marcado como em análise.")
+    return redirect("gestao:listar_problemas")
+
+
+@login_required
+@require_any_role([Role.OWNER, Role.GERENTE])
+def resolver_problema(request, problema_id):
+    """Resolve um problema reportado."""
+    problema = get_object_or_404(ProblemaEntrega, id=problema_id)
+
+    if request.method != "POST":
+        messages.error(request, "Método não permitido.")
+        return redirect("gestao:listar_problemas")
+
+    if problema.status == StatusProblema.RESOLVIDO:
+        messages.error(request, "Problema já foi resolvido.")
+        return redirect("gestao:listar_problemas")
+
+    resolucao = request.POST.get("resolucao", "").strip()
+
+    if not resolucao:
+        messages.error(request, "Descrição da resolução é obrigatória.")
+        return redirect("gestao:listar_problemas")
+
+    problema.status = StatusProblema.RESOLVIDO
+    problema.resolucao = resolucao
+    problema.resolvido_em = timezone.now()
+    problema.save()
+
+    messages.success(request, "Problema resolvido com sucesso!")
+    return redirect("gestao:listar_problemas")
