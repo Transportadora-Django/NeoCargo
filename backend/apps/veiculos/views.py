@@ -2,35 +2,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 
 from apps.contas.models import Role
+from apps.gestao.views import require_any_role
 from .models import EspecificacaoVeiculo, Veiculo
 from .forms import EspecificacaoVeiculoForm, VeiculoForm
 
 
-def require_owner(view_func):
-    """Decorator para verificar se usuário é owner"""
-
-    def wrapper(request, *args, **kwargs):
-        if not request.user.is_authenticated:
-            messages.error(request, "Você precisa estar logado.")
-            return redirect("contas:login")
-
-        try:
-            if request.user.profile.role != Role.OWNER:
-                messages.error(request, "Acesso negado. Apenas donos podem acessar esta área.")
-                return redirect("home")
-        except Exception:
-            messages.error(request, "Acesso negado.")
-            return redirect("home")
-
-        return view_func(request, *args, **kwargs)
-
-    return wrapper
+def require_owner_or_gerente(view_func):
+    """Decorator para verificar se usuário é owner ou gerente"""
+    return require_any_role([Role.OWNER, Role.GERENTE])(view_func)
 
 
 # ============= ESPECIFICAÇÕES DE VEÍCULOS =============
 
 
-@require_owner
+@require_owner_or_gerente
 def listar_especificacoes(request):
     """Lista todas as especificações de veículos"""
     especificacoes = EspecificacaoVeiculo.objects.all()
@@ -43,7 +28,7 @@ def listar_especificacoes(request):
     return render(request, "veiculos/listar_especificacoes.html", context)
 
 
-@require_owner
+@require_owner_or_gerente
 def adicionar_especificacao(request):
     """Adiciona uma nova especificação"""
     if request.method == "POST":
@@ -60,7 +45,7 @@ def adicionar_especificacao(request):
     return render(request, "veiculos/form_especificacao.html", context)
 
 
-@require_owner
+@require_owner_or_gerente
 def editar_especificacao(request, especificacao_id):
     """Edita uma especificação existente"""
     especificacao = get_object_or_404(EspecificacaoVeiculo, id=especificacao_id)
@@ -84,7 +69,7 @@ def editar_especificacao(request, especificacao_id):
     return render(request, "veiculos/form_especificacao.html", context)
 
 
-@require_owner
+@require_owner_or_gerente
 def remover_especificacao(request, especificacao_id):
     """Remove uma especificação"""
     especificacao = get_object_or_404(EspecificacaoVeiculo, id=especificacao_id)
@@ -103,7 +88,7 @@ def remover_especificacao(request, especificacao_id):
 # ============= VEÍCULOS =============
 
 
-@require_owner
+@require_owner_or_gerente
 def listar_veiculos(request):
     """Lista todos os veículos da empresa"""
     veiculos = Veiculo.objects.select_related("especificacao").all()
@@ -116,7 +101,7 @@ def listar_veiculos(request):
     return render(request, "veiculos/listar_veiculos.html", context)
 
 
-@require_owner
+@require_owner_or_gerente
 def adicionar_veiculo(request):
     """Adiciona um novo veículo"""
     if request.method == "POST":
@@ -135,7 +120,7 @@ def adicionar_veiculo(request):
     return render(request, "veiculos/form_veiculo.html", context)
 
 
-@require_owner
+@require_owner_or_gerente
 def editar_veiculo(request, veiculo_id):
     """Edita um veículo existente"""
     veiculo = get_object_or_404(Veiculo, id=veiculo_id)
@@ -159,7 +144,7 @@ def editar_veiculo(request, veiculo_id):
     return render(request, "veiculos/form_veiculo.html", context)
 
 
-@require_owner
+@require_owner_or_gerente
 def remover_veiculo(request, veiculo_id):
     """Remove um veículo"""
     veiculo = get_object_or_404(Veiculo, id=veiculo_id)

@@ -192,7 +192,7 @@ class CustomLoginView(LoginView):
             profile, created = Profile.objects.get_or_create(user=user, defaults={"role": Role.GERENTE})
             if created:
                 messages.info(self.request, "Perfil de gerente criado automaticamente.")
-            return reverse("dashboard_gerente")
+            return reverse("gestao:dashboard_gerente")
 
         # Usuários normais com profile
         if hasattr(user, "profile"):
@@ -202,9 +202,9 @@ class CustomLoginView(LoginView):
             elif profile.role == Role.MOTORISTA:
                 return reverse("motoristas:dashboard")
             elif profile.role == Role.GERENTE:
-                return reverse("dashboard_gerente")
+                return reverse("gestao:dashboard_gerente")
             elif profile.role == Role.OWNER:
-                return reverse("dashboard_owner")
+                return reverse("gestao:dashboard_dono")
 
         # Fallback para dashboard_cliente
         return reverse("dashboard:cliente")
