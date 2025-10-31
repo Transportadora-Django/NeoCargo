@@ -99,3 +99,83 @@ class AtribuicaoPedido(models.Model):
     @property
     def is_cancelado(self):
         return self.status == StatusAtribuicao.CANCELADO
+
+
+class TipoProblema(models.TextChoices):
+    """Tipos de problemas que podem ser reportados"""
+
+    VEICULO = "veiculo", "Problema com Veículo"
+    CARGA = "carga", "Problema com Carga"
+    ROTA = "rota", "Problema na Rota"
+    CLIENTE = "cliente", "Problema com Cliente"
+    ACIDENTE = "acidente", "Acidente"
+    OUTRO = "outro", "Outro"
+
+
+class StatusProblema(models.TextChoices):
+    """Status do problema reportado"""
+
+    PENDENTE = "pendente", "Pendente"
+    EM_ANALISE = "em_analise", "Em Análise"
+    RESOLVIDO = "resolvido", "Resolvido"
+
+
+class ProblemaEntrega(models.Model):
+    """Modelo para problemas reportados pelos motoristas durante entregas"""
+
+    atribuicao = models.ForeignKey(
+        AtribuicaoPedido,
+        on_delete=models.CASCADE,
+        related_name="problemas",
+        verbose_name="Atribuição",
+        help_text="Atribuição de pedido relacionada ao problema",
+    )
+    tipo = models.CharField(
+        max_length=20, choices=TipoProblema.choices, verbose_name="Tipo de Problema", help_text="Categoria do problema"
+    )
+    descricao = models.TextField(
+        verbose_name="Descrição do Problema", help_text="Descrição detalhada do problema encontrado"
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=StatusProblema.choices,
+        default=StatusProblema.PENDENTE,
+        verbose_name="Status",
+        help_text="Status atual do problema",
+    )
+    criado_em = models.DateTimeField(auto_now_add=True, verbose_name="Criado em")
+    atualizado_em = models.DateTimeField(auto_now=True, verbose_name="Atualizado em")
+    resolvido_em = models.DateTimeField(null=True, blank=True, verbose_name="Resolvido em")
+    resolucao = models.TextField(
+        blank=True, null=True, verbose_name="Resolução", help_text="Descrição da resolução do problema"
+    )
+
+    class Meta:
+        verbose_name = "Problema de Entrega"
+        verbose_name_plural = "Problemas de Entrega"
+        ordering = ["-criado_em"]
+
+    def __str__(self):
+        return f"{self.get_tipo_display()} - Pedido #{self.atribuicao.pedido.id} - {self.get_status_display()}"
+
+    @property
+    def is_pendente(self):
+        return self.status == StatusProblema.PENDENTE
+
+    @property
+    def is_em_analise(self):
+        return self.status == StatusProblema.EM_ANALISE
+
+    @property
+    def is_resolvido(self):
+        return self.status == StatusProblema.RESOLVIDO
+
+    @property
+    def motorista(self):
+        """Atalho para acessar o motorista da atribuição"""
+        return self.atribuicao.motorista
+
+    @property
+    def pedido(self):
+        """Atalho para acessar o pedido da atribuição"""
+        return self.atribuicao.pedido

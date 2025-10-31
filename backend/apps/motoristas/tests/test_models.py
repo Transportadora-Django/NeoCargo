@@ -2,13 +2,17 @@
 
 import pytest
 from django.db.utils import IntegrityError
+from django.utils import timezone
 
 from apps.contas.models import Profile, Role
 from apps.motoristas.models import (
     AtribuicaoPedido,
     CategoriaCNH,
     Motorista,
+    ProblemaEntrega,
     StatusAtribuicao,
+    StatusProblema,
+    TipoProblema,
 )
 from apps.pedidos.models import Pedido, StatusPedido
 from apps.rotas.models import Cidade
@@ -255,3 +259,213 @@ class TestAtribuicaoPedido:
         )
 
         assert atribuicao.status == StatusAtribuicao.PENDENTE
+
+
+@pytest.mark.django_db
+class TestProblemaEntrega:
+    """Testes para o modelo ProblemaEntrega."""
+
+    @pytest.fixture
+    def setup_problema(self, django_user_model):
+        """Configura dados necessários para testes de problema."""
+        # Criar cidade
+        cidade = Cidade.objects.create(
+            nome="Porto Alegre",
+            estado="RS",
+            latitude=-30.0346,
+            longitude=-51.2177,
+        )
+
+        # Criar motorista
+        user_motorista = django_user_model.objects.create_user(
+            username="motorista_problema",
+            email="motorista@problema.com",
+            password="senha123",
+        )
+        profile_motorista = Profile.objects.get(user=user_motorista)
+        profile_motorista.role = Role.MOTORISTA
+        profile_motorista.save()
+        motorista = Motorista.objects.create(
+            profile=profile_motorista,
+            sede_atual=cidade,
+            cnh_categoria=CategoriaCNH.C,
+        )
+
+        # Criar veículo
+        espec = EspecificacaoVeiculo.objects.create(
+            tipo=TipoVeiculo.VAN,
+            combustivel_principal=TipoCombustivel.DIESEL,
+            rendimento_principal=8.0,
+            carga_maxima=1500,
+            velocidade_media=90,
+            reducao_rendimento_principal=0.0005,
+        )
+        veiculo = Veiculo.objects.create(
+            especificacao=espec,
+            marca="Fiat",
+            modelo="Ducato",
+            placa="XYZ1234",
+            ano=2020,
+            cor="Branco",
+            sede_atual=cidade,
+        )
+
+        # Criar cliente e pedido
+        user_cliente = django_user_model.objects.create_user(
+            username="cliente_problema",
+            email="cliente@problema.com",
+            password="senha123",
+        )
+        profile_cliente = Profile.objects.get(user=user_cliente)
+        profile_cliente.role = Role.CLIENTE
+        profile_cliente.save()
+        pedido = Pedido.objects.create(
+            cliente=user_cliente,
+            cidade_origem="Porto Alegre",
+            cidade_destino="Porto Alegre",
+            peso_carga=500,
+            prazo_desejado=3,
+            status=StatusPedido.EM_TRANSPORTE,
+        )
+
+        # Criar atribuição
+        atribuicao = AtribuicaoPedido.objects.create(
+            pedido=pedido,
+            motorista=motorista,
+            veiculo=veiculo,
+            status=StatusAtribuicao.EM_ANDAMENTO,
+        )
+
+        return {
+            "atribuicao": atribuicao,
+            "motorista": motorista,
+            "pedido": pedido,
+        }
+
+    def test_criar_problema_sucesso(self, setup_problema):
+        """Testa criação de problema com dados válidos."""
+        data = setup_problema
+        problema = ProblemaEntrega.objects.create(
+            atribuicao=data["atribuicao"],
+            tipo=TipoProblema.VEICULO,
+            descricao="Pneu furou durante o trajeto",
+        )
+
+        assert problema.id is not None
+        assert problema.atribuicao == data["atribuicao"]
+        assert problema.tipo == TipoProblema.VEICULO
+        assert problema.descricao == "Pneu furou durante o trajeto"
+        assert problema.status == StatusProblema.PENDENTE
+        assert problema.resolucao is None
+        assert problema.resolvido_em is None
+
+    def test_problema_str(self, setup_problema):
+        """Testa representação em string do problema."""
+        data = setup_problema
+        problema = ProblemaEntrega.objects.create(
+            atribuicao=data["atribuicao"],
+            tipo=TipoProblema.ACIDENTE,
+            descricao="Acidente leve no trajeto",
+        )
+
+        expected = f"Acidente - Pedido #{data['pedido'].id} - Pendente"
+        assert str(problema) == expected
+
+    def test_problema_status_default(self, setup_problema):
+        """Testa que o status padrão é PENDENTE."""
+        data = setup_problema
+        problema = ProblemaEntrega.objects.create(
+            atribuicao=data["atribuicao"],
+            tipo=TipoProblema.CARGA,
+            descricao="Carga danificada",
+        )
+
+        assert problema.status == StatusProblema.PENDENTE
+
+    def test_tipos_problema_validos(self):
+        """Testa que todos os tipos de problema estão disponíveis."""
+        tipos = [t.value for t in TipoProblema]
+        assert "veiculo" in tipos
+        assert "carga" in tipos
+        assert "rota" in tipos
+        assert "cliente" in tipos
+        assert "acidente" in tipos
+        assert "outro" in tipos
+
+    def test_status_problema_validos(self):
+        """Testa que todos os status de problema estão disponíveis."""
+        status = [s.value for s in StatusProblema]
+        assert "pendente" in status
+        assert "em_analise" in status
+        assert "resolvido" in status
+
+    def test_problema_properties(self, setup_problema):
+        """Testa as properties do problema."""
+        data = setup_problema
+        problema = ProblemaEntrega.objects.create(
+            atribuicao=data["atribuicao"],
+            tipo=TipoProblema.ROTA,
+            descricao="Estrada interditada",
+        )
+
+        assert problema.is_pendente is True
+        assert problema.is_em_analise is False
+        assert problema.is_resolvido is False
+
+        problema.status = StatusProblema.EM_ANALISE
+        problema.save()
+
+        assert problema.is_pendente is False
+        assert problema.is_em_analise is True
+        assert problema.is_resolvido is False
+
+        problema.status = StatusProblema.RESOLVIDO
+        problema.resolvido_em = timezone.now()
+        problema.save()
+
+        assert problema.is_pendente is False
+        assert problema.is_em_analise is False
+        assert problema.is_resolvido is True
+
+    def test_problema_motorista_property(self, setup_problema):
+        """Testa atalho para acessar motorista."""
+        data = setup_problema
+        problema = ProblemaEntrega.objects.create(
+            atribuicao=data["atribuicao"],
+            tipo=TipoProblema.OUTRO,
+            descricao="Problema genérico",
+        )
+
+        assert problema.motorista == data["motorista"]
+
+    def test_problema_pedido_property(self, setup_problema):
+        """Testa atalho para acessar pedido."""
+        data = setup_problema
+        problema = ProblemaEntrega.objects.create(
+            atribuicao=data["atribuicao"],
+            tipo=TipoProblema.CLIENTE,
+            descricao="Cliente não estava no local",
+        )
+
+        assert problema.pedido == data["pedido"]
+
+    def test_multiplos_problemas_mesma_atribuicao(self, setup_problema):
+        """Testa que uma atribuição pode ter múltiplos problemas."""
+        data = setup_problema
+
+        problema1 = ProblemaEntrega.objects.create(
+            atribuicao=data["atribuicao"],
+            tipo=TipoProblema.VEICULO,
+            descricao="Primeiro problema",
+        )
+
+        problema2 = ProblemaEntrega.objects.create(
+            atribuicao=data["atribuicao"],
+            tipo=TipoProblema.ROTA,
+            descricao="Segundo problema",
+        )
+
+        problemas = data["atribuicao"].problemas.all()
+        assert problemas.count() == 2
+        assert problema1 in problemas
+        assert problema2 in problemas
