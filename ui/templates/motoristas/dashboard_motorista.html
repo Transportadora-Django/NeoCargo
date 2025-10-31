@@ -1,0 +1,406 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Dashboard do Motorista - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/pedidos-listar.css' %}">
+<link rel="stylesheet" href="{% static 'css/pages/motorista-dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<div class="pedidos-header">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h1 class="pedidos-title">
+                    <i class="fas fa-tachometer-alt me-2"></i>
+                    Dashboard do Motorista
+                </h1>
+                <p class="pedidos-subtitle mb-0">
+                    Olá, {{ request.user.get_full_name }}! Gerencie suas entregas e acompanhe seu desempenho.
+                </p>
+            </div>
+            <div>
+                <span class="status-badge status-aprovado">
+                    <i class="fas fa-truck me-2"></i>
+                    Motorista Ativo
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container pb-5">
+    <!-- Estatísticas -->
+    <h2 class="pedidos-title mb-4" style="color: var(--neocargo-navy);">
+        <i class="fas fa-chart-line me-2"></i>Minhas Estatísticas
+    </h2>
+    <div class="row g-4 mb-5">
+        <div class="col-lg-4 col-md-6">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(34 197 94 / 10%); color: #22c55e; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-check-circle" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Total de Entregas</div>
+                        <div class="pedido-id">{{ total_entregas }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(251 146 60 / 10%); color: #fb923c; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-clock" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Entregas Pendentes</div>
+                        <div class="pedido-id">{{ entregas_pendentes }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="pedido-card">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="pedido-icon" style="background: rgb(239 68 68 / 10%); color: #ef4444; width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i class="fas fa-exclamation-triangle" style="font-size: 1.5rem;"></i>
+                    </div>
+                    <div>
+                        <div class="pedido-info-label">Problemas Abertos</div>
+                        <div class="pedido-id">{{ problemas_abertos }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entrega Atual -->
+    {% if entrega_atual %}
+    <h2 class="pedidos-title mb-4 mt-5" style="color: var(--neocargo-navy);">
+        <i class="fas fa-bolt me-2"></i>Entrega em Andamento
+    </h2>
+    <div class="pedido-card mb-4" style="background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%); border: none; box-shadow: 0 10px 30px rgba(59, 130, 246, 0.3);">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4">
+            <div class="d-flex align-items-center gap-3">
+                <div style="background: rgba(255, 255, 255, 0.2); color: #fff; width: 60px; height: 60px; border-radius: 15px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-truck-loading" style="font-size: 1.75rem;"></i>
+                </div>
+                <div>
+                    <h5 class="pedido-id mb-1" style="color: #fff;">
+                        Pedido #{{ entrega_atual.pedido.id }}
+                    </h5>
+                    <p class="pedido-info-label mb-0" style="color: rgba(255, 255, 255, 0.9);">
+                        Cliente: {{ entrega_atual.pedido.cliente.get_full_name }}
+                    </p>
+                </div>
+            </div>
+            <span class="status-badge" style="background: white; color: #3b82f6; font-weight: 600;">
+                <i class="fas fa-spinner fa-pulse me-1"></i>Em Andamento
+            </span>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-6 col-lg-3">
+                <div style="background: rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 1rem;">
+                    <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                        <i class="fas fa-map-marker-alt me-2"></i>Origem
+                    </div>
+                    <div style="color: white; font-weight: 600;">{{ entrega_atual.pedido.cidade_origem }}</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div style="background: rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 1rem;">
+                    <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                        <i class="fas fa-flag-checkered me-2"></i>Destino
+                    </div>
+                    <div style="color: white; font-weight: 600;">{{ entrega_atual.pedido.cidade_destino }}</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div style="background: rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 1rem;">
+                    <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                        <i class="fas fa-truck me-2"></i>Veículo
+                    </div>
+                    <div style="color: white; font-weight: 600;">{{ entrega_atual.veiculo.placa }}</div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div style="background: rgba(255, 255, 255, 0.15); border-radius: 8px; padding: 1rem;">
+                    <div style="color: rgba(255, 255, 255, 0.8); font-size: 0.875rem; margin-bottom: 0.25rem;">
+                        <i class="fas fa-weight me-2"></i>Peso
+                    </div>
+                    <div style="color: white; font-weight: 600;">{{ entrega_atual.pedido.peso_carga }} kg</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+            <form action="{% url 'motoristas:concluir_entrega' entrega_atual.id %}" method="post" class="flex-fill">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success w-100" 
+                        onclick="return confirm('Confirmar conclusão da entrega?')"
+                        style="background: #22c55e; border: none; font-weight: 600; padding: 0.75rem;">
+                    <i class="fas fa-check-circle me-2"></i>
+                    Concluir Entrega
+                </button>
+            </form>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalProblema" data-atribuicao-id="{{ entrega_atual.id }}"
+                    style="background: #ef4444; border: none; font-weight: 600; padding: 0.75rem;">
+                <i class="fas fa-exclamation-circle me-2"></i>
+                Relatar Problema
+            </button>
+        </div>
+    </div>
+    {% else %}
+    <h2 class="pedidos-title mb-4 mt-5" style="color: var(--neocargo-navy);">
+        <i class="fas fa-bolt me-2"></i>Entrega em Andamento
+    </h2>
+    <div class="pedido-card mb-4" style="background-color: #f9fafb; border: 2px dashed #d1d5db;">
+        <div class="text-center py-5">
+            <i class="fas fa-box-open" style="font-size: 4rem; color: #9ca3af; margin-bottom: 1rem;"></i>
+            <h5 class="pedido-id mb-2" style="color: #4b5563;">Nenhuma entrega em andamento</h5>
+            <p class="pedido-info-label mb-0" style="color: #6b7280;">Você está disponível para novas atribuições.</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Grid de Seções -->
+    <h2 class="pedidos-title mb-4 mt-5" style="color: var(--neocargo-navy);">
+        <i class="fas fa-history me-2"></i>Atividade Recente
+    </h2>
+    <div class="row g-4 mb-5">
+        <!-- Próximas Entregas -->
+        <div class="col-lg-6">
+            <div class="pedido-card" style="height: 100%;">
+                <div class="pedido-header">
+                    <h5 class="pedido-id mb-0">
+                        <i class="fas fa-clipboard-list me-2"></i>Próximas Entregas
+                    </h5>
+                    <a href="{% url 'motoristas:historico_entregas' %}" class="btn btn-sm" style="background: var(--neocargo-cyan); color: #fff; padding: 0.375rem 0.75rem; border-radius: 8px; text-decoration: none;">
+                        <i class="fas fa-eye me-1"></i>Ver Todas
+                    </a>
+                </div>
+                <div class="pedido-body" style="display: block; max-height: 400px; overflow-y: auto;">
+                    {% if proximas_entregas %}
+                        {% for entrega in proximas_entregas %}
+                        <div class="d-flex justify-content-between align-items-start py-3 {% if not forloop.last %}border-bottom{% endif %}" style="border-color: #f1f5f9 !important;">
+                            <div style="flex: 1; min-width: 0;">
+                                <div class="pedido-id" style="font-size: 0.95rem;">Pedido #{{ entrega.pedido.id }}</div>
+                                <small class="pedido-info-label" style="display: block;">
+                                    <i class="fas fa-map-marker-alt me-1"></i>
+                                    {{ entrega.pedido.cidade_origem }} → {{ entrega.pedido.cidade_destino }}
+                                </small>
+                                <small class="pedido-info-label text-muted">
+                                    <i class="fas fa-weight me-1"></i>{{ entrega.pedido.peso_carga }} kg
+                                </small>
+                                {% if not entrega_atual and entrega.status == 'pendente' %}
+                                <form action="{% url 'motoristas:iniciar_entrega' entrega.id %}" method="post" class="mt-2">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-new-pedido btn-sm" 
+                                            onclick="return confirm('Deseja iniciar esta entrega agora?')">
+                                        <i class="fas fa-play me-1"></i>Iniciar Entrega
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                            <div class="text-end" style="flex-shrink: 0; margin-left: 1rem;">
+                                {% if entrega.status == 'pendente' %}
+                                    <span class="status-badge status-pendente">Pendente</span>
+                                {% elif entrega.status == 'em_andamento' %}
+                                    <span class="status-badge status-em-transporte">Em Andamento</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center py-5 mb-0" style="color: #94a3b8;">Nenhuma entrega programada.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Problemas Recentes -->
+        <div class="col-lg-6">
+            <div class="pedido-card" style="height: 100%;">
+                <div class="pedido-header">
+                    <h5 class="pedido-id mb-0">
+                        <i class="fas fa-exclamation-triangle me-2"></i>Problemas Recentes
+                    </h5>
+                    <a href="{% url 'motoristas:meus_problemas' %}" class="btn btn-sm" style="background: var(--neocargo-cyan); color: #fff; padding: 0.375rem 0.75rem; border-radius: 8px; text-decoration: none;">
+                        <i class="fas fa-eye me-1"></i>Ver Todos
+                    </a>
+                </div>
+                <div class="pedido-body" style="display: block; max-height: 400px; overflow-y: auto;">
+                    {% if problemas_recentes %}
+                        {% for problema in problemas_recentes %}
+                        <div class="d-flex justify-content-between align-items-start py-3 {% if not forloop.last %}border-bottom{% endif %}" style="border-color: #f1f5f9 !important;">
+                            <div style="flex: 1; min-width: 0;">
+                                <div class="pedido-id" style="font-size: 0.95rem;">{{ problema.get_tipo_display }}</div>
+                                <small class="pedido-info-label" style="display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                    {{ problema.descricao|truncatewords:12 }}
+                                </small>
+                                <small class="pedido-date" style="display: block;">
+                                    <i class="far fa-clock me-1"></i>{{ problema.criado_em|date:"d/m/Y H:i" }}
+                                </small>
+                            </div>
+                            <div class="text-end" style="flex-shrink: 0; margin-left: 1rem;">
+                                {% if problema.status == 'pendente' %}
+                                    <span class="status-badge status-pendente">Pendente</span>
+                                {% elif problema.status == 'em_analise' %}
+                                    <span class="status-badge" style="background: linear-gradient(135deg, #fb923c 0%, #f59e0b 100%); color: #fff; border: none;">Em Análise</span>
+                                {% else %}
+                                    <span class="status-badge status-concluido">Resolvido</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-center py-5 mb-0" style="color: #94a3b8;">Nenhum problema reportado.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Histórico Recente -->
+    <h2 class="pedidos-title mb-4 mt-5" style="color: var(--neocargo-navy);">
+        <i class="fas fa-check-circle me-2"></i>Últimas Entregas Concluídas
+    </h2>
+    <div class="row g-4 mb-5">
+        <div class="col-12">
+            <div class="pedido-card">
+                <div class="pedido-header">
+                    <h5 class="pedido-id mb-0">
+                        <i class="fas fa-history me-2"></i>Histórico
+                    </h5>
+                    <a href="{% url 'motoristas:historico_entregas' %}" class="btn btn-sm" style="background: var(--neocargo-cyan); color: #fff; padding: 0.375rem 0.75rem; border-radius: 8px; text-decoration: none;">
+                        <i class="fas fa-eye me-1"></i>Ver Completo
+                    </a>
+                </div>
+                <div class="pedido-body" style="display: block;">
+                    {% if historico_recente %}
+                        <div class="table-responsive">
+                            <table class="table align-middle mb-0">
+                                <thead style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0;">
+                                    <tr>
+                                        <th style="padding: 1rem; color: #475569; font-weight: 600; font-size: 0.875rem;">Pedido</th>
+                                        <th style="padding: 1rem; color: #475569; font-weight: 600; font-size: 0.875rem;">Rota</th>
+                                        <th style="padding: 1rem; color: #475569; font-weight: 600; font-size: 0.875rem;">Data</th>
+                                        <th style="padding: 1rem; color: #475569; font-weight: 600; font-size: 0.875rem;">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for entrega in historico_recente %}
+                                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                                        <td style="padding: 1rem;">
+                                            <span class="pedido-id" style="font-size: 0.95rem;">#{{ entrega.pedido.id }}</span>
+                                        </td>
+                                        <td style="padding: 1rem;">
+                                            <span class="pedido-info-label">
+                                                <i class="fas fa-map-marker-alt text-muted me-1"></i>
+                                                {{ entrega.pedido.cidade_origem }} → {{ entrega.pedido.cidade_destino }}
+                                            </span>
+                                        </td>
+                                        <td style="padding: 1rem;">
+                                            <span class="pedido-date">
+                                                <i class="far fa-calendar me-1"></i>
+                                                {{ entrega.atualizado_em|date:"d/m/Y" }}
+                                            </span>
+                                        </td>
+                                        <td style="padding: 1rem;">
+                                            <span class="status-badge status-concluido">Concluída</span>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <p class="text-center py-5 mb-0" style="color: #94a3b8;">Nenhuma entrega no histórico.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Relatar Problema -->
+<div class="modal fade" id="modalProblema" tabindex="-1" aria-labelledby="modalProblemaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProblemaLabel">
+                    <i class="fas fa-exclamation-triangle text-danger me-2"></i>
+                    Relatar Problema na Entrega
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <form id="formProblema" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <input type="hidden" name="atribuicao_id" id="atribuicaoId">
+                    
+                    <div class="mb-3">
+                        <label for="tipoProblema" class="form-label">Tipo de Problema *</label>
+                        <select class="form-select" id="tipoProblema" name="tipo" required>
+                            <option value="">Selecione...</option>
+                            <option value="veiculo">Problema com Veículo</option>
+                            <option value="carga">Problema com Carga</option>
+                            <option value="rota">Problema na Rota</option>
+                            <option value="cliente">Problema com Cliente</option>
+                            <option value="acidente">Acidente</option>
+                            <option value="outro">Outro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descricaoProblema" class="form-label">Descrição *</label>
+                        <textarea class="form-control" id="descricaoProblema" name="descricao" rows="4" 
+                                  placeholder="Descreva o problema em detalhes..." required></textarea>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Seja o mais detalhado possível para agilizar a resolução.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-2"></i>
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-paper-plane me-2"></i>
+                        Enviar Relatório
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gerenciar modal de problema
+const modalProblema = document.getElementById('modalProblema');
+if (modalProblema) {
+    modalProblema.addEventListener('show.bs.modal', function(event) {
+        const button = event.relatedTarget;
+        const atribuicaoId = button.getAttribute('data-atribuicao-id');
+        document.getElementById('atribuicaoId').value = atribuicaoId;
+        
+        // Definir action do form
+        const form = document.getElementById('formProblema');
+        form.action = `/motoristas/entregas/${atribuicaoId}/relatar-problema/`;
+    });
+    
+    // Limpar form ao fechar
+    modalProblema.addEventListener('hidden.bs.modal', function() {
+        document.getElementById('formProblema').reset();
+    });
+}
+</script>
+{% endblock %}

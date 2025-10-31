@@ -122,6 +122,12 @@
                                             Solicitações
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'gestao:listar_problemas' %}">
+                                            <i class="fas fa-exclamation-triangle me-2"></i>
+                                            Problemas
+                                        </a>
+                                    </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <a class="dropdown-item" href="{% url 'veiculos:listar_especificacoes' %}">
@@ -162,8 +168,28 @@
                                     Pedidos
                                 </a>
                             </li>
+                        {% elif user.profile.is_motorista %}
+                            <!-- Menu para Motorista -->
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'motoristas:dashboard' %}">
+                                    <i class="fas fa-tachometer-alt me-1" aria-hidden="true"></i>
+                                    Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'motoristas:historico_entregas' %}">
+                                    <i class="fas fa-truck me-1" aria-hidden="true"></i>
+                                    Minhas Entregas
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'motoristas:meus_problemas' %}">
+                                    <i class="fas fa-exclamation-triangle me-1" aria-hidden="true"></i>
+                                    Problemas
+                                </a>
+                            </li>
                         {% else %}
-                            <!-- Menu para Cliente/Motorista -->
+                            <!-- Menu para Cliente -->
                             <li class="nav-item">
                                 <a class="nav-link" href="{% url 'dashboard:cliente' %}">
                                     <i class="fas fa-tachometer-alt me-1" aria-hidden="true"></i>
