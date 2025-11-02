@@ -85,10 +85,7 @@ ANYMAIL = {
 }
 
 # Email addresses
-DEFAULT_FROM_EMAIL = os.getenv(
-    "DEFAULT_FROM_EMAIL", 
-    "NeoCargo <neocargo.testes@gmail.com>"
-)
+DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "NeoCargo <neocargo.testes@gmail.com>")
 SERVER_EMAIL = os.getenv("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 
 # Logging configuration otimizado para produção
