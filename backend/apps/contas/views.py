@@ -251,6 +251,29 @@ class CustomPasswordResetView(PasswordResetView):
     success_url = reverse_lazy("contas:password_reset_done")
     form_class = CustomPasswordResetForm  # Usa o formulário customizado
 
+    def get_extra_email_context(self, **kwargs):
+        """
+        Adiciona contexto extra ao email, incluindo o domínio correto.
+        """
+        context = super().get_extra_email_context(**kwargs)
+
+        # Obter o domínio correto do request
+        request = self.request
+        current_site = get_current_site(request)
+
+        # Determinar protocolo (http ou https)
+        protocol = "https" if request.is_secure() else "http"
+
+        # Adicionar ao contexto
+        context.update(
+            {
+                "protocol": protocol,
+                "domain": current_site.domain,
+            }
+        )
+
+        return context
+
     def form_valid(self, form):
         messages.success(
             self.request, "Se este e-mail estiver cadastrado, você receberá instruções para redefinir sua senha."
