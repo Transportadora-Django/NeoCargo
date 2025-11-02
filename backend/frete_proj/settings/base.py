@@ -34,6 +34,8 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     # Documentação automática
     "django_extensions",
+    # Email via API
+    "anymail",
 ]
 
 LOCAL_APPS = [
