@@ -160,12 +160,33 @@
     // Verificar se existe elemento do mapa
     const mapElement = document.getElementById('map')
     if (!mapElement) {
+      console.warn('Elemento #map não encontrado no DOM')
+      return
+    }
+
+    // Verificar se Leaflet está disponível
+    if (typeof L === 'undefined') {
+      console.error('Leaflet (L) não está definido. CDN pode estar bloqueado.')
+      mapElement.innerHTML = `
+        <div class="map-loading">
+          <div class="text-center text-danger">
+            <i class="fas fa-exclamation-triangle mb-3"></i>
+            <p><strong>Erro ao carregar biblioteca de mapas</strong></p>
+            <p class="small">Verifique sua conexão com a internet ou permissões de rede.</p>
+          </div>
+        </div>
+      `
       return
     }
 
     // Obter dados das cidades e rotas (injetados pelo template)
     const cidadesData = window.NEOCARGO_CIDADES || []
     const rotasData = window.NEOCARGO_ROTAS || []
+
+    console.log('Inicializando mapa com:', {
+      cidades: cidadesData.length,
+      rotas: rotasData.length,
+    })
 
     // Verificar se há dados
     if (cidadesData.length === 0) {
@@ -183,6 +204,7 @@
     // Inicializar mapa
     try {
       initMap(cidadesData, rotasData)
+      console.log('Mapa inicializado com sucesso!')
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('Erro ao inicializar mapa:', error)
@@ -190,7 +212,11 @@
         <div class="map-loading">
           <div class="text-center text-danger">
             <i class="fas fa-exclamation-triangle mb-3"></i>
-            <p>Erro ao carregar o mapa. Por favor, recarregue a página.</p>
+            <p><strong>Erro ao carregar o mapa</strong></p>
+            <p class="small">${error.message}</p>
+            <button class="btn btn-primary btn-sm mt-2" onclick="location.reload()">
+              <i class="fas fa-sync me-1"></i>Recarregar Página
+            </button>
           </div>
         </div>
       `

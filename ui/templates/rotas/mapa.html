@@ -4,7 +4,13 @@
 {% block title %}{{ titulo }} - NeoCargo{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!-- Leaflet CSS com integrity check -->
+<link 
+    rel="stylesheet" 
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""
+/>
 <link rel="stylesheet" href="{% static 'css/pages/rotas.css' %}" />
 {% endblock %}
 
@@ -110,11 +116,27 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Leaflet JS com integrity check -->
+<script 
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""
+></script>
 <script>
+    // Debug: Verificar se Leaflet carregou
+    if (typeof L === 'undefined') {
+        console.error('Leaflet não foi carregado! Verifique a conexão com unpkg.com');
+    } else {
+        console.log('Leaflet carregado com sucesso:', L.version);
+    }
+    
     // Expor dados para o script externo
     window.NEOCARGO_CIDADES = {{ cidades_json|safe }};
     window.NEOCARGO_ROTAS = {{ rotas_json|safe }};
+    
+    // Debug: Verificar dados
+    console.log('Cidades carregadas:', window.NEOCARGO_CIDADES?.length || 0);
+    console.log('Rotas carregadas:', window.NEOCARGO_ROTAS?.length || 0);
 </script>
 <script src="{% static 'js/pages/rotas-mapa.js' %}"></script>
 {% endblock %}
