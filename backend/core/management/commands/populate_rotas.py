@@ -217,6 +217,187 @@ class Command(BaseCommand):
                         "tempo_estimado_horas": 11.5,
                         "pedagio_valor": 65.80,
                     },
+                    # Novas rotas para conectar todas as cidades
+                    # Nordeste - conexões adicionais
+                    {
+                        "origem": "Salvador-BA",
+                        "destino": "Fortaleza-CE",
+                        "distancia_km": 1389,
+                        "tempo_estimado_horas": 19.0,
+                        "pedagio_valor": 95.40,
+                    },
+                    {
+                        "origem": "Recife-PE",
+                        "destino": "Natal-RN",
+                        "distancia_km": 297,
+                        "tempo_estimado_horas": 4.5,
+                        "pedagio_valor": 24.60,
+                    },
+                    {
+                        "origem": "Natal-RN",
+                        "destino": "João Pessoa-PB",
+                        "distancia_km": 185,
+                        "tempo_estimado_horas": 2.8,
+                        "pedagio_valor": 16.20,
+                    },
+                    {
+                        "origem": "Natal-RN",
+                        "destino": "Fortaleza-CE",
+                        "distancia_km": 537,
+                        "tempo_estimado_horas": 7.8,
+                        "pedagio_valor": 42.30,
+                    },
+                    {
+                        "origem": "Recife-PE",
+                        "destino": "Maceió-AL",
+                        "distancia_km": 285,
+                        "tempo_estimado_horas": 4.2,
+                        "pedagio_valor": 23.50,
+                    },
+                    {
+                        "origem": "Recife-PE",
+                        "destino": "João Pessoa-PB",
+                        "distancia_km": 120,
+                        "tempo_estimado_horas": 2.0,
+                        "pedagio_valor": 12.80,
+                    },
+                    {
+                        "origem": "Salvador-BA",
+                        "destino": "Maceió-AL",
+                        "distancia_km": 612,
+                        "tempo_estimado_horas": 9.0,
+                        "pedagio_valor": 48.90,
+                    },
+                    # Sul - conexões adicionais
+                    {
+                        "origem": "Florianópolis-SC",
+                        "destino": "Joinville-SC",
+                        "distancia_km": 180,
+                        "tempo_estimado_horas": 2.5,
+                        "pedagio_valor": 15.30,
+                    },
+                    {
+                        "origem": "Curitiba-PR",
+                        "destino": "Joinville-SC",
+                        "distancia_km": 130,
+                        "tempo_estimado_horas": 2.0,
+                        "pedagio_valor": 14.20,
+                    },
+                    {
+                        "origem": "São Paulo-SP",
+                        "destino": "Florianópolis-SC",
+                        "distancia_km": 705,
+                        "tempo_estimado_horas": 10.0,
+                        "pedagio_valor": 58.40,
+                    },
+                    {
+                        "origem": "São Paulo-SP",
+                        "destino": "Porto Alegre-RS",
+                        "distancia_km": 1120,
+                        "tempo_estimado_horas": 16.0,
+                        "pedagio_valor": 85.30,
+                    },
+                    # Centro-Oeste - conectando as cidades isoladas
+                    {
+                        "origem": "Brasília-DF",
+                        "destino": "Goiânia-GO",
+                        "distancia_km": 209,
+                        "tempo_estimado_horas": 3.0,
+                        "pedagio_valor": 18.40,
+                    },
+                    {
+                        "origem": "Brasília-DF",
+                        "destino": "Belo Horizonte-MG",
+                        "distancia_km": 741,
+                        "tempo_estimado_horas": 10.5,
+                        "pedagio_valor": 64.20,
+                    },
+                    {
+                        "origem": "Brasília-DF",
+                        "destino": "Palmas-TO",
+                        "distancia_km": 973,
+                        "tempo_estimado_horas": 13.5,
+                        "pedagio_valor": 74.80,
+                    },
+                    {
+                        "origem": "Goiânia-GO",
+                        "destino": "Campo Grande-MS",
+                        "distancia_km": 935,
+                        "tempo_estimado_horas": 13.0,
+                        "pedagio_valor": 72.50,
+                    },
+                    {
+                        "origem": "Campo Grande-MS",
+                        "destino": "Cuiabá-MT",
+                        "distancia_km": 694,
+                        "tempo_estimado_horas": 10.0,
+                        "pedagio_valor": 58.30,
+                    },
+                    {
+                        "origem": "Brasília-DF",
+                        "destino": "Cuiabá-MT",
+                        "distancia_km": 1133,
+                        "tempo_estimado_horas": 15.5,
+                        "pedagio_valor": 82.70,
+                    },
+                    # Norte - conectando Amazônia
+                    {
+                        "origem": "Palmas-TO",
+                        "destino": "Belém-PA",
+                        "distancia_km": 1291,
+                        "tempo_estimado_horas": 18.0,
+                        "pedagio_valor": 88.90,
+                    },
+                    {
+                        "origem": "Belém-PA",
+                        "destino": "Manaus-AM",
+                        "distancia_km": 1306,
+                        "tempo_estimado_horas": 18.5,
+                        "pedagio_valor": 92.40,
+                    },
+                    {
+                        "origem": "Porto Velho-RO",
+                        "destino": "Cuiabá-MT",
+                        "distancia_km": 1456,
+                        "tempo_estimado_horas": 20.0,
+                        "pedagio_valor": 98.60,
+                    },
+                    {
+                        "origem": "Manaus-AM",
+                        "destino": "Porto Velho-RO",
+                        "distancia_km": 901,
+                        "tempo_estimado_horas": 13.0,
+                        "pedagio_valor": 68.50,
+                    },
+                    {
+                        "origem": "Brasília-DF",
+                        "destino": "Salvador-BA",
+                        "distancia_km": 1446,
+                        "tempo_estimado_horas": 20.0,
+                        "pedagio_valor": 98.40,
+                    },
+                    # Conexões Sudeste
+                    {
+                        "origem": "Campinas-SP",
+                        "destino": "Belo Horizonte-MG",
+                        "distancia_km": 494,
+                        "tempo_estimado_horas": 7.5,
+                        "pedagio_valor": 44.30,
+                    },
+                    {
+                        "origem": "Belo Horizonte-MG",
+                        "destino": "Vitória-ES",
+                        "distancia_km": 524,
+                        "tempo_estimado_horas": 8.0,
+                        "pedagio_valor": 46.80,
+                    },
+                    {
+                        "origem": "Belo Horizonte-MG",
+                        "destino": "Salvador-BA",
+                        "distancia_km": 1372,
+                        "tempo_estimado_horas": 19.0,
+                        "pedagio_valor": 94.50,
+                    },
                 ]
 
                 rotas_criadas = 0
@@ -293,7 +474,7 @@ class Command(BaseCommand):
         # Atualizar rotas existentes com tempo estimado e pedágio
         self.stdout.write("\n🛣️  Atualizando rotas existentes...")
         rotas_map = {
-            # Baseado nas 14 rotas mostradas na imagem
+            # Rotas existentes
             ("Salvador", "BA", "Recife", "PE"): {"tempo": 12.0, "pedagio": 68.70},
             ("Recife", "PE", "Fortaleza", "CE"): {"tempo": 11.5, "pedagio": 65.80},
             ("Curitiba", "PR", "Florianópolis", "SC"): {"tempo": 4.5, "pedagio": 28.90},
@@ -308,6 +489,32 @@ class Command(BaseCommand):
             ("São Paulo", "SP", "Santos", "SP"): {"tempo": 1.2, "pedagio": 18.70},
             ("São Paulo", "SP", "Curitiba", "PR"): {"tempo": 6.0, "pedagio": 38.90},
             ("São Paulo", "SP", "Brasília", "DF"): {"tempo": 14.0, "pedagio": 78.90},
+            # Novas rotas adicionadas
+            ("Salvador", "BA", "Fortaleza", "CE"): {"tempo": 19.0, "pedagio": 95.40},
+            ("Recife", "PE", "Natal", "RN"): {"tempo": 4.5, "pedagio": 24.60},
+            ("Natal", "RN", "João Pessoa", "PB"): {"tempo": 2.8, "pedagio": 16.20},
+            ("Natal", "RN", "Fortaleza", "CE"): {"tempo": 7.8, "pedagio": 42.30},
+            ("Recife", "PE", "Maceió", "AL"): {"tempo": 4.2, "pedagio": 23.50},
+            ("Recife", "PE", "João Pessoa", "PB"): {"tempo": 2.0, "pedagio": 12.80},
+            ("Salvador", "BA", "Maceió", "AL"): {"tempo": 9.0, "pedagio": 48.90},
+            ("Florianópolis", "SC", "Joinville", "SC"): {"tempo": 2.5, "pedagio": 15.30},
+            ("Curitiba", "PR", "Joinville", "SC"): {"tempo": 2.0, "pedagio": 14.20},
+            ("São Paulo", "SP", "Florianópolis", "SC"): {"tempo": 10.0, "pedagio": 58.40},
+            ("São Paulo", "SP", "Porto Alegre", "RS"): {"tempo": 16.0, "pedagio": 85.30},
+            ("Brasília", "DF", "Goiânia", "GO"): {"tempo": 3.0, "pedagio": 18.40},
+            ("Brasília", "DF", "Belo Horizonte", "MG"): {"tempo": 10.5, "pedagio": 64.20},
+            ("Brasília", "DF", "Palmas", "TO"): {"tempo": 13.5, "pedagio": 74.80},
+            ("Goiânia", "GO", "Campo Grande", "MS"): {"tempo": 13.0, "pedagio": 72.50},
+            ("Campo Grande", "MS", "Cuiabá", "MT"): {"tempo": 10.0, "pedagio": 58.30},
+            ("Brasília", "DF", "Cuiabá", "MT"): {"tempo": 15.5, "pedagio": 82.70},
+            ("Palmas", "TO", "Belém", "PA"): {"tempo": 18.0, "pedagio": 88.90},
+            ("Belém", "PA", "Manaus", "AM"): {"tempo": 18.5, "pedagio": 92.40},
+            ("Porto Velho", "RO", "Cuiabá", "MT"): {"tempo": 20.0, "pedagio": 98.60},
+            ("Manaus", "AM", "Porto Velho", "RO"): {"tempo": 13.0, "pedagio": 68.50},
+            ("Brasília", "DF", "Salvador", "BA"): {"tempo": 20.0, "pedagio": 98.40},
+            ("Campinas", "SP", "Belo Horizonte", "MG"): {"tempo": 7.5, "pedagio": 44.30},
+            ("Belo Horizonte", "MG", "Vitória", "ES"): {"tempo": 8.0, "pedagio": 46.80},
+            ("Belo Horizonte", "MG", "Salvador", "BA"): {"tempo": 19.0, "pedagio": 94.50},
         }
 
         rotas_atualizadas = 0
