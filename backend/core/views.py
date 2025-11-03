@@ -22,6 +22,16 @@ def home(request):
     return render(request, "home/index.html", context)
 
 
+def sobre(request):
+    """
+    View da página Saiba Mais / Sobre
+    """
+    context = {
+        "page_title": "Sobre - NeoCargo",
+    }
+    return render(request, "home/sobre.html", context)
+
+
 @require_http_methods(["GET"])
 def health_check(request):
     """

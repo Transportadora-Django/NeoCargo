@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Sobre - NeoCargo{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/pages/sobre.css' %}">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="sobre-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-4 fw-bold mb-4">
+                    <i class="fas fa-info-circle me-3"></i>Sobre a NeoCargo
+                </h1>
+                <p class="lead">
+                    Transformando a logística brasileira com tecnologia, eficiência e transparência
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Sobre a Empresa -->
+<section class="sobre-empresa py-5">
+    <div class="container">
+        <div class="row align-items-center mb-5">
+            <div class="col-lg-6 mb-4 mb-lg-0">
+                <img src="{% static 'assets/Logo-NeoCargo.svg' %}" alt="NeoCargo Logo" class="logo-grande">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="mb-4">
+                    <i class="fas fa-building me-2 text-primary"></i>
+                    Quem Somos
+                </h2>
+                <p class="lead mb-3">
+                    A NeoCargo é um sistema de gestão de transportadora desenvolvido especialmente para o mercado brasileiro.
+                </p>
+                <p>
+                    Nossa plataforma oferece uma solução completa para gerenciamento de fretes, rotas, veículos e motoristas, 
+                    proporcionando maior eficiência operacional e controle total sobre suas operações logísticas.
+                </p>
+                <p>
+                    Desenvolvido com tecnologias modernas e focado na experiência do usuário, o NeoCargo é a escolha ideal 
+                    para empresas que buscam modernizar seus processos e aumentar sua competitividade no mercado.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Missão, Visão e Valores -->
+<section class="mvv-section py-5 bg-light">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Missão -->
+            <div class="col-md-4">
+                <div class="mvv-card">
+                    <div class="mvv-icon">
+                        <i class="fas fa-bullseye"></i>
+                    </div>
+                    <h3>Missão</h3>
+                    <p>
+                        Fornecer soluções tecnológicas inovadoras que simplifiquem e otimizem 
+                        a gestão logística, tornando-a mais eficiente, transparente e acessível 
+                        para empresas de todos os portes.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Visão -->
+            <div class="col-md-4">
+                <div class="mvv-card">
+                    <div class="mvv-icon">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <h3>Visão</h3>
+                    <p>
+                        Ser a principal plataforma de gestão de transportes do Brasil, 
+                        reconhecida pela excelência em tecnologia, inovação e atendimento 
+                        ao cliente.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Valores -->
+            <div class="col-md-4">
+                <div class="mvv-card">
+                    <div class="mvv-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Valores</h3>
+                    <ul class="valores-list">
+                        <li><i class="fas fa-check-circle"></i> Inovação</li>
+                        <li><i class="fas fa-check-circle"></i> Transparência</li>
+                        <li><i class="fas fa-check-circle"></i> Eficiência</li>
+                        <li><i class="fas fa-check-circle"></i> Compromisso</li>
+                        <li><i class="fas fa-check-circle"></i> Excelência</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Funcionalidades -->
+<section class="funcionalidades-section py-5">
+    <div class="container">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <h2 class="display-5 fw-bold mb-3">
+                    <i class="fas fa-rocket me-2 text-primary"></i>
+                    Principais Funcionalidades
+                </h2>
+                <p class="lead text-muted">
+                    Tudo que você precisa para gerenciar sua transportadora em um só lugar
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Gestão de Pedidos -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon bg-primary">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <h4>Gestão de Pedidos</h4>
+                    <p>
+                        Controle completo sobre todos os pedidos, desde a solicitação até a entrega,
+                        com rastreamento em tempo real e histórico detalhado.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Controle de Rotas -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon bg-success">
+                        <i class="fas fa-route"></i>
+                    </div>
+                    <h4>Controle de Rotas</h4>
+                    <p>
+                        Gerencie rotas entre cidades, visualize em mapas interativos e 
+                        otimize custos com cálculo automático de distâncias e pedágios.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Gestão de Veículos -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon bg-warning">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h4>Gestão de Veículos</h4>
+                    <p>
+                        Cadastre e acompanhe toda sua frota, com informações de manutenção,
+                        disponibilidade e documentação sempre atualizadas.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Gestão de Motoristas -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon bg-info">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h4>Gestão de Motoristas</h4>
+                    <p>
+                        Controle de motoristas com validação de CNH, disponibilidade,
+                        histórico de entregas e gestão de problemas reportados.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Cálculo de Fretes -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon bg-danger">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <h4>Cálculo de Fretes</h4>
+                    <p>
+                        Sistema inteligente de cálculo de fretes considerando distância,
+                        tipo de carga, veículo e margem de lucro configurável.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Dashboard Intuitivo -->
+            <div class="col-md-6 col-lg-4">
+                <div class="feature-card">
+                    <div class="feature-icon bg-secondary">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h4>Dashboard Intuitivo</h4>
+                    <p>
+                        Visualize todas as informações importantes em dashboards personalizados
+                        para cada tipo de usuário: cliente, motorista, gerente e proprietário.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 text-center">
+                <h2 class="display-5 fw-bold mb-4">Pronto para começar?</h2>
+                <p class="lead mb-4">
+                    Crie sua conta gratuitamente e experimente todas as funcionalidades da NeoCargo
+                </p>
+                <div class="d-flex gap-3 justify-content-center flex-wrap">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'contas:signup' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>
+                        Criar Conta Gratuita
+                    </a>
+                    <a href="{% url 'contas:login' %}" class="btn btn-outline-primary btn-lg">
+                        <i class="fas fa-sign-in-alt me-2"></i>
+                        Já tenho conta
+                    </a>
+                    {% else %}
+                    <a href="{% url 'dashboard:cliente' %}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-tachometer-alt me-2"></i>
+                        Ir para Dashboard
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
