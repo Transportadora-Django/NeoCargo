@@ -30,9 +30,9 @@ python manage.py migrate --settings=frete_proj.settings.prod
 echo "👤 Configurando superuser inicial..."
 python manage.py setup_initial_superuser --settings=frete_proj.settings.prod || echo "⚠️  Aviso: Falha ao criar superuser (pode já existir)"
 
-# Popular dados iniciais
+# Popular dados iniciais (com --force para atualizar coordenadas se já existirem)
 echo "🌍 Populando rotas e cidades..."
-python manage.py populate_rotas --settings=frete_proj.settings.prod || echo "⚠️  Aviso: Falha ao popular rotas (podem já existir)"
+python manage.py populate_rotas --force --settings=frete_proj.settings.prod || echo "⚠️  Aviso: Falha ao popular rotas"
 
 echo "🚚 Populando especificações e veículos..."
 python manage.py populate_veiculos --settings=frete_proj.settings.prod || echo "⚠️  Aviso: Falha ao popular veículos (podem já existir)"
