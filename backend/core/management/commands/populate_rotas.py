@@ -289,3 +289,58 @@ class Command(BaseCommand):
                 self.stdout.write(self.style.WARNING(f"⚠️  Não encontrada: {nome}/{estado}"))
 
         self.stdout.write(self.style.SUCCESS(f"\n✅ {atualizadas} cidades atualizadas com coordenadas!"))
+
+        # Atualizar rotas existentes com tempo estimado e pedágio
+        self.stdout.write("\n🛣️  Atualizando rotas existentes...")
+        rotas_map = {
+            # Baseado nas 14 rotas mostradas na imagem
+            ("Salvador", "BA", "Recife", "PE"): {"tempo": 12.0, "pedagio": 68.70},
+            ("Recife", "PE", "Fortaleza", "CE"): {"tempo": 11.5, "pedagio": 65.80},
+            ("Curitiba", "PR", "Florianópolis", "SC"): {"tempo": 4.5, "pedagio": 28.90},
+            ("Curitiba", "PR", "Porto Alegre", "RS"): {"tempo": 10.5, "pedagio": 62.40},
+            ("Rio de Janeiro", "RJ", "Vitória", "ES"): {"tempo": 8.0, "pedagio": 48.60},
+            ("Rio de Janeiro", "RJ", "Belo Horizonte", "MG"): {"tempo": 7.0, "pedagio": 41.20},
+            ("Rio de Janeiro", "RJ", "Salvador", "BA"): {"tempo": 23.0, "pedagio": 112.30},
+            ("Florianópolis", "SC", "Porto Alegre", "RS"): {"tempo": 7.0, "pedagio": 38.50},
+            ("São Paulo", "SP", "Belo Horizonte", "MG"): {"tempo": 8.5, "pedagio": 52.30},
+            ("São Paulo", "SP", "Campinas", "SP"): {"tempo": 1.5, "pedagio": 12.50},
+            ("São Paulo", "SP", "Rio de Janeiro", "RJ"): {"tempo": 6.5, "pedagio": 45.80},
+            ("São Paulo", "SP", "Santos", "SP"): {"tempo": 1.2, "pedagio": 18.70},
+            ("São Paulo", "SP", "Curitiba", "PR"): {"tempo": 6.0, "pedagio": 38.90},
+            ("São Paulo", "SP", "Brasília", "DF"): {"tempo": 14.0, "pedagio": 78.90},
+        }
+
+        rotas_atualizadas = 0
+        for rota_key, dados in rotas_map.items():
+            origem_nome, origem_estado, destino_nome, destino_estado = rota_key
+            try:
+                origem = Cidade.objects.get(nome=origem_nome, estado=origem_estado)
+                destino = Cidade.objects.get(nome=destino_nome, estado=destino_estado)
+
+                rota = Rota.objects.filter(origem=origem, destino=destino).first()
+                if rota:
+                    rota.tempo_estimado_horas = Decimal(str(dados["tempo"]))
+                    rota.pedagio_valor = Decimal(str(dados["pedagio"]))
+                    rota.save()
+                    rotas_atualizadas += 1
+                    self.stdout.write(
+                        self.style.SUCCESS(
+                            f"✓ Rota atualizada: {rota.origem.nome} → {rota.destino.nome} "
+                            f"({dados['tempo']}h, R${dados['pedagio']})"
+                        )
+                    )
+                else:
+                    self.stdout.write(
+                        self.style.WARNING(
+                            f"⚠️  Rota não encontrada: {origem_nome}/{origem_estado} → {destino_nome}/{destino_estado}"
+                        )
+                    )
+            except Cidade.DoesNotExist as e:
+                self.stdout.write(
+                    self.style.WARNING(
+                        f"⚠️  Cidade não encontrada para rota "
+                        f"{origem_nome}/{origem_estado} → {destino_nome}/{destino_estado}: {e}"
+                    )
+                )
+
+        self.stdout.write(self.style.SUCCESS(f"\n✅ {rotas_atualizadas} rotas atualizadas!"))
